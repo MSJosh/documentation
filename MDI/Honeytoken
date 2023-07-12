@@ -1,0 +1,36 @@
+
+Defender for Identity is a comprehensive security product provided that offers various features and capabilities to enhance the security of an organization's Active Directory environment. One of the features within Defender for Identity is the use of Honey Tokens, also known as Honey Accounts. 
+
+Honey Tokens, as part of Defender for Identity, are decoy user accounts intentionally created to attract and detect malicious activity within the Active Directory environment. These accounts function as proactive defense mechanisms by diverting the attention of attackers and alerting defenders to potential threats. When any authentication is associated with these Honey Tokens, an alert is triggered, providing early warnings of malicious activity. 
+
+By utilizing Honey Tokens within the Defender for Identity product, organizations can strengthen their security posture, detect threats earlier, and respond promptly to potential attacks. 
+
+Benefits of Defender for Identity Honey Tokens: 
+
+Early Detection: Honey Tokens enable early detection of potential security breaches. By monitoring these decoy accounts, any unauthorized access attempts trigger alerts and allow security teams to quickly investigate and respond to suspicious activities. 
+Threat Deception: Honey Tokens create a sense of false security for attackers, diverting their attention from legitimate user accounts. This can buy valuable time for defenders to identify and neutralize threats before they can cause considerable damage. 
+Attack Surface Reduction: The presence of Honey Tokens discourages attackers from targeting real user accounts, reducing the overall attack surface, and mitigating potential risks to critical assets. 
+Examples of Honey Tokens: 
+
+Unused User Accounts: Organizations can create decoy user accounts that are like real user accounts but are not actively used by any legitimate users. These accounts can be placed in organizational units (OU) throughout the Active Directory environment to lure attackers. 
+Admin User Accounts: Organizations can create decoy admin accounts that are like admin accounts but do not have active permissions like a domain admin account. If the organization has a similar naming convention for admin accounts, organizations can create additional accounts like real admin accounts. (DO NOT add these accounts to admin roles) 
+Honey Tokens Detection: 
+
+Defender for Identity will detect Honey Token use in the following ways. 
+
+Honeytoken user was queried via SAM-R.- Being Deprecated  
+Honeytoken user was queried via LDAP. 
+Honeytoken user authentication activity. 
+Honeytoken user had attributes modified. 
+Honeytoken group membership changed. 
+Limitations of Defender for Identity Honey Tokens: 
+
+False Positives: There is a possibility of generating false positives if legitimate users accidentally interact with Honey Tokens.  
+Limited Coverage: Honey Tokens are only effective if attackers come across them. Sophisticated attackers may bypass or recognize these decoys, rendering them less effective. 
+Maintenance Overhead: Managing and maintaining Honey Tokens can require additional effort and resources. Organizations need to regularly update and monitor these decoy accounts to ensure their effectiveness. 
+ 
+
+Source Documents and recommended sites. 
+- https://techcommunity.microsoft.com/t5/microsoft-365-defender-blog/deceptive-defense-best-practices-for-identity-based-honeytokens/ba-p/3851641
+- https://www.bordergate.co.uk/bloodhound-by-example/
+-https://www.hub.trimarcsecurity.com/post/the-art-of-the-honeypot-account-making-the-unusual-look-normal
