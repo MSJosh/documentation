@@ -1,0 +1,5 @@
+AuditLogs
+//| where ActivityDisplayName == "User started security info registration"
+| extend IntiatingUPN = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
+| extend TargetUPN = tostring(TargetResources[0].userPrincipalName)
+| project OperationName, IntiatingUPN, TargetUPN, TimeGenerated, ResultDescription
