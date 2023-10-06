@@ -1,0 +1,3 @@
+arg("").Resources
+| where type == "microsoft.network/publicipaddresses"
+| extend ipAddress = tostring(properties.ipAddress), publicIPAllocationMethod = tostring(properties.publicIPAllocationMethod)
