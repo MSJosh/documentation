@@ -9,5 +9,6 @@ Once you have it, click Next. Then click on </> Transformation editor on the top
 source
 | project-away ConditionalAccessPolicies
 ![image](https://github.com/MSJosh/documentation/assets/120500937/25286902-2cb9-475b-b74d-bf1679cabd2b)
+
 And finally Create.
 Note that it doesn’t delete the value for already ingested logs. Only for the new one that will get ingested. Also doesn’t take place immediately, Usually it takes about five minutes.
