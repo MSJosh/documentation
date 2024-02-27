@@ -1,0 +1,12 @@
+Syslog
+| where ProcessName == "ADMP"
+| extend Status = extract("Status=(.*?)\\]", 1, SyslogMessage),
+         TechnicianName = extract("TechnicianName=(.*?)]", 1, SyslogMessage),
+         Task = extract("Task=(.*?)]", 1, SyslogMessage),
+         Category = extract("ACTION=(.*?)]", 1, SyslogMessage),
+         ObjectName = extract("Object Name=(.*?)\\]", 1, SyslogMessage), // Adjust the extraction pattern here
+         DomainName = extract("Domain Name=(.*?)\\]", 1, SyslogMessage)
+| extend MemberOf = extract("memberOf=(\\[.*?\\])", 1, SyslogMessage)
+| mv-expand Member = parse_json(MemberOf)
+|where Category != "Microsoft 365 Management"
+| project TimeGenerated, Status, TechnicianName, Task, Category, ObjectName, DomainName, Member
