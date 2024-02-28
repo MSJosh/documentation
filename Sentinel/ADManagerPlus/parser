@@ -1,12 +1,32 @@
 Syslog
-| where ProcessName == "ADMP"
-| extend Status = extract("Status=(.*?)\\]", 1, SyslogMessage),
+| where ProcessName == "ADMP" //Syslog processname from AD Manager Plus
+//Extract syslogmessage to readable format 
+| extend Status = extract("Status=(.*?)\\]", 1, SyslogMessage), //Status of job (success/failure)
+         Task = extract("Task=(.*?)]", 1, SyslogMessage), //Process done by tool
+         ImmutableId = extract("ImmutableId=(.*?)\\]", 1, SyslogMessage), //Entra ID record not in project
+         Microsoft365Account = extract("Microsoft 365 Account=(.*?)\\]", 1, SyslogMessage), 
+         Microsoft365UserCreationMethod = extract("Microsoft 365 User Creation Method=(.*?)\\]", 1, SyslogMessage),
+         PostalCode = extract("PostalCode=(.*?)\\]", 1, SyslogMessage), //Not in Project
+         GivenName = extract("GivenName=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         EmployeeId = extract("employeeId=(.*?)\\]", 1, SyslogMessage), //Not in Project
+         City = extract("City=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         JobTitle = extract("JobTitle=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         StreetAddress = extract("StreetAddress=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         Department = extract("Department=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         MailNickName = extract("MailNickName=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         LicenseDetails = extract("License Details=(\\[.*?\\])", 1, SyslogMessage), ////Not in Project
+         BlockCredential = extract("BlockCredential=(.*?)\\]", 1, SyslogMessage),
+         PhysicalDeliveryOfficeName = extract("PhysicalDeliveryOfficeName=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         State = extract("State=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         DisplayName = extract("DisplayName=(.*?)\\]", 1, SyslogMessage),
+         Country = extract("Country=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         UsageLocation = extract("UsageLocation=(.*?)\\]", 1, SyslogMessage),//Not in Project
+         UserPrincipalName = extract("UserPrincipalName=(.*?)\\]", 1, SyslogMessage),
+         Surname = extract("Surname=(.*?)\\]", 1, SyslogMessage),
          TechnicianName = extract("TechnicianName=(.*?)]", 1, SyslogMessage),
-         Task = extract("Task=(.*?)]", 1, SyslogMessage),
          Category = extract("ACTION=(.*?)]", 1, SyslogMessage),
-         ObjectName = extract("Object Name=(.*?)\\]", 1, SyslogMessage), // Adjust the extraction pattern here
+         ObjectName = extract("Object Name=(.*?)\\]", 1, SyslogMessage), 
          DomainName = extract("Domain Name=(.*?)\\]", 1, SyslogMessage)
-| extend MemberOf = extract("memberOf=(\\[.*?\\])", 1, SyslogMessage)
-| mv-expand Member = parse_json(MemberOf)
-|where Task != "Microsoft 365 User Creation"
-| project TimeGenerated, Status, TechnicianName, Task, Category, ObjectName, DomainName, Member
+//| extend MemberOf = extract("memberOf=(\\[.*?\\])", 1, SyslogMessage) //Not in Project and commenting out 
+//| mv-expand Member = parse_json(MemberOf) // Can add back in if needed
+|project EventTime, Status, Task, Category, UserPrincipalName, ObjectName, TechnicianName, DomainName, Microsoft365Account, Microsoft365UserCreationMethod,  LicenseDetails, BlockCredential, DisplayName
