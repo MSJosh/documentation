@@ -8,5 +8,5 @@ Syslog
          DomainName = extract("Domain Name=(.*?)\\]", 1, SyslogMessage)
 | extend MemberOf = extract("memberOf=(\\[.*?\\])", 1, SyslogMessage)
 | mv-expand Member = parse_json(MemberOf)
-|where Category != "Microsoft 365 Management"
+|where Task != "Microsoft 365 User Creation"
 | project TimeGenerated, Status, TechnicianName, Task, Category, ObjectName, DomainName, Member
