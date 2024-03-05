@@ -19,3 +19,6 @@ Types of transform options
   * Remove a column from each row
   * Parse important data from a column
   * Send certain rows to lower cost storage
+ 
+
+
