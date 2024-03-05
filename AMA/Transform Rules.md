@@ -12,8 +12,8 @@ Types of transform options
   * Obfuscate sensitive information
   * Send to an alternate table
 *  Enrich data with more or calculated information
-  * Add business-specific information
-  * Add a column with more information
+   * Add business-specific information
+   * Add a column with more information
 * Reduce data costs
   * Remove entire rows
   * Remove a column from each row
