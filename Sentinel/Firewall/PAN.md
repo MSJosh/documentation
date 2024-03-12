@@ -9,7 +9,7 @@ Collecting Palo Alto Data with Sentinel
 
 | Type  |Format | 
 | --------------- | ---------- | 
-|Traffic| CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
+|Traffic| "CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
 deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc
 destinationTranslatedAddress=$natdst cs1Label=Rule cs1=$rule suser=$srcuser duser=$dstuser app=$app
 cs3Label=Virtual System cs3=$vsys cs4Label=Source Zone cs4=$from cs5Label=Destination Zone cs5=$to
@@ -37,7 +37,7 @@ PanDstDeviceOSv=$dst_osversion PanDstHostname=$dst_host PanDstMac=$dst_mac
 PanContainerName=$container_id PanPODNamespace=$pod_namespace PanPODName=$pod_name
 PanSrcEDL=$src_edl PanDstEDL=$dst_edl PanGPHostID=$hostid PanEPSerial=$serialnumber PanSrcDAG=$src_dag
 PanDstDAG=$dst_dag PanHASessionOwner=$session_owner PanTimeHighRes=$high_res_timestamp
-PanASServiceType=$nssai_sst PanASServiceDiff=$nssai_sd |
+PanASServiceType=$nssai_sst PanASServiceDiff=$nssai_sd" |
 
 
 
