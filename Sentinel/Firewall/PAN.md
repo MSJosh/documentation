@@ -13,6 +13,7 @@ Collecting Palo Alto Data with Sentinel
 
 
 **Traffic PAN Config**
+
 CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
 deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc
 destinationTranslatedAddress=$natdst cs1Label=Rule cs1=$rule suser=$srcuser duser=$dstuser app=$app
