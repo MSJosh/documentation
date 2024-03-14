@@ -15,7 +15,7 @@ Collecting Palo Alto Data with Sentinel
 
 **Traffic CEF Config - Recommended**
 ```
-CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc destinationTranslatedAddress=$natdst cs1=$rule suser=$srcuser duser=$dstuser app=$app cs4=$from cs5Label=Destination Zone cs5=$to deviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cn1Label=SessionID cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport destinationTranslatedPort=$natdport flexString1Label=Flags flexString1=$flags proto=$proto act=$action flexNumber1Label=Total bytes flexNumber1=$bytes in=$bytes_sent out=$bytes_received cn2Label=Packets cn2=$packets start=$cef-formatted-time_generated cn3Label=Elapsed time in seconds cn3=$elapsed cs2Label=URL Category cs2=$category externalId=$seqno reason=$session_end_reason dvchost=$device_name cat=$action_source PanOSSrcUUID=$src_uuid PanOSDstUUID=$dst_uuid PanOSTunnelID=$tunnelid PanOSMonitorTag=$monitortag PanOSParentSessionID=$parent_session_id PanOSParentStartTime=$parent_start_time PanOSTunnelType=$tunnel PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_sent PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection PanDynamicUsrgrp=$dynusergroup_name
+CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc destinationTranslatedAddress=$natdst cs1=$rule suser=$srcuser duser=$dstuser app=$app cs4=$from cs5=$to deviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport destinationTranslatedPort=$natdport flexString1=$flags proto=$proto act=$action flexNumber1Label=Total bytes flexNumber1=$bytes in=$bytes_sent out=$bytes_received cn2=$packets start=$cef-formatted-time_generated Category cs2=$category externalId=$seqno reason=$session_end_reason dvchost=$device_name cat=$action_source PanOSSrcUUID=$src_uuid PanOSDstUUID=$dst_uuid PanOSTunnelID=$tunnelid PanOSMonitorTag=$monitortag PanOSParentSessionID=$parent_session_id PanOSParentStartTime=$parent_start_time PanOSTunnelType=$tunnel PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_sent PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection PanDynamicUsrgrp=$dynusergroup_name
 
 ```
 
@@ -38,29 +38,22 @@ CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-form
 | duser=$dstuser                     | Destination User                          |
 | app=$app                           | Application                               |
 | cs4=$from                          | Custom String 4 - Source Zone             |
-| cs5Label=Destination Zone          | Custom String 5 Label - Destination Zone  |
 | cs5=$to                            | Custom String 5 - Destination Zone        |
 | deviceInboundInterface=$inbound_if | Device Inbound Interface                  |
 | deviceOutboundInterface=$outbound_if| Device Outbound Interface                |
-| cn1Label=SessionID                 | Custom Number 1 Label - Session ID        |
 | cn1=$sessionid                     | Custom Number 1 - Session ID              |
 | cnt=$repeatcnt                     | Count                                     |
 | spt=$sport                         | Source Port                               |
 | dpt=$dport                         | Destination Port                          |
 | sourceTranslatedPort=$natsport     | Source Translated Port after NAT          |
 | destinationTranslatedPort=$natdport| Destination Translated Port after NAT     |
-| flexString1Label=Flags             | Flexible String 1 Label - Flags           |
 | flexString1=$flags                 | Flexible String 1 - Flags                 |
 | proto=$proto                       | Protocol                                  |
 | act=$action                        | Action                                    |
 | in=$bytes_sent                     | Bytes Sent                                |
 | out=$bytes_received                | Bytes Received                            |
-| cn2Label=Packets                   | Custom Number 2 Label - Packets           |
 | cn2=$packets                       | Custom Number 2 - Packets                 |
 | start=$cef-formatted-time_generated| Start Time formatted in CEF               |
-| cn3Label=Elapsed time in seconds   | Custom Number 3 Label - Elapsed Time in Seconds |
-| cn3=$elapsed                       | Custom Number 3 - Elapsed Time in Seconds |
-| cs2Label=URL Category              | Custom String 2 Label - URL Category      |
 | cs2=$category                      | Custom String 2 - URL Category            |
 | d=$seqno                 | External ID represented by $seqno         |
 | reason=$session_end_reason         | Reason for Session End                    |
