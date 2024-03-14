@@ -7,6 +7,7 @@ Collecting Palo Alto Data with Sentinel
 
 
 //Drop dropped and block traffic
+
         "transformKql": "source | where DeviceAction !contains \"Deny\" | where DeviceAction !contains \"Reset-both\" | project-away DeviceCustomString3, ExtID, DeviceCustomString3Label, DeviceCustomString6,DeviceCustomString6Label, AdditionalExtensions",
         "outputStream": "Microsoft-CommonSecurityLog"
 
