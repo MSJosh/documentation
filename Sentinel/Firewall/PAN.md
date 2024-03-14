@@ -14,8 +14,8 @@ Collecting Palo Alto Data with Sentinel
 
 
 **Traffic PAN Config**
-
-"CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
+```
+CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
 deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc
 destinationTranslatedAddress=$natdst cs1Label=Rule cs1=$rule suser=$srcuser duser=$dstuser app=$app
 cs3Label=Virtual System cs3=$vsys cs4Label=Source Zone cs4=$from cs5Label=Destination Zone cs5=$to
@@ -32,4 +32,5 @@ PanOSSrcUUID=$src_uuid PanOSDstUUID=$dst_uuid PanOSTunnelID=$tunnelid PanOSMonit
 PanOSParentSessionID=$parent_session_id PanOSParentStartTime=$parent_start_time PanOSTunnelType=$tunnel
 PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_sent
 PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection
-PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name"
+PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
+```
