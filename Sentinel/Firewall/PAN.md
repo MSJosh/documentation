@@ -32,6 +32,7 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 ```
 
 * What is collected with above config.
+  
 | Item                               | Description                               |
 |------------------------------------|-------------------------------------------|
 | $sender_sw_version                 | Sender Software Version                   |
