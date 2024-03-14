@@ -6,7 +6,7 @@ Collecting Palo Alto Data with Sentinel
 
 
 
-//Drop dropped and block traffic
+**Drop dropped and block traffic
 
         "transformKql": "source | where DeviceAction !contains \"Deny\" | where DeviceAction !contains \"Reset-both\" | project-away DeviceCustomString3, ExtID, DeviceCustomString3Label, DeviceCustomString6,DeviceCustomString6Label, AdditionalExtensions",
         "outputStream": "Microsoft-CommonSecurityLog"
@@ -15,18 +15,8 @@ Collecting Palo Alto Data with Sentinel
 
 **Traffic CEF Config - Recommended**
 ```
-CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
-deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc
-destinationTranslatedAddress=$natdst cs1Label=Rule cs1=$rule suser=$srcuser duser=$dstuser app=$app
-cs4Label=Source Zone cs4=$from cs5Label=Destination Zone cs5=$todeviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cn1Label=SessionID cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport
-destinationTranslatedPort=$natdport flexString1Label=Flags flexString1=$flags proto=$proto act=$action
-flexNumber1Label=Total bytes flexNumber1=$bytes in=$bytes_sent out=$bytes_received cn2Label=Packets
-cn2=$packets start=$cef-formatted-time_generated cn3Label=Elapsed time in seconds cn3=$elapsed cs2Label=URL Category
-cs2=$category externalId=$seqno reason=$session_end_reason dvchost=$device_name cat=$action_source PanOSSrcUUID=$src_uuid PanOSDstUUID=$dst_uuid PanOSTunnelID=$tunnelid PanOSMonitorTag=$monitortag
-PanOSParentSessionID=$parent_session_id PanOSParentStartTime=$parent_start_time PanOSTunnelType=$tunnel
-PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_sent
-PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection
-PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
+CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc destinationTranslatedAddress=$natdst cs1=$rule suser=$srcuser duser=$dstuser app=$app cs4=$from cs5Label=Destination Zone cs5=$to deviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cn1Label=SessionID cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport destinationTranslatedPort=$natdport flexString1Label=Flags flexString1=$flags proto=$proto act=$action flexNumber1Label=Total bytes flexNumber1=$bytes in=$bytes_sent out=$bytes_received cn2Label=Packets cn2=$packets start=$cef-formatted-time_generated cn3Label=Elapsed time in seconds cn3=$elapsed cs2Label=URL Category cs2=$category externalId=$seqno reason=$session_end_reason dvchost=$device_name cat=$action_source PanOSSrcUUID=$src_uuid PanOSDstUUID=$dst_uuid PanOSTunnelID=$tunnelid PanOSMonitorTag=$monitortag PanOSParentSessionID=$parent_session_id PanOSParentStartTime=$parent_start_time PanOSTunnelType=$tunnel PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_sent PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection PanDynamicUsrgrp=$dynusergroup_name
+
 ```
 
 * What is collected with above config.
@@ -43,12 +33,10 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | dst=$dst                           | Destination IP Address                    |
 | sourceTranslatedAddress=$natsrc    | Source Translated Address after NAT       |
 | destinationTranslatedAddress=$natdst| Destination Translated Address after NAT  |
-| cs1Label=Rule                      | Custom String 1 Label - Rule              |
 | cs1=$rule                          | Custom String 1 - Rule                    |
 | suser=$srcuser                     | Source User                               |
 | duser=$dstuser                     | Destination User                          |
 | app=$app                           | Application                               |
-| cs4Label=Source Zone               | Custom String 4 Label - Source Zone       |
 | cs4=$from                          | Custom String 4 - Source Zone             |
 | cs5Label=Destination Zone          | Custom String 5 Label - Destination Zone  |
 | cs5=$to                            | Custom String 5 - Destination Zone        |
@@ -91,7 +79,6 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | PanOSSCTPChunksRcv=$chunks_received| PAN-OS SCTP Chunks Received               |
 | PanOSRuleUUID=$rule_uuid           | PAN-OS Rule UUID                          |
 | PanOSHTTP2Con=$http2_connection    | PAN-OS HTTP/2 Connection                  |
-| PanLinkChange=$link_change_count   | PAN Link Change Count                     |
 | PanDynamicUsrgrp=$dynusergroup_name| PAN Dynamic User Group Name               |
 
 Source doc - https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/traffic-log-fields
