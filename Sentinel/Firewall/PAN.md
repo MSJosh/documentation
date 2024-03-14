@@ -30,3 +30,73 @@ PanOSSCTPAssocID=$assoc_id PanOSSCTPChunks=$chunks PanOSSCTPChunkSent=$chunks_se
 PanOSSCTPChunksRcv=$chunks_received PanOSRuleUUID=$rule_uuid PanOSHTTP2Con=$http2_connection
 PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 ```
+
+* What is collected with above config.
+| Item                               | Description                               |
+|------------------------------------|-------------------------------------------|
+| $sender_sw_version                 | Sender Software Version                   |
+| $subtype                           | Subtype                                   |
+| $type                              | Type                                      |
+| 1                                  | Numeric value (not labeled)               |
+| rt=$cef-formatted-receive_time     | Receive Time formatted in CEF            |
+| deviceExternalId=$serial           | Device External ID (assuming unique identifier) represented by $serial |
+| src=$src                           | Source IP Address                         |
+| dst=$dst                           | Destination IP Address                    |
+| sourceTranslatedAddress=$natsrc    | Source Translated Address after NAT       |
+| destinationTranslatedAddress=$natdst| Destination Translated Address after NAT  |
+| cs1Label=Rule                      | Custom String 1 Label - Rule              |
+| cs1=$rule                          | Custom String 1 - Rule                    |
+| suser=$srcuser                     | Source User                               |
+| duser=$dstuser                     | Destination User                          |
+| app=$app                           | Application                               |
+| cs3Label=Virtual System            | Custom String 3 Label - Virtual System    |
+| cs3=$vsys                          | Custom String 3 - Virtual System          |
+| cs4Label=Source Zone               | Custom String 4 Label - Source Zone       |
+| cs4=$from                          | Custom String 4 - Source Zone             |
+| cs5Label=Destination Zone          | Custom String 5 Label - Destination Zone  |
+| cs5=$to                            | Custom String 5 - Destination Zone        |
+| deviceInboundInterface=$inbound_if | Device Inbound Interface                  |
+| deviceOutboundInterface=$outbound_if| Device Outbound Interface                |
+| cs6Label=LogProfile                | Custom String 6 Label - Log Profile       |
+| cs6=$logset                        | Custom String 6 - Log Profile             |
+| cn1Label=SessionID                 | Custom Number 1 Label - Session ID        |
+| cn1=$sessionid                     | Custom Number 1 - Session ID              |
+| cnt=$repeatcnt                     | Count                                     |
+| spt=$sport                         | Source Port                               |
+| dpt=$dport                         | Destination Port                          |
+| sourceTranslatedPort=$natsport     | Source Translated Port after NAT          |
+| destinationTranslatedPort=$natdport| Destination Translated Port after NAT     |
+| flexString1Label=Flags             | Flexible String 1 Label - Flags           |
+| flexString1=$flags                 | Flexible String 1 - Flags                 |
+| proto=$proto                       | Protocol                                  |
+| act=$action                        | Action                                    |
+| flexNumber1Label=Total bytes       | Flexible Number 1 Label - Total Bytes     |
+| flexNumber1=$bytes                 | Flexible Number 1 - Total Bytes           |
+| in=$bytes_sent                     | Bytes Sent                                |
+| out=$bytes_received                | Bytes Received                            |
+| cn2Label=Packets                   | Custom Number 2 Label - Packets           |
+| cn2=$packets                       | Custom Number 2 - Packets                 |
+| start=$cef-formatted-time_generated| Start Time formatted in CEF               |
+| cn3Label=Elapsed time in seconds   | Custom Number 3 Label - Elapsed Time in Seconds |
+| cn3=$elapsed                       | Custom Number 3 - Elapsed Time in Seconds |
+| cs2Label=URL Category              | Custom String 2 Label - URL Category      |
+| cs2=$category                      | Custom String 2 - URL Category            |
+| externalId=$seqno                 | External ID represented by $seqno         |
+| reason=$session_end_reason         | Reason for Session End                    |
+| dvchost=$device_name               | Device Hostname                           |
+| cat=$action_source                 | Category based on Action Source           |
+| PanOSSrcUUID=$src_uuid             | PAN-OS Source UUID                        |
+| PanOSDstUUID=$dst_uuid             | PAN-OS Destination UUID                   |
+| PanOSTunnelID=$tunnelid            | PAN-OS Tunnel ID                          |
+| PanOSMonitorTag=$monitortag        | PAN-OS Monitor Tag                        |
+| PanOSParentSessionID=$parent_session_id| PAN-OS Parent Session ID               |
+| PanOSParentStartTime=$parent_start_time| PAN-OS Parent Session Start Time       |
+| PanOSTunnelType=$tunnel            | PAN-OS Tunnel Type                        |
+| PanOSSCTPAssocID=$assoc_id         | PAN-OS SCTP Association ID                |
+| PanOSSCTPChunks=$chunks            | PAN-OS SCTP Chunks                        |
+| PanOSSCTPChunkSent=$chunks_sent    | PAN-OS SCTP Chunks Sent                   |
+| PanOSSCTPChunksRcv=$chunks_received| PAN-OS SCTP Chunks Received               |
+| PanOSRuleUUID=$rule_uuid           | PAN-OS Rule UUID                          |
+| PanOSHTTP2Con=$http2_connection    | PAN-OS HTTP/2 Connection                  |
+| PanLinkChange=$link_change_count   | PAN Link Change Count                     |
+| PanDynamicUsrgrp=$dynusergroup_name| PAN Dynamic User Group Name               |
