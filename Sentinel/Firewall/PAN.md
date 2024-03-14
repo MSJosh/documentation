@@ -18,9 +18,7 @@ Collecting Palo Alto Data with Sentinel
 CEF:0|Palo Alto Networks|PAN-OS|$sender_sw_version|$subtype|$type|1|rt=$cef-formatted-receive_time
 deviceExternalId=$serial src=$src dst=$dst sourceTranslatedAddress=$natsrc
 destinationTranslatedAddress=$natdst cs1Label=Rule cs1=$rule suser=$srcuser duser=$dstuser app=$app
-cs3Label=Virtual System cs3=$vsys cs4Label=Source Zone cs4=$from cs5Label=Destination Zone cs5=$to
-deviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cs6Label=LogProfile cs6=$logset
-cn1Label=SessionID cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport
+cs4Label=Source Zone cs4=$from cs5Label=Destination Zone cs5=$todeviceInboundInterface=$inbound_if deviceOutboundInterface=$outbound_if cn1Label=SessionID cn1=$sessionid cnt=$repeatcnt spt=$sport dpt=$dport sourceTranslatedPort=$natsport
 destinationTranslatedPort=$natdport flexString1Label=Flags flexString1=$flags proto=$proto act=$action
 flexNumber1Label=Total bytes flexNumber1=$bytes in=$bytes_sent out=$bytes_received cn2Label=Packets
 cn2=$packets start=$cef-formatted-time_generated cn3Label=Elapsed time in seconds cn3=$elapsed cs2Label=URL Category
@@ -35,12 +33,12 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
   
 | Item                               | Description                               |
 |------------------------------------|-------------------------------------------|
-| $sender_sw_version                 | Sender Software Version                   |
+| $sender_sw_version                 | Firewall Software Version                 |
 | $subtype                           | Subtype                                   |
-| $type                              | Type                                      |
+| $type                              | Threat/Content Type  (Traffic)            |
 | 1                                  | Numeric value (not labeled)               |
-| rt=$cef-formatted-receive_time     | Receive Time formatted in CEF            |
-| deviceExternalId=$serial           | Device External ID (assuming unique identifier) represented by $serial |
+| rt=$cef-formatted-receive_time     | Receive Time formatted in CEF             |
+| deviceExternalId=$serial           | Device External ID represented by $serial |
 | src=$src                           | Source IP Address                         |
 | dst=$dst                           | Destination IP Address                    |
 | sourceTranslatedAddress=$natsrc    | Source Translated Address after NAT       |
@@ -50,16 +48,12 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | suser=$srcuser                     | Source User                               |
 | duser=$dstuser                     | Destination User                          |
 | app=$app                           | Application                               |
-| cs3Label=Virtual System            | Custom String 3 Label - Virtual System    |
-| cs3=$vsys                          | Custom String 3 - Virtual System          |
 | cs4Label=Source Zone               | Custom String 4 Label - Source Zone       |
 | cs4=$from                          | Custom String 4 - Source Zone             |
 | cs5Label=Destination Zone          | Custom String 5 Label - Destination Zone  |
 | cs5=$to                            | Custom String 5 - Destination Zone        |
 | deviceInboundInterface=$inbound_if | Device Inbound Interface                  |
 | deviceOutboundInterface=$outbound_if| Device Outbound Interface                |
-| cs6Label=LogProfile                | Custom String 6 Label - Log Profile       |
-| cs6=$logset                        | Custom String 6 - Log Profile             |
 | cn1Label=SessionID                 | Custom Number 1 Label - Session ID        |
 | cn1=$sessionid                     | Custom Number 1 - Session ID              |
 | cnt=$repeatcnt                     | Count                                     |
@@ -71,8 +65,6 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | flexString1=$flags                 | Flexible String 1 - Flags                 |
 | proto=$proto                       | Protocol                                  |
 | act=$action                        | Action                                    |
-| flexNumber1Label=Total bytes       | Flexible Number 1 Label - Total Bytes     |
-| flexNumber1=$bytes                 | Flexible Number 1 - Total Bytes           |
 | in=$bytes_sent                     | Bytes Sent                                |
 | out=$bytes_received                | Bytes Received                            |
 | cn2Label=Packets                   | Custom Number 2 Label - Packets           |
@@ -82,7 +74,7 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | cn3=$elapsed                       | Custom Number 3 - Elapsed Time in Seconds |
 | cs2Label=URL Category              | Custom String 2 Label - URL Category      |
 | cs2=$category                      | Custom String 2 - URL Category            |
-| externalId=$seqno                 | External ID represented by $seqno         |
+| d=$seqno                 | External ID represented by $seqno         |
 | reason=$session_end_reason         | Reason for Session End                    |
 | dvchost=$device_name               | Device Hostname                           |
 | cat=$action_source                 | Category based on Action Source           |
@@ -101,3 +93,5 @@ PanLinkChange=$link_change_count PanDynamicUsrgrp=$dynusergroup_name
 | PanOSHTTP2Con=$http2_connection    | PAN-OS HTTP/2 Connection                  |
 | PanLinkChange=$link_change_count   | PAN Link Change Count                     |
 | PanDynamicUsrgrp=$dynusergroup_name| PAN Dynamic User Group Name               |
+
+Source doc - https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/traffic-log-fields
