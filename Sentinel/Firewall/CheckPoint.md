@@ -19,7 +19,7 @@ CommonSecurityLog  \\Table where CEF should come in from
 
 
 4. Now that you have data coming into Sentinel you can begin the process of mapping data that is valuable begin the process to get rid of data that you dont want or need.  This should be decided before sending to Sentinel to reduce cost but in some cases it is nice to have some sample data in Sentinel to test with, just be sure to stop Log Exporter once you have your sample data set.
-5. 
+
 
 
 **Remove AdditionalExtensions**
