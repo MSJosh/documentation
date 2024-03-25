@@ -6,8 +6,8 @@ Configuring CheckPoint to send data to a syslog server is similar to other firew
 
 
 
-1. Configure Logger to send data as CEF - https://sc1.checkpoint.com/documents/R80.40/WebAdminGuides/EN/CP_R80.40_LoggingAndMonitoring_AdminGuide/Topics-LMG/Log-Exporter.htm
-2. If you are making changes in any enviroment ensure that you have a good backup as mistakes can happen - https://support.checkpoint.com/results/sk/sk127653
+1. Configure Logger to send data as CEF - [CheckPoint CEF Doc](https://sc1.checkpoint.com/documents/R80.40/WebAdminGuides/EN/CP_R80.40_LoggingAndMonitoring_AdminGuide/Topics-LMG/Log-Exporter.htm)
+2. If you are making changes in any enviroment ensure that you have a good backup as mistakes can happen - [CheckPoint Backup](https://support.checkpoint.com/results/sk/sk127653)
 3. Validate data is coming in correctly. 
 ```
 CommonSecurityLog  \\Table where CEF should come in from
