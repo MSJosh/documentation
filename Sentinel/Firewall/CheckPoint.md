@@ -30,7 +30,10 @@ As mentioned alot of data from Check Point comes into the AdditionalExtensions w
 3. Once the table shows up select the three ... and select "Edit schema"
 4. Scroll to the bottom to create a Custom Column.
 5. Taking the data from the table below you can map the map the proper Column information like Type, Description and Name. *Note that column names can't have space and Microsoft adds _CF to the end of the column name.  The last part is the most important part as in the transform when we extend the data we will put it the ColumnName_CF.
-6. 
+6. Extend is only needed on the first transform. Below is a sample taking a string and an interger and putting to two different columns. At the end of the transform there is a project-away dropping the AdditionalExtensions column so that that you are not paying for double data. 
+```
+"transformKql": "source | extend layer_name_CF = extract(\"layer_name=([^;]+);\", 1, AdditionalExtensions), sent_bytes_CF = toint(extract(\"sent_bytes=([^;]+);\", 1, AdditionalExtensions)) | project-away AdditionalExtensions",
+```
 
 
 
@@ -61,9 +64,8 @@ As mentioned alot of data from Check Point comes into the AdditionalExtensions w
 | information          | Information                  | string   | Status of policy installation for a specific Software Blade (used only for Anti-Bot and Anti-Virus)      |                                              |
 | interface_name       | Interface                    | string   | The name of the Security Gateway interface                  |                                                                                           |
 | interfacedir         | Direction                    | string   | Connection direction                                        |                                                                                           |
-| layer_name           | Layer Name                   | string   | Layer name (match table, Threat Prevention match table)     |extend 
-layer_name_CF = extract(\"layer_name=([^;]+);\", 1, AdditionalExtensions)                                                                                          |
-| layer_uuid           | N/A                          | string   | Layer UUID (match table, Threat Prevention match table)     |                                                                                           |
+| layer_name           | Layer Name                   | string   | Layer name (match table, Threat Prevention match table)     | extend layer_name_CF = extract(\"layer_name=([^;]+);\", 1, AdditionalExtensions)          |
+| layer_uuid           | N/A                          | string   | Layer UUID (match table, Threat Prevention match table)     |extend layer_uuid_CF = extract(\"layer_uuid=([^;]+);\", 1, AdditionalExtensions)                   |
 | log_id               | Log ID                       | int      | Unique identity for logs includes: Type, Family,   Product/Blade, Category |                                                                            |
 | loguid               | N/A                          | luuid    | UUID of unified logs                                        |                                                                                           |
 | malware_action       | Malware Action               | string   | Description of detected malware activity                    |                                                                                           |
