@@ -18,6 +18,19 @@ CommonSecurityLog  \\Table where CEF should come in from
 ![image](https://github.com/MSJosh/documentation/assets/120500937/acd81113-98f6-4fed-9685-f1f132d065c4)
 
 
+4. Now that you have data coming into Sentinel you can begin the process of mapping data that is valuable begin the process to get rid of data that you dont want or need.  This should be decided before sending to Sentinel to reduce cost but in some cases it is nice to have some sample data in Sentinel to test with, just be sure to stop Log Exporter once you have your sample data set.
+5. 
+
+
+**Remove AdditionalExtensions**
+
+As mentioned alot of data from Check Point comes into the AdditionalExtensions will take about 30 - 40 percent of your ingest costs with Sentinel.
+1. Using Transform KQL and creating new columns for data you care about will help reduce the amount of data.
+2. To create a new column go to the log analytics workspace that you are sending Check Point data to and select Tables and search for "CommonSecurityLog"
+3. Once the table shows up select the three ... and select "Edit schema"
+4. Scroll to the bottom to create a Custom Column.
+5. Taking the data from the table below you can map the map the proper Column information like Type, Description and Name. *Note that column names can't have space and Microsoft adds _CF to the end of the column name.  The last part is the most important part as in the transform when we extend the data we will put it the ColumnName_CF.
+6. 
 
 
 
@@ -45,12 +58,13 @@ CommonSecurityLog  \\Table where CEF should come in from
 | from                 | Sender                       | string   | Source mail address                                         |                                                                                           |
 | to                   | Recipient                    | string   | Source mail recipient                                       |                                                                                           |
 | id                   | N/A                          | int      | Override application ID                                     |                                                                                           |
-| information          | Information                  | string   | Status of policy installation for a specific Software Blade | (used only for Anti-Bot and Anti-Virus)                                                   |
+| information          | Information                  | string   | Status of policy installation for a specific Software Blade (used only for Anti-Bot and Anti-Virus)      |                                              |
 | interface_name       | Interface                    | string   | The name of the Security Gateway interface                  |                                                                                           |
 | interfacedir         | Direction                    | string   | Connection direction                                        |                                                                                           |
-| layer_name           | Layer Name                   | string   | Layer name (match table, Threat Prevention match table)     |                                                                                           |
+| layer_name           | Layer Name                   | string   | Layer name (match table, Threat Prevention match table)     |extend 
+layer_name_CF = extract(\"layer_name=([^;]+);\", 1, AdditionalExtensions)                                                                                          |
 | layer_uuid           | N/A                          | string   | Layer UUID (match table, Threat Prevention match table)     |                                                                                           |
-| log_id               | Log ID                       | int      | Unique identity for logs includes: Type, Family,            | Product/Blade, Category                                                                   |
+| log_id               | Log ID                       | int      | Unique identity for logs includes: Type, Family,   Product/Blade, Category |                                                                            |
 | loguid               | N/A                          | luuid    | UUID of unified logs                                        |                                                                                           |
 | malware_action       | Malware Action               | string   | Description of detected malware activity                    |                                                                                           |
 | malware_family       | Malware Family               | string   | Additional information on protection                        |                                                                                           |
@@ -65,7 +79,7 @@ CommonSecurityLog  \\Table where CEF should come in from
 | policy_mgmt          | Policy Management            | string   | Name of the Management Server that manages this Security GW|                                                                                           |
 | policy_name          | Policy Name                  | string   | Name of the last policy that this Security Gateway fetched |                                                                                           |
 | product              | Blade                        | string   | Product name                                                |                                                                                           |
-| product_family       | Product Family               | int      | The product family the blade/product belongs to             | Possible values: 0 - Network, 1 - Endpoint, 2 - Access, 3 - Threat, 4 - Mobile           |
+| product_family       | Product Family               | int      | The product family the blade/product belongs to   Possible values: 0 - Network, 1 - Endpoint, 2 - Access, 3 - Threat, 4 - Mobile     |        |
 | protection_id        | Protection ID                | string   | Protection malware ID                                       |                                                                                           |
 | protection_name      | Protection Name              | string   | Specific signature name of the attack                       |                                                                                           |
 | protection_type      | Protection Type              | string   | Type of protection used to detect the attack                |                                                                                           |
@@ -79,7 +93,7 @@ CommonSecurityLog  \\Table where CEF should come in from
 | rule_action          | Action                       | string   | Action of the matched rule in the Access Control policy     |                                                                                           |
 | rule_name            | Access Rule Name             | string   | Name of the Access Control rule (match table)               |                                                                                           |
 | rule_uid             | Policy Rule UID              | string   | Rule ID in the Access Control policy to which the connect...|                                                                                           |
-| scan_direction       | File-Direction               | string   | Scan direction                                              | Possible options: From external / dmz / internal to external / dmz / internal, To/from this Security Gateway |
+| scan_direction       | File-Direction               | string   | Scan direction  Possible options: From external / dmz / internal to external / dmz / internal, To/from this Security Gateway |                          |
 | sent_bytes           | Sent Bytes                   | int      | Number of bytes sent during the connection                 | extend sent_bytes_CF = toint(extract("sent_bytes=([^;]+);", 1, AdditionalExtensions))     |
 | session_id           | Session Identification       | luuid    | Log UID                                                     |                                                                                           |
 
