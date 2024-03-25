@@ -1,6 +1,7 @@
 Collecting CheckPoint FIrewall data with Sentinel
 
 **Preface**
+
 Configuring CheckPoint to send data to a syslog server is similar to other firewall solutions. Similar to Palo Alto, CheckPoint has a centralized collection tool. This solution is not as flexible with renaming or dropping custom columns/data sets unique to CheckPoint. What this means is we will need to ensure that we create a transform rule so that it doesn't land in AdditionalExtensions.  Pending on the deployment there is a total of 80+ columns that can be put into the AdditionalExtensions column in CommonSecurityLog table.  This can balloon your security budget and in a number of cases this data might not be valuable for a security alert or investigation. 
 
 
