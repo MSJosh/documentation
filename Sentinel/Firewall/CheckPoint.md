@@ -18,9 +18,9 @@ CommonSecurityLog  \\Table where CEF should come in from
 ![image](https://github.com/MSJosh/documentation/assets/120500937/acd81113-98f6-4fed-9685-f1f132d065c4)
 
 
-Certainly! Below is the data formatted for GitHub markdown:
 
-```markdown
+
+
 | Field Name           | Field Display Name           | Type     | Description                                                 | Transform KQL                                                                             |
 |----------------------|------------------------------|----------|-------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | bytes                | Total Bytes                  | int      | Number of bytes received during a connection               |                                                                                           |
