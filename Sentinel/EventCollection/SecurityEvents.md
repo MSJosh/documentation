@@ -39,9 +39,9 @@
 | Event ID 4666: An application attempted an operation           | ☐                     | ☐       | ☑      |
 | Event ID 4667: An application was initialized                  | ☐                     | ☐       | ☑      |
 | Event ID 4670: Permissions on an object were changed            | ☐                     | ☐       | ☑      |
-| Event ID 4672: Special privileges assigned to a new l...         | ☐                     | ☐       | ☑      |
+| Event ID 4672: Special privileges assigned to a new logon | ☐                     | ☐       | ☑      |
 | Event ID 4673: A privileged service was called                 | ☐                     | ☐       | ☑      |
-| Event ID 4674: An operation was attempted on a privil...         | ☐                     | ☐       | ☑      |
+| Event ID 4674: An operation was attempted on a privileged object | ☐                     | ☐       | ☑      |
 | Event ID 4675: SIDs were filtered                               | ☐                     | ☐       | ☑      |
 | Event ID 4688: A new process has been created                  | ☐                     | ☑       | ☑      |
 | Event ID 4689: A process has exited                             | ☐                     | ☐       | ☑      |
@@ -51,8 +51,8 @@
 | Event ID 4704: A user right was assigned                       | ☐                     | ☐       | ☑      |
 | Event ID 4705: A user right was removed                        | ☐                     | ☐       | ☑      |
 | Event ID 4716: Trusted domain information was modified         | ☐                     | ☐       | ☑      |
-| Event ID 4717: System security access was granted to ...         | ☐                     | ☐       | ☑      |
-| Event ID 4718: System security access was removed from...         | ☐                     | ☐       | ☑      |
+| Event ID 4717: System security access was granted to an account       | ☐                     | ☐       | ☑      |
+| Event ID 4718: System security access was removed from an account | ☐                     | ☐       | ☑      |
 | Event ID 4719: System audit policy was changed                 | ☐                     | ☑       | ☑      |
 | Event ID 4720: An account was created                          | ☐                     | ☑       | ☑      |
 | Event ID 4722: An account was enabled                          | ☐                     | ☑       | ☑      |
@@ -60,14 +60,14 @@
 | Event ID 4724: An account was modified                         | ☐                     | ☑       | ☑      |
 | Event ID 4725: An account was deleted                          | ☐                     | ☐       | ☑      |
 | Event ID 4726: User Account Deleted                            | ☑                     | ☐       | ☑      |
-| Event ID 4727: A security-enabled global group was cr...         | ☑                     | ☑       | ☑      |
+| Event ID 4727: A security-enabled global group was created   | ☑                     | ☑       | ☑      |
 | Event ID 4728: Member Added to Global Security Group           | ☑                     | ☑       | ☑      |
 | Event ID 4729: Member Removed from Global Security Group       | ☑                     | ☐       | ☑      |
 | Event ID 4730: Global Security Group Deleted                   | ☑                     | ☐       | ☐      |
 | Event ID 4732: Member Added to Local Security Group            | ☑                     | ☑       | ☑      |
 | Event ID 4733: Member Removed from Local Security Group        | ☑                     | ☐       | ☑      |
 | Event ID 4735: A security-enabled local group was changed      | ☐                     | ☑       | ☑      |
-| Event ID 4737: A security-enabled global group was ch...         | ☐                     | ☑       | ☑      |
+| Event ID 4737: A security-enabled global group was changed | ☐                     | ☑       | ☑      |
 | Event ID 4738: A security-enabled local group was changed      | ☐                     | ☐       | ☑      |
 | Event ID 4739: Domain Policy was changed                       | ☐                     | ☑       | ☑      |
 | Event ID 4740: A user account was locked out                   | ☐                     | ☑       | ☑      |
@@ -123,22 +123,22 @@
 | Event ID 4902: The Per-user audit policy table was c...         | ☐                     | ☐       | ☑      |
 | Event ID 4904: An attempt was made to register a sec...         | ☐                     | ☐       | ☑      |
 | Event ID 4948: A change has been made to Windows Fire...         | ☐                     | ☑       | ☑      |
-| Event ID 4956: Windows Firewall has changed the acti...         | ☐                     | ☑       | ☑      |
+| Event ID 4956: Windows Firewall has changed the active profile | ☐                     | ☑       | ☑      |
 | Event ID 4985: The state of a transaction has changed          | ☐                     | ☐       | ☑      |
 | Event ID 500: An account was successfully logged on            | ☐                     | ☐       | ☑      |
 | Event ID 501: An account was logged off                        | ☐                     | ☐       | ☑      |
-| Event ID 5024: The Windows Firewall Service has start...         | ☐                     | ☑       | ☑      |
-| Event ID 5033: The Windows Firewall Driver has started...         | ☐                     | ☑       | ☑      |
+| Event ID 5024: The Windows Firewall Service has started successfully | ☐                     | ☑       | ☑      |
+| Event ID 5033: The Windows Firewall Driver has started successfully        | ☐                     | ☑       | ☑      |
 | Event ID 5059: Windows Firewall setting has been changed       | ☐                     | ☐       | ☑      |
 | Event ID 5136:  A directory service object was modified        | ☑                     | ☐       | ☑      |
 | Event ID 5137: A directory service object was modified         | ☐                     | ☐       | ☑      |
 | Event ID 5140: A network share object was accessed             | ☐                     | ☐       | ☑      |
-| Event ID 5145: A network share object was checked to ...         | ☐                     | ☐       | ☑      |
-| Event ID 5632: A request was made to authenticate to...          | ☐                     | ☐       | ☑      |
-| Event ID 6144: Security policy in the group policy ob...         | ☐                     | ☐       | ☑      |
-| Event ID 6145: Security policy in the group policy ob...         | ☐                     | ☐       | ☑      |
-| Event ID 6272: Network Policy Server granted access to...         | ☐                     | ☐       | ☑      |
-| Event ID 6273: Network Policy Server denied access to ...         | ☐                     | ☐       | ☑      |
+| Event ID 5145: A network share object was checked to see whether client can be granted desired access | ☐                     | ☐       | ☑      |
+| Event ID 5632: A request was made to authenticate to a wireless network | ☐                     | ☐       | ☑      |
+| Event ID 6144: Security policy in the group policy objects has been applied successfully       | ☐                     | ☐       | ☑      |
+| Event ID 6145: Security policy in the group policy objects has been applied successfully        | ☐                     | ☐       | ☑      |
+| Event ID 6272: Network Policy Server granted access to a user      | ☐                     | ☐       | ☑      |
+| Event ID 6273: Network Policy Server denied access to a user | ☐                     | ☐       | ☑      |
 | Event ID 6278: Network Policy Server granted access to a user but put it on probation because the host did not meet the defined health policy| ☐                     | ☐       | ☑      |
 | Event ID 6416: A new external device was recognized by the system| ☐                     | ☐       | ☑      |
 |Event ID 6423: The installation of this device is forbidden by system policy| ☐                     | ☐       | ☑      |
