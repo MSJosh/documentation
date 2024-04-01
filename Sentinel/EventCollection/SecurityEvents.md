@@ -139,16 +139,16 @@
 | Event ID 6145: Security policy in the group policy ob...         | ☐                     | ☐       | ☑      |
 | Event ID 6272: Network Policy Server granted access to...         | ☐                     | ☐       | ☑      |
 | Event ID 6273: Network Policy Server denied access to ...         | ☐                     | ☐       | ☑      |
-| Event ID 6278: Network Policy Server granted access to...         | ☐                     | ☐       | ☑      |
-| Event ID 6416: A new external device was recognized b...         | ☐                     | ☐       | ☑      |
-| Event ID 6423: The installation of this device is forbidden...   | ☐                     | ☐       | ☑      |
-| Event ID 6424: The installation of this device is allo...         | ☐                     | ☐       | ☑      |
+| Event ID 6278: Network Policy Server granted access to a user but put it on probation because the host did not meet the defined health policy| ☐                     | ☐       | ☑      |
+| Event ID 6416: A new external device was recognized by the system| ☐                     | ☐       | ☑      |
+|Event ID 6423: The installation of this device is forbidden by system policy| ☐                     | ☐       | ☑      |
+| Event ID 6424: The installation of this device is allowed by system policy| ☐                     | ☐       | ☑      |
 | Event ID 7045:  New Service Installed                          | ☑                     | ☐       | ☐      |
 | Event ID 8001: Credential Manager credentials were backed up   | ☐                     | ☑       | ☑      |
-| Event ID 8002: Credential Manager credentials were resto...         | ☐                     | ☑       | ☑      |
+| Event ID 8002: Credential Manager credentials were restored from a backup | ☐                     | ☑       | ☑      |
 | Event ID 8003: Credential Manager credentials were deleted     | ☐                     | ☑       | ☑      |
 | Event ID 8004:  NTLM Authentication                            | ☑                     | ☑       | ☑      |
 | Event ID 8005: Credential Manager credentials were read        | ☐                     | ☑       | ☑      |
 | Event ID 8006: Credential Manager credentials were written     | ☐                     | ☑       | ☑      |
 | Event ID 8007: Credential Manager credentials were backed up   | ☐                     | ☑       | ☑      |
-| Event ID 8222: The DFS Replication service has stopped ...         | ☐                     | ☑       | ☑      |
+| Event ID 8222: The DFS Replication service has stopped communicating with partner | ☐                     | ☑       | ☑      |
