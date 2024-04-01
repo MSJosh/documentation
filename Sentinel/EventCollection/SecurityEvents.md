@@ -1,17 +1,17 @@
 | Windows Security Event                                           | Defender for Identity | Minimal | Common |
 |-----------------------------------------------------------------|-----------------------|---------|--------|
-| Event ID 1: Audit Policy Change - The auditing subsystem...     | ☐                     | ☐       | ☑      |
+| Event ID 1: Audit Policy Change - The auditing subsystem successfully starts    | ☐                     | ☐       | ☑      |
 | Event ID 1100: The event logging service has shut down          | ☐                     | ☐       | ☑      |
 | Event ID 1102: The audit log was cleared                       | ☐                     | ☑       | ☑      |
 | Event ID 1107: The security log is now full                     | ☐                     | ☐       | ☑      |
 | Event ID 1108: The security log is now clear                    | ☐                     | ☐       | ☑      |
 | Event ID 1202: The Federation Service validated a new credential | ☑                     | ☐       | ☐      |
-| Event ID 1203: The Federation Service failed to validate...     | ☑                     | ☐       | ☐      |
-| Event ID 26401: The Federation Service validated a new...       | ☐                     | ☐       | ☑      |
-| Event ID 299: The IPsec Main Mode authentication failed...      | ☐                     | ☐       | ☑      |
+| Event ID 1203: The Federation Service failed to validate a new credential     | ☑                     | ☐       | ☐      |
+| Event ID 26401: The Federation Service validated a new credential       | ☐                     | ☐       | ☑      |
+| Event ID 299: The IPsec Main Mode authentication failed because the peer did not respond to the authentication request| ☐                     | ☐       | ☑      |
 | Event ID 300: The IPsec Main Mode authentication succeeded      | ☐                     | ☐       | ☑      |
 | Event ID 30004: An operation was performed on an object         | ☐                     | ☐       | ☑      |
-| Event ID 324: The IPsec tunnel mode authentication...           | ☐                     | ☐       | ☑      |
+| Event ID 324: The IPsec tunnel mode authentication failed because the peer did not respond to the authentication request| ☐                     | ☐       | ☑      |
 | Event ID 340: The IPsec tunnel mode authentication succeeded    | ☐                     | ☐       | ☑      |
 | Event ID 403: An attempt to write to the file system failed     | ☐                     | ☐       | ☑      |
 | Event ID 404: An attempt to delete a file failed                | ☐                     | ☐       | ☑      |
@@ -19,9 +19,9 @@
 | Event ID 411: A scheduled task was updated                     | ☐                     | ☐       | ☑      |
 | Event ID 412: A scheduled task was deleted                     | ☐                     | ☐       | ☑      |
 | Event ID 413: A scheduled task was registered                  | ☐                     | ☐       | ☑      |
-| Event ID 431: A request was made to authenticate to...          | ☐                     | ☐       | ☑      |
+| Event ID 431: A request was made to authenticate to a wireless network         | ☐                     | ☐       | ☑      |
 | Event ID 4608: Windows is starting up                           | ☐                     | ☐       | ☑      |
-| Event ID 4610: An authentication package has been lo...         | ☐                     | ☐       | ☑      |
+| Event ID 4610: An authentication package has been loaded by the Local Security Authority | ☐                     | ☐       | ☑      |
 | Event ID 4611: A trusted logon process has been regi...         | ☐                     | ☐       | ☑      |
 | Event ID 4614: A notification package has been loade...         | ☐                     | ☐       | ☑      |
 | Event ID 4622: A security package has been loaded by...          | ☐                     | ☐       | ☑      |
