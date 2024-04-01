@@ -22,14 +22,14 @@
 | Event ID 431: A request was made to authenticate to a wireless network         | ☐                     | ☐       | ☑      |
 | Event ID 4608: Windows is starting up                           | ☐                     | ☐       | ☑      |
 | Event ID 4610: An authentication package has been loaded by the Local Security Authority | ☐                     | ☐       | ☑      |
-| Event ID 4611: A trusted logon process has been regi...         | ☐                     | ☐       | ☑      |
-| Event ID 4614: A notification package has been loade...         | ☐                     | ☐       | ☑      |
-| Event ID 4622: A security package has been loaded by...          | ☐                     | ☐       | ☑      |
+| Event ID 4611: A trusted logon process has been registered with the Local Security Authority    | ☐                     | ☐       | ☑      |
+| Event ID 4614: A notification package has been loaded by the Security Account Manager         | ☐                     | ☐       | ☑      |
+| Event ID 4622: A security package has been loaded by the Local Security Authority| ☐                     | ☐       | ☑      |
 | Event ID 4624: An account was successfully logged on            | ☑                     | ☑       | ☑      |
 | Event ID 4625: An account failed to log on                      | ☑                     | ☑       | ☑      |
 | Event ID 4634: An account was logged off                        | ☐                     | ☐       | ☑      |
 | Event ID 4647: User initiated logoff                            | ☐                     | ☐       | ☑      |
-| Event ID 4648: A logon was attempted using explicit c...         | ☐                     | ☐       | ☑      |
+| Event ID 4648: A logon was attempted using explicit credentials | ☐                     | ☐       | ☑      |
 | Event ID 4649: A replay attack was detected                    | ☐                     | ☐       | ☑      |
 | Event ID 4657: A registry value was modified                   | ☐                     | ☑       | ☑      |
 | Event ID 4661: A handle to an object was requested             | ☐                     | ☐       | ☑      |
