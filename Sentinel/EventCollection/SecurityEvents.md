@@ -118,11 +118,11 @@
 | Event ID 4890: The certificate manager settings for C...         | ☑                     | ☐       | ☐      |
 | Event ID 4893: A process has exited                            | ☐                     | ☐       | ☑      |
 | Event ID 4896: One or more rows have been deleted fr...         | ☑                     | ☐       | ☐      |
-| Event ID 4946: A change has been made to Windows Fire...         |                       | ☑       | ☑      |
-| Event ID 4898: Certificate Services received a resubm...         | ☐                     | ☐       | ☑      |
-| Event ID 4902: The Per-user audit policy table was c...         | ☐                     | ☐       | ☑      |
-| Event ID 4904: An attempt was made to register a sec...         | ☐                     | ☐       | ☑      |
-| Event ID 4948: A change has been made to Windows Fire...         | ☐                     | ☑       | ☑      |
+| Event ID 4946: A change has been made to Windows Firewall exception list| ☐                       | ☑       | ☑      |
+| Event ID 4898: Certificate Services received a resubmitted certificate request| ☐                     | ☐       | ☑      |
+| Event ID 4902: The Per-user audit policy table was created | ☐                     | ☐       | ☑      |
+| Event ID 4904: An attempt was made to register a security event source | ☐                     | ☐       | ☑      |
+| Event ID 4948: A change has been made to Windows Firewall exception list | ☐                     | ☑       | ☑      |
 | Event ID 4956: Windows Firewall has changed the active profile | ☐                     | ☑       | ☑      |
 | Event ID 4985: The state of a transaction has changed          | ☐                     | ☐       | ☑      |
 | Event ID 500: An account was successfully logged on            | ☐                     | ☐       | ☑      |
