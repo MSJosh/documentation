@@ -74,51 +74,51 @@
 | Event ID 4741: Computer Account Added.                         | ☑                     | ☐       | ☐      |
 | Event ID 4742: A computer account was changed                  | ☐                     | ☐       | ☑      |
 | Event ID 4743: Computer Account Deleted                        | ☑                     | ☐       | ☐      |
-| Event ID 4744: A security-disabled local group was c...         | ☐                     | ☐       | ☑      |
-| Event ID 4745: A security-disabled local group was c...         | ☐                     | ☐       | ☑      |
-| Event ID 4746: A member was added to a security-disa...         | ☐                     | ☐       | ☑      |
-| Event ID 4750: A security-disabled global group was c...         | ☐                     | ☐       | ☑      |
-| Event ID 4751: A member was added to a security-disa...         | ☐                     | ☐       | ☑      |
-| Event ID 4752: A member was removed from a security-d...         | ☐                     | ☐       | ☑      |
+| Event ID 4744: A security-disabled local group was created | ☐                     | ☐       | ☑      |
+| Event ID 4745: A security-disabled local group was changed     | ☐                     | ☐       | ☑      |
+| Event ID 4746: A member was added to a security-disabled local group  | ☐                     | ☐       | ☑      |
+| Event ID 4750: A security-disabled global group was changed | ☐                     | ☐       | ☑      |
+| Event ID 4751: A member was added to a security-disabled global group  | ☐                     | ☐       | ☑      |
+| Event ID 4752: A member was removed from a security-disabled global group        | ☐                     | ☐       | ☑      |
 | Event ID 4753: Global Distribution Group Deleted               | ☑                     | ☐       | ☐      |
-| Event ID 4754: A security-disabled universal group wa...         | ☐                     | ☑       | ☑      |
-| Event ID 4755: A security-disabled universal group wa...         | ☐                     | ☑       | ☑      |
+| Event ID 4754: A security-disabled universal group was created       | ☐                     | ☑       | ☑      |
+| Event ID 4755: A security-disabled universal group was changed | ☐                     | ☑       | ☑      |
 | Event ID 4756: Member Added to Universal Security Group        | ☑                     | ☑       | ☑      |
-| Event ID 4757: Member Removed from Universal Security...         | ☑                     | ☑       | ☑      |
+| Event ID 4757:  Member Removed from Universal Security Group      | ☑                     | ☑       | ☑      |
 | Event ID 4758: Universal Security Group Deleted                | ☑                     | ☐       | ☐      |
-| Event ID 4760: A security-enabled local group was cr...         | ☐                     | ☐       | ☑      |
-| Event ID 4761: A security-enabled local group was ch...         | ☐                     | ☐       | ☑      |
-| Event ID 4762: A member was added to a security-ena...         | ☐                     | ☐       | ☑      |
+| Event ID 4760: A security-enabled local group was created | ☐                     | ☐       | ☑      |
+| Event ID 4761: A security-enabled local group was changed | ☐                     | ☐       | ☑      |
+| Event ID 4762: A member was added to a security-enabled local group | ☐                     | ☐       | ☑      |
 | Event ID 4763: Universal Distribution Group Deleted            | ☑                     | ☐       | ☐      |
-| Event ID 4764: A security-enabled universal group wa...         | ☐                     | ☐       | ☑      |
-| Event ID 4767: A security-enabled universal group wa...         | ☐                     | ☐       | ☑      |
-| Event ID 4768: A Kerberos authentication ticket (TG...         | ☐                     | ☐       | ☑      |
+| Event ID 4764: A security-enabled universal group was created | ☐                     | ☐       | ☑      |
+| Event ID 4767: A security-enabled universal group was changed | ☐                     | ☐       | ☑      |
+| Event ID 4768: Event ID 4768: A Kerberos authentication ticket (TGT) was requested| ☐                     | ☐       | ☑      |
 | Event ID 4771: Kerberos pre-authentication failed               | ☐                     | ☐       | ☑      |
 | Event ID 4774: An account was mapped for logon                 | ☐                     | ☐       | ☑      |
-| Event ID 4776: Domain Controller Attempted to Validat...         | ☑                     | ☐       | ☐      |
-| Event ID 4778: A session was reconnected to a Windo...         | ☐                     | ☐       | ☑      |
-| Event ID 4779: A session was disconnected from a Wi...         | ☐                     | ☐       | ☑      |
+| Event ID 4776: Event ID 4776:  Domain Controller Attempted to Validate Credentials for an Account (NTLM) | ☑                     | ☐       | ☐      |
+| Event ID 4778: A session was reconnected to a Window Station | ☐                     | ☐       | ☑      |
+| Event ID 4779: A session was disconnected from a Window Station | ☐                     | ☐       | ☑      |
 | Event ID 4781: The name of an account was changed              | ☐                     | ☐       | ☑      |
-| Event ID 4793: The Password Policy Checking API was ...         | ☐                     | ☐       | ☑      |
-| Event ID 4797: An attempt was made to query the exi...         | ☐                     | ☐       | ☑      |
-| Event ID 4798: A user’s local group membership was ...         | ☐                     | ☐       | ☑      |
-| Event ID 4799: A security-enabled local group member...         | ☐                     | ☑       | ☑      |
+| Event ID 4793: The Password Policy Checking API was called | ☐                     | ☐       | ☑      |
+| Event ID 4797: An attempt was made to query the existence of a blank password for an account | ☐                     | ☐       | ☑      |
+| Event ID 4798: A user’s local group membership was enumerated | ☐                     | ☐       | ☑      |
+| Event ID 4799: A security-enabled local group membership was enumerated| ☐                     | ☑       | ☑      |
 | Event ID 4800: The workstation was locked                     | ☐                     | ☐       | ☑      |
 | Event ID 4801: The workstation was unlocked                   | ☐                     | ☐       | ☑      |
 | Event ID 4802: The screen saver was invoked                   | ☐                     | ☐       | ☑      |
 | Event ID 4803: The screen saver was dismissed                 | ☐                     | ☐       | ☑      |
-| Event ID 4825: A user was denied access to Remote De...         | ☐                     | ☑       | ☑      |
+| Event ID 4825: A user was denied access to Remote Desktop | ☐                     | ☑       | ☑      |
 | Event ID 4826: Boot Configuration Data loaded                  | ☐                     | ☐       | ☑      |
 | Event ID 4870: Certificate Services revoked a certificate     | ☑                     | ☐       | ☑      |
-| Event ID 4882: The security permissions for Certific...         | ☑                     | ☐       | ☐      |
-| Event ID 4885: The audit filter for Certificate Services...     | ☑                     | ☐       | ☐      |
+| Event ID 4882: The security permissions for Certificate Services changed | ☑                     | ☐       | ☐      |
+| Event ID 4885: The audit filter for Certificate Services changed | ☑                     | ☐       | ☐      |
 | Event ID 4886: A password was reset                            | ☐                     | ☐       | ☑      |
-| Event ID 4887: Certificate Services approved a certif...         | ☑                     | ☐       | ☑      |
-| Event ID 4888: Certificate Services denied a certifi...         | ☑                     | ☐       | ☑      |
-| Event ID 4890: The certificate manager settings for C...         | ☑                     | ☐       | ☐      |
+| Event ID 4887: Certificate Services approved a certificate request and issued a certificate | ☑                     | ☐       | ☑      |
+| Event ID 4888: Certificate Services denied a certificate request | ☑                     | ☐       | ☑      |
+| Event ID 4890: The certificate manager settings for Certificate Services changed  | ☑                     | ☐       | ☐      |
 | Event ID 4893: A process has exited                            | ☐                     | ☐       | ☑      |
 | Event ID 4896: One or more rows have been deleted fr...         | ☑                     | ☐       | ☐      |
-| Event ID 4946: A change has been made to Windows Firewall exception list| ☐                       | ☑       | ☑      |
+| Event ID 4946: A change has been made to Windows Firewall exception list | ☐                       | ☑       | ☑      |
 | Event ID 4898: Certificate Services received a resubmitted certificate request| ☐                     | ☐       | ☑      |
 | Event ID 4902: The Per-user audit policy table was created | ☐                     | ☐       | ☑      |
 | Event ID 4904: An attempt was made to register a security event source | ☐                     | ☐       | ☑      |
