@@ -16,8 +16,8 @@ With Windows Systems you have options manual installation and assignment and aut
 
 <div style="text-align:center"><img src="https://github.com/MSJosh/documentation/assets/120500937/6c429d22-e807-4616-8979-6800abb39b2a" alt="image"></div>
 
-    - [Review Events](https://github.com/MSJosh/documentation/Sentinel/EventCollection/SecurityEvents.md)
-    - [Custom/XPath documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/data-sources)
+    - Review Events - https://github.com/MSJosh/documentation/Sentinel/EventCollection/SecurityEvents.md
+    - Custom/XPath documentation - https://docs.microsoft.com/en-us/azure/azure-monitor/agents/data-sources
 
 5. Finish the creation of the DCR. Once saved the selected machines selected under resource will check and install Azure Monitor Agent (AMA) if not installed already and write the DCR configuration on the machine so that the agent knows what to collect and send to Log Analytics Workspace/Sentinel. 
 
