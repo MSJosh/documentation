@@ -1,13 +1,13 @@
 //Get outbound email with attachments using OfficeActivity and EmailEvents tables.
 let EmailEventsQuery =
-    EmailEvents
-    | where EmailDirection contains "Outbound" and AttachmentCount > 0
-    | extend RecipientDomain = tostring(split(RecipientEmailAddress, "@")[-1]);
+ EmailEvents
+ | where EmailDirection contains "Outbound" and AttachmentCount > 0
+ | extend RecipientDomain = tostring(split(RecipientEmailAddress, "@")[-1]);
 let OfficeActivityQuery =
-    OfficeActivity
-    | where Operation in ("Send")
-    | extend InternetMessageId_ = tostring(parse_json(Item).InternetMessageId);
+ OfficeActivity
+| where Operation in ("Send")
+ | extend InternetMessageId = tostring(parse_json(Item).InternetMessageId);
 EmailEventsQuery
-| join kind=inner OfficeActivityQuery on $left.InternetMessageId == $right.InternetMessageId_
+| join kind=inner OfficeActivityQuery on $left.InternetMessageId == $right.InternetMessageId
 | extend SizeInBytes = tostring(parse_json(Item).SizeInBytes)
 | project TimeGenerated, Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, RecipientDomain, AttachmentCount,SizeInBytes
