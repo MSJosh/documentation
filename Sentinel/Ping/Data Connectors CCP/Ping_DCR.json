@@ -1,1 +1,78 @@
-
+[
+    {
+        "name": "PingDCR",
+        "apiVersion": "2021-09-01-preview",
+        "type": "Microsoft.Insights/dataCollectionRules",
+        "location": "{{location}}",
+        "properties": {
+            "streamDeclarations": {
+                "Custom-Ping_CL": {
+                    "columns": [
+                    {
+                        "name": "TimeGenerated",
+                        "type": "datetime"
+                    },
+                    {
+                        "name": "RawData",
+                        "type": "string"
+                    },
+                    {
+                        "name": "source",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Pingid",
+                        "type": "string"
+                    },
+                    {
+                        "name": "recorded",
+                        "type": "string"
+                    },
+                    {
+                        "name": "action",
+                        "type": "string"
+                    },
+                    {
+                        "name": "actors",
+                        "type": "string"
+                    },
+                    {
+                        "name": "resources",
+                        "type": "string"
+                    },
+                    {
+                        "name": "client",
+                        "type": "string"
+                    },
+                    {
+                        "name": "result",
+                        "type": "string"
+                    }
+                           ]
+                }
+            },
+            "dataSources": {},
+            "destinations": {
+                "logAnalytics": [
+                    {
+                        "workspaceResourceId": "{{workspaceResourceId}}",
+                        "name": "clv2ws1"
+                    }
+                ]
+            },
+            "dataFlows": [
+                {
+                    "streams": [
+                        "Custom-Ping_CL"
+                    ],
+                    "destinations": [
+                        "clv2ws1"
+                    ],
+                    "transformKql": "source\n | project-rename ActingAppType= source, ActorUserId= PingID //not done
+                    "outputStream": "Microsoft-ASimAuthenticationEventLogs"
+                }
+            ],
+            "dataCollectionEndpointId": "[concat('/subscriptions/',variables('subscriptionID'),'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Insights/dataCollectionEndpoints/',{{dataCollectionEndpointId}}"
+        }
+    }
+]
