@@ -1,0 +1,8 @@
+Operation
+| where TimeGenerated >= ago(30d) //Can change to 90 days if needed
+| where Detail startswith "Benefit amount used" //pulls only data from operation table we need.
+| parse Detail with "Benefit amount used: " BenefitUsedGB " GB" //Cleans the output some
+| extend BenefitUsedGB = toreal(BenefitUsedGB)  //Makes it actual GB
+| parse OperationKey with * "Benefit type used: " BenefitType //Gets the types of Benefit (M365 and P2)
+| project TimeGenerated, BenefitType, BenefitUsedGB  //Puts data to clean method
+| summarize TotalBenefitUsedGB=sum(BenefitUsedGB) by BenefitType  /summarizes the data for easy reading.
