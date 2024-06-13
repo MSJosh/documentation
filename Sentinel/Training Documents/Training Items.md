@@ -1,5 +1,6 @@
 **Crowd-Sourced Training and hunting Links**
-![image](https://github.com/MSJosh/documentation/assets/120500937/e2bd9861-8f4a-4a08-afd6-a9d09232ac73)
+![image](https://github.com/MSJosh/documentation/assets/120500937/608929d8-d8c9-4c91-87bb-51e4d64f6ce9)
+
 
 
 **Kusto/KQL Learning**
