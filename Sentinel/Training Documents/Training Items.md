@@ -1,4 +1,4 @@
-**Crowd Sourced Traning and hunting Links**
+**Crowd-Sourced Traning and hunting Links**
 ![image](https://github.com/MSJosh/documentation/assets/120500937/e284eacf-2ffb-459a-9dda-9c4922375b3d)
 
 
