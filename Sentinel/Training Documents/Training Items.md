@@ -25,7 +25,7 @@
 1. [Microsoft Sentinel Blog](https://github.com/microsoft/techcommunity.microsoft.com/tree/master/microsoft-sentinel-blog/bg-p/MicrosoftSentinelBlog)
 2. [KQL Search](https://github.com/kqlquery/kqlquery.com)
 3. [Cloud Brothers](https://github.com/cloudbrothers/cloudbrothers.info)
-4. [LinkedIn Sentinel Group](https://github.com/linkedin/groups/8768381)
+4. [LinkedIn Sentinel Group](https://www.linkedin.com/groups/8768381/)
 
 ## **Prebuilt KQL queries**
 1. [KQL Search](https://www.kqlsearch.com)
