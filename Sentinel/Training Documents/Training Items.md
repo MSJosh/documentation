@@ -17,8 +17,8 @@
 3. [Intro to Azure Sentinel](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/training/modules/intro-to-azure-sentinel)
 4. [Configure Azure Sentinel Environment](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/training/paths/sc-200-configure-azure-sentinel-environment)
 5. [Azure Sentinel Skill-Up Resources](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/azure/sentinel/skill-up-resources)
-6. [Design Your Workspace Architecture](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/azure/sentinel/design-your-workspace-architecture)
-7. [Azure Sentinel Training Lab](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Training/Azure-Sentinel-Training-Lab)
+6. [Design Your Workspace Architecture](https://learn.microsoft.com/en-us/azure/sentinel/design-your-workspace-architecture)
+7. [Azure Sentinel Training Lab](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Training/Azure-Sentinel-Training-Lab/README.md)
 8. [Becoming a Microsoft Sentinel Expert](https://cloudacademy.com/learning-paths/becoming-a-microsoft-sentinel-expert-4465/)
 
 ## **Blogs**
