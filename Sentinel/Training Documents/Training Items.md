@@ -12,19 +12,19 @@
 5. Top 300 KQL Queries - [300 Queries](https://github.com/MSJosh/documentation/blob/main/Sentinel/Training%20Documents/Top%20300%20Azure%20Sentinel%20KQL%20Query%20_%20%20(1).pdf)
 
 ## **Training items**
-1. [Learning with the Microsoft Sentinel Training Lab](https://github.com/microsoft/techcommunity.microsoft.com/tree/master/microsoft-sentinel-blog/learning-with-the-microsoft-sentinel-training-lab)
-2. [Become a Microsoft Sentinel Ninja: The Complete Level 400](https://github.com/microsoft/techcommunity.microsoft.com/tree/master/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400)
-3. [Intro to Azure Sentinel](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/training/modules/intro-to-azure-sentinel)
-4. [Configure Azure Sentinel Environment](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/training/paths/sc-200-configure-azure-sentinel-environment)
-5. [Azure Sentinel Skill-Up Resources](https://github.com/microsoft/learn.microsoft.com/tree/master/en-us/azure/sentinel/skill-up-resources)
+1. [Learning with the Microsoft Sentinel Training Lab](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/learning-with-the-microsoft-sentinel-training-lab/ba-p/2953403)
+2. [Become a Microsoft Sentinel Ninja: The Complete Level 400](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310)
+3. [Intro to Azure Sentinel](https://learn.microsoft.com/en-us/training/modules/intro-to-azure-sentinel/)
+4. [Configure Azure Sentinel Environment](https://learn.microsoft.com/en-us/training/paths/sc-200-configure-azure-sentinel-environment/)
+5. [Azure Sentinel Skill-Up Resources](https://learn.microsoft.com/en-us/azure/sentinel/skill-up-resources)
 6. [Design Your Workspace Architecture](https://learn.microsoft.com/en-us/azure/sentinel/design-your-workspace-architecture)
 7. [Azure Sentinel Training Lab](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Training/Azure-Sentinel-Training-Lab/README.md)
 8. [Becoming a Microsoft Sentinel Expert](https://cloudacademy.com/learning-paths/becoming-a-microsoft-sentinel-expert-4465/)
 
 ## **Blogs**
-1. [Microsoft Sentinel Blog](https://github.com/microsoft/techcommunity.microsoft.com/tree/master/microsoft-sentinel-blog/bg-p/MicrosoftSentinelBlog)
-2. [KQL Search](https://github.com/kqlquery/kqlquery.com)
-3. [Cloud Brothers](https://github.com/cloudbrothers/cloudbrothers.info)
+1. [Microsoft Sentinel Blog](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/bg-p/MicrosoftSentinelBlog)
+2. [KQL Search](https://kqlquery.com)
+3. [Cloud Brothers](https://cloudbrothers.info)
 4. [LinkedIn Sentinel Group](https://www.linkedin.com/groups/8768381/)
 
 ## **Prebuilt KQL queries**
