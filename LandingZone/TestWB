@@ -2,6 +2,13 @@
   "version": "Notebook/1.0",
   "items": [
     {
+      "type": 1,
+      "content": {
+        "json": "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_logo_flat.svg/2560px-Ford_logo_flat.svg.png\" alt=\"Logo\" width=\"200\"/>\r\n"
+      },
+      "name": "text - 6"
+    },
+    {
       "type": 9,
       "content": {
         "version": "KqlParameterItem/1.0",
@@ -47,8 +54,7 @@
               "value::all"
             ],
             "queryType": 1,
-            "resourceType": "microsoft.resourcegraph/resources",
-            "value": "/subscriptions/99005f96-e572-4035-b476-836fd9d83d64"
+            "resourceType": "microsoft.resourcegraph/resources"
           },
           {
             "id": "ef68dc9e-94e2-47c9-bfc8-8206537418a8",
