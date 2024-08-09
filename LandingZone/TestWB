@@ -153,6 +153,1727 @@
         "resourceType": "microsoft.operationalinsights/workspaces"
       },
       "name": "query - 3"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Entity Insights\r\n---\r\nChoose an Entity Type to investigate by."
+      },
+      "name": "InvestigationHeader"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "5cfe0f82-d29c-4a9a-b7dd-f329fb7b988b",
+            "cellValue": "InvestigationType",
+            "linkTarget": "parameter",
+            "linkLabel": "Investigate Account",
+            "subTarget": "Account",
+            "style": "link"
+          },
+          {
+            "id": "7720a8f8-10e8-4be3-b980-fe6d6bb45b6d",
+            "cellValue": "InvestigationType",
+            "linkTarget": "parameter",
+            "linkLabel": "Full Search",
+            "subTarget": "Search",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "InvestigationLinks"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "d492cada-966f-484b-b527-d41ba2ddd1a3",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "IPAddress",
+                  "type": 1,
+                  "isRequired": true,
+                  "query": "datatable(Entity:string, EntityType:string)\r\n\t[\"{EntityData}\",\"{EntityType}\"]\r\n| where EntityType =~ \"ip\"\r\n| project Entity",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "timeContext": {
+                    "durationMs": 604800000
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "conditionalVisibility": {
+              "parameterName": "InvestigationType",
+              "comparison": "isEqualTo",
+              "value": "IP"
+            },
+            "name": "parameters - 8"
+          },
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "d3818dec-355b-49b0-a2ba-e119da14844a",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Active Accounts",
+                  "subTarget": "Accounts",
+                  "preText": "",
+                  "style": "link"
+                },
+                {
+                  "id": "c4a505ba-ae31-4fa6-bbbc-659d0b27d036",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Network",
+                  "subTarget": "Network",
+                  "preText": "",
+                  "style": "link"
+                },
+                {
+                  "id": "ca04718e-3a80-42bd-b6c5-e5acadbc0a1d",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Normalized Network (Preview)",
+                  "subTarget": "NormalizedNetwork",
+                  "style": "link"
+                },
+                {
+                  "id": "08336f47-fe4b-4ba4-989c-d265aff3207d",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "IOCs",
+                  "subTarget": "IOC",
+                  "style": "link"
+                },
+                {
+                  "id": "c96ba98d-c211-419b-8abf-ea25772ab122",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Related Alerts & Bookmarks",
+                  "subTarget": "Related",
+                  "style": "link"
+                },
+                {
+                  "id": "de7adc45-b859-4753-a05f-58fb2b00e434",
+                  "cellValue": "IPNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "{IPCustomTabName}",
+                  "subTarget": "Custom",
+                  "style": "link"
+                }
+              ]
+            },
+            "name": "links - 4"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let Office = OfficeActivity\r\n| where TimeGenerated {TimeRange}\r\n| where ClientIP == \"{IPAddress}\"\r\n| extend UPN = tolower(UserId)\r\n| summarize Count=count() by UPN;\r\nlet AAD = SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where IPAddress == \"{IPAddress}\"\r\n| extend UPN = tolower(UserPrincipalName)\r\n| project UPN\r\n| summarize Count=count() by UPN;\r\nAzureActivity\r\n| where TimeGenerated {TimeRange}\r\n| where CallerIpAddress == \"{IPAddress}\"\r\n| extend UPN = tolower(Caller)\r\n| project UPN\r\n| summarize Count=count() by UPN\r\n| union AAD, Office\r\n| summarize Count=sum(Count) by UPN\r\n| sort by Count desc",
+                    "size": 4,
+                    "title": "Accounts Active from IP",
+                    "exportFieldName": "UPN",
+                    "exportParameterName": "UPN",
+                    "exportDefaultValue": "AllUPNs",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "UPN",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "conditionalVisibility": {
+                    "parameterName": "InvestigationType",
+                    "comparison": "isEqualTo",
+                    "value": "IP"
+                  },
+                  "name": "query - 9"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where IPAddress == \"{IPAddress}\"\r\n| where UserPrincipalName =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| summarize Count=count() by AppDisplayName",
+                    "size": 1,
+                    "title": "AAD Signin",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "piechart"
+                  },
+                  "customWidth": "33",
+                  "conditionalVisibility": {
+                    "parameterName": "InvestigationType",
+                    "comparison": "isEqualTo",
+                    "value": "IP"
+                  },
+                  "name": "query - 10"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "OfficeActivity\r\n| where TimeGenerated {TimeRange}\r\n| where ClientIP == \"{IPAddress}\"\r\n| where UserId =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| summarize Count=count() by Operation",
+                    "size": 1,
+                    "title": "Office Activity",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "piechart"
+                  },
+                  "customWidth": "33",
+                  "conditionalVisibility": {
+                    "parameterName": "InvestigationType",
+                    "comparison": "isEqualTo",
+                    "value": "IP"
+                  },
+                  "name": "query - 10 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "AzureActivity\r\n| where TimeGenerated {TimeRange}\r\n| where CallerIpAddress == \"{IPAddress}\"\r\n| where Caller =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| summarize Count=count() by OperationNameValue",
+                    "size": 1,
+                    "title": "Azure Activity",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "table"
+                  },
+                  "customWidth": "33",
+                  "conditionalVisibility": {
+                    "parameterName": "InvestigationType",
+                    "comparison": "isEqualTo",
+                    "value": "IP"
+                  },
+                  "name": "query - 10 - Copy - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let Office = OfficeActivity\r\n| where UserId =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| where ClientIP == \"{IPAddress}\"\r\n| extend UPN = tolower(UserId)\r\n| project TimeGenerated, ResultType=ResultStatus, UPN, AppOrAction=Operation, Details=Parameters, Source=\"OfficeActivity\";\r\nlet AAD = SigninLogs\r\n| where UserPrincipalName =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| where IPAddress == \"{IPAddress}\"\r\n| extend UPN = tolower(UserPrincipalName)\r\n| project TimeGenerated, ResultType, UPN, AppOrAction=AppDisplayName, Details=ResultDescription, Source=\"SigninLogs\";\r\nAzureActivity\r\n| where Caller =~ \"{UPN}\" or \"AllUPNs\" == \"{UPN}\"\r\n| where CallerIpAddress == \"{IPAddress}\"\r\n| extend UPN = tolower(Caller)\r\n| project TimeGenerated, ResultType=ActivityStatus, UPN, AppOrAction=OperationNameValue, Details=ResourceId, Source=\"AzureActivity\"\r\n| union AAD, Office\r\n| sort by TimeGenerated desc",
+                    "size": 0,
+                    "showAnalytics": true,
+                    "title": "Activity Detail",
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "query - 4"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "Accounts"
+            },
+            "name": "IPAccounts"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let IPList = dynamic([\"{IPAddress}\"]);\r\n(union isfuzzy=true\r\n(CommonSecurityLog  //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP)\r\n| where SourceIP in (IPList) or DestinationIP in (IPList) or Message has_any (IPList)\r\n| extend IPMatch = case(SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"Message\") \r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection, FirewallAction=DeviceAction, Protocol, SourceIP, DestinationIP, tostring(DestinationPort), IPMatch, Type),\r\n(VMConnection //Final\r\n| where isnotempty(SourceIp) or isnotempty(DestinationIp) \r\n| where SourceIp in (IPList) or DestinationIp in (IPList) \r\n| extend IPMatch = case( SourceIp in (IPList), \"SourceIP\", DestinationIp in (IPList), \"DestinationIP\", \"None\") \r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection=Direction, Protocol, SourceIP=SourceIp, DestinationIP=DestinationIp, tostring(DestinationPort), IPMatch, Type\r\n),\r\n(WindowsFirewall //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP) \r\n| where SourceIP in (IPList) or DestinationIP in (IPList) \r\n| extend IPMatch = case( SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"None\") \r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection, FirewallAction, Protocol, SourceIP, DestinationIP, tostring(DestinationPort), IPMatch, Type\r\n),\r\n(W3CIISLog //Final\r\n| where isnotempty(cIP)\r\n| where cIP in (IPList) or sIP in (IPList)\r\n| extend IPMatch = case( cIP in (IPList), \"SourceIP\", sIP in (IPList), \"DestinationIP\", \"None\") \r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection=\"Inbound\", SourceIP=cIP, DestinationIP=sIP, DestinationPort=tostring(sPort), IPMatch, Type\r\n)\r\n)\r\n| summarize Count=sum(Count) by Type\r\n| sort by Count desc",
+                    "size": 4,
+                    "title": "Network Activity",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "Type",
+                    "exportParameterName": "LogType",
+                    "exportDefaultValue": "None",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "Type",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "Network Overview"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let IPList = dynamic([\"{IPAddress}\"]);\r\n(union isfuzzy=true\r\n(CommonSecurityLog  //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP)\r\n| where SourceIP in (IPList) or DestinationIP in (IPList) or Message has_any (IPList)\r\n| extend IPMatch = case(SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"Message\") \r\n| summarize Count=count() by IPMatch),\r\n(VMConnection //Final\r\n| where isnotempty(SourceIp) or isnotempty(DestinationIp) \r\n| where SourceIp in (IPList) or DestinationIp in (IPList) \r\n| extend IPMatch = case( SourceIp in (IPList), \"SourceIP\", DestinationIp in (IPList), \"DestinationIP\", \"None\") \r\n| summarize Count=count() by IPMatch\r\n),\r\n(WindowsFirewall //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP) \r\n| where SourceIP in (IPList) or DestinationIP in (IPList) \r\n| extend IPMatch = case( SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"None\") \r\n| summarize Count=count() by IPMatch\r\n),\r\n(W3CIISLog //Final\r\n| where isnotempty(cIP)\r\n| where cIP in (IPList) or sIP in (IPList)\r\n| extend IPMatch = case( cIP in (IPList), \"SourceIP\", sIP in (IPList), \"DestinationIP\", \"None\") \r\n| summarize Count=count() by IPMatch\r\n)\r\n)\r\n| summarize Count=sum(Count) by IPMatch\r\n| sort by Count desc",
+                    "size": 4,
+                    "title": "IPMatch",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "IPMatch",
+                    "exportParameterName": "IPMatch",
+                    "exportDefaultValue": "None",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "IPMatch",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      },
+                      "showBorder": false
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "IP Match"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let IPList = dynamic([\"{IPAddress}\"]);\r\n(union isfuzzy=true\r\n(CommonSecurityLog  //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP)\r\n| where SourceIP in (IPList) or DestinationIP in (IPList) or Message has_any (IPList)\r\n| extend IPMatch = case(SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"Message\") \r\n| where IPMatch =~ \"{IPMatch}\" or \"{IPMatch}\" =~ \"None\"\r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection, FirewallAction=DeviceAction, Protocol, SourceIP, DestinationIP, tostring(DestinationPort), IPMatch, Type),\r\n(VMConnection //Final\r\n| where isnotempty(SourceIp) or isnotempty(DestinationIp) \r\n| where SourceIp in (IPList) or DestinationIp in (IPList) \r\n| extend IPMatch = case( SourceIp in (IPList), \"SourceIP\", DestinationIp in (IPList), \"DestinationIP\", \"None\") \r\n| where IPMatch =~ \"{IPMatch}\" or \"{IPMatch}\" =~ \"None\"\r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection=Direction, Protocol, SourceIP=SourceIp, DestinationIP=DestinationIp, tostring(DestinationPort), IPMatch, Type\r\n),\r\n(WindowsFirewall //Final\r\n| where isnotempty(SourceIP) or isnotempty(DestinationIP) \r\n| where SourceIP in (IPList) or DestinationIP in (IPList) \r\n| extend IPMatch = case( SourceIP in (IPList), \"SourceIP\", DestinationIP in (IPList), \"DestinationIP\", \"None\") \r\n| where IPMatch =~ \"{IPMatch}\" or \"{IPMatch}\" =~ \"None\"\r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection, FirewallAction, Protocol, SourceIP, DestinationIP, tostring(DestinationPort), IPMatch, Type\r\n),\r\n(W3CIISLog //Final\r\n| where isnotempty(cIP)\r\n| where cIP in (IPList) or sIP in (IPList)\r\n| extend IPMatch = case( cIP in (IPList), \"SourceIP\", sIP in (IPList), \"DestinationIP\", \"None\") \r\n| where IPMatch =~ \"{IPMatch}\" or \"{IPMatch}\" =~ \"None\"\r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by Computer, CommunicationDirection=\"Inbound\", SourceIP=cIP, DestinationIP=sIP, DestinationPort=tostring(sPort), IPMatch, Type\r\n)\r\n)\r\n| where Type =~ \"{LogType}\" or \"{LogType}\" =~ \"None\"\r\n| sort by LastOccurance desc",
+                    "size": 0,
+                    "showAnalytics": true,
+                    "title": "Network Activity Details",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "Network"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "DnsEvents\r\n| where ResultCode == 0\r\n| where IPAddresses contains \"{IPAddress}\" or ClientIP =~ \"{IPAddress}\"\r\n| extend IPMatch = iff(ClientIP =~ \"{IPAddress}\", \"DNSClientIP\", \"IPAddressAnswer\")\r\n| summarize Count=count() by IPMatch\r\n| sort by Count desc",
+                    "size": 4,
+                    "title": "DNS Query Details",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "IPMatch",
+                    "exportParameterName": "DNSIPMatch",
+                    "exportDefaultValue": "None",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "IPMatch",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "name": "query - 8"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let data = DnsEvents\r\n| where ResultCode == 0\r\n| where IPAddresses contains \"{IPAddress}\" or ClientIP =~ \"{IPAddress}\"\r\n| extend IPMatch = iff(ClientIP =~ \"{IPAddress}\", \"DNSClientIP\", \"IPAddressAnswer\")\r\n| where IPMatch =~ \"{DNSIPMatch}\" or \"{DNSIPMatch}\" =~ \"None\"\r\n| extend queryID = strcat(Computer, ClientIP, IPAddresses, Name, QueryType);\r\ndata\r\n| summarize FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated), Count=count() by DNSServer=Computer, DNSClientIP=ClientIP, IPAddressAnswer=IPAddresses, Name, QueryType, IPMatch, queryID\r\n| join kind = inner (data\r\n| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by queryID) on queryID \r\n| project-away TimeGenerated, queryID, queryID1\r\n| project DNSServer, DNSClientIP, IPAddressAnswer, Name, QueryType, IPMatch, Trend, FirstOccurance, LastOccurance, Count\r\n| sort by LastOccurance desc",
+                    "size": 1,
+                    "showAnalytics": true,
+                    "title": "DNS Query Details",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Trend",
+                          "formatter": 9,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "name": "DNSQueryDetails"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "Network"
+            },
+            "name": "IPNetwork"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "#### Network normalization\r\n\r\nThis section of the workbook uses a normalized schema for network and requires the installation of parsers in your workspace to function.  Please use the references below to setup the Network Normalization parsers.\r\n\r\n- [Normalization in Azure Sentinel](https://docs.microsoft.com/azure/sentinel/normalization)\r\n- [GitHub - Normalized Schema - Networking](https://github.com/Azure/Azure-Sentinel/tree/master/Parsers/ASimNetworkSession)",
+                    "style": "info"
+                  },
+                  "name": "text - 5"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| summarize Count = count() by IPMatch\r\n| order by Count",
+                    "size": 4,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "IPMatch",
+                    "exportParameterName": "IPMatch",
+                    "exportDefaultValue": "All",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "tileSettings": {
+                      "showBorder": false,
+                      "titleContent": {
+                        "columnMatch": "IPMatch",
+                        "formatter": 1
+                      },
+                      "leftContent": {
+                        "columnMatch": "Count",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "maximumSignificantDigits": 3,
+                            "maximumFractionDigits": 2
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "name": "query - 6"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| where IPMatch == \"{IPMatch}\" or \"{IPMatch}\" == \"All\"\r\n| summarize Count = count() by FirewallAction=DvcAction\r\n| order by Count",
+                    "size": 0,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "FirewallAction",
+                    "exportParameterName": "FirewallAction",
+                    "exportDefaultValue": "All",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 4,
+                          "formatOptions": {
+                            "palette": "blue",
+                            "compositeBarSettings": {
+                              "labelText": ""
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "FirewallActionQuery"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| where DvcAction == \"{FirewallAction}\" or \"{FirewallAction}\" == \"All\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| where IPMatch == \"{IPMatch}\" or \"{IPMatch}\" == \"All\"\r\n| summarize Count = count() by SourceIP = SrcIpAddr\r\n| order by Count",
+                    "size": 0,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "SourceIP",
+                    "exportParameterName": "SourceIP",
+                    "exportDefaultValue": "All",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 4,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - 0"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| where DvcAction == \"{FirewallAction}\" or \"{FirewallAction}\" == \"All\"\r\n| where SrcIpAddr == \"{SourceIP}\" or \"{SourceIP}\" == \"All\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| where IPMatch == \"{IPMatch}\" or \"{IPMatch}\" == \"All\"\r\n| summarize Count = count() by DestinationIP = DstIpAddr\r\n| order by Count",
+                    "size": 0,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "DestinationIP",
+                    "exportParameterName": "DestinationIP",
+                    "exportDefaultValue": "All",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 4,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - 0 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| where DvcAction == \"{FirewallAction}\" or \"{FirewallAction}\" == \"All\"\r\n| where SrcIpAddr == \"{SourceIP}\" or \"{SourceIP}\" == \"All\"\r\n| where DstIpAddr == \"{DestinationIP}\" or \"{DestinationIP}\" == \"All\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| where IPMatch == \"{IPMatch}\" or \"{IPMatch}\" == \"All\"\r\n| summarize Count = count() by DestinationPort = DstPortNumber\r\n| order by Count",
+                    "size": 0,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "DestinationPort",
+                    "exportParameterName": "DestinationPort",
+                    "exportDefaultValue": "All",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 4,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "25",
+                  "name": "query - 0 - Copy - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "Network_MetaParser\r\n| where SrcIpAddr == \"{IPAddress}\" or DstIpAddr == \"{IPAddress}\"\r\n| where DvcAction == \"{FirewallAction}\" or \"{FirewallAction}\" == \"All\"\r\n| where SrcIpAddr == \"{SourceIP}\" or \"{SourceIP}\" == \"All\"\r\n| where DstIpAddr == \"{DestinationIP}\" or \"{DestinationIP}\" == \"All\"\r\n| where DstPortNumber == \"{DestinationPort}\" or \"{DestinationPort}\" == \"All\"\r\n| extend IPMatch = iff(SrcIpAddr == \"{IPAddress}\", \"Source IP Match\", \"Destination IP Match\")\r\n| where IPMatch == \"{IPMatch}\" or \"{IPMatch}\" == \"All\"\r\n| summarize Count = count() by ReportingProdcut = EventProduct, SourceIP = SrcIpAddr, DestinationIP = DstIpAddr, DestinationPort = DstPortNumber, ApplicationLayerProtocol = NetworkApplicationProtocol, NetworkProtocol = NetworkProtocol, DeviceAction = DvcAction\r\n| order by Count",
+                    "size": 0,
+                    "showAnalytics": true,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 4,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - 4"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "NormalizedNetwork"
+            },
+            "name": "NormalizedNetworkGroup"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "ThreatIntelligenceIndicator\r\n| where TimeGenerated > ago(180d)\r\n| where NetworkIP == \"{IPAddress}\"\r\n| summarize arg_max(TimeGenerated, Active) by IndicatorId, SourceSystem, Description, ThreatType\r\n| project SourceSystem, Description, ThreatType, Active",
+                    "size": 4,
+                    "title": "IP Threat Intelligence",
+                    "noDataMessage": "No Threat Intelligence was found for the selected IP.",
+                    "noDataMessageStyle": 3,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "customWidth": "50",
+                  "conditionalVisibility": {
+                    "parameterName": "InvestigationType",
+                    "comparison": "isEqualTo",
+                    "value": "IP"
+                  },
+                  "name": "query - 13"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "IOC"
+            },
+            "name": "IPIOC"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SecurityAlert\r\n| where TimeGenerated {TimeRange}\r\n| where Entities contains \"\"\"IP\"\"\"\r\n| extend AllEntities = parse_json(Entities)\r\n| mv-expand AllEntities\r\n| where AllEntities.Type == \"ip\" and AllEntities.Address == \"{IPAddress}\"\r\n| project AlertSeverity, AlertName=DisplayName, ProviderName, AlertDetails=Entities, SystemAlertId",
+                    "size": 4,
+                    "title": "Related Security Alerts",
+                    "noDataMessage": "No Security Alerts were found for the selected IP.",
+                    "noDataMessageStyle": 3,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AlertDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "GenericDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "SystemAlertId",
+                          "formatter": 5
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 13 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "HuntingBookmark\r\n| where TimeGenerated {TimeRange}\r\n| extend Entities = parse_json(QueryResultRow).__entityMapping\r\n| where Entities contains \"\"\"ip\"\"\" //Entity Type to match\r\n| summarize arg_max(TimeGenerated, BookmarkName, Notes, Tags, Entities) by BookmarkId\r\n| extend splitEntities = split(replace(@'[\"{}]', '', tostring(Entities)),',')\r\n| mv-expand splitEntities\r\n| extend splitEntity = split(splitEntities, ':')\r\n| where splitEntity[1] =~ \"ip\"\r\n| where splitEntity[0] =~ \"{IPAddress}\"\r\n| project BookmarkName, Notes, Tags",
+                    "size": 4,
+                    "title": "Related Bookmarks",
+                    "noDataMessage": "No Bookmarks were found for the selected IP.",
+                    "noDataMessageStyle": 3,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AlertDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "GenericDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "SystemAlertId",
+                          "formatter": 5
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 13 - Copy - Copy"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "Related"
+            },
+            "name": "IPRelated"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "loadType": "always",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "## To use this custom group, switch the group type from \"Editable\" to \"From Template\" and enter the ID of your custom workbook"
+                  },
+                  "name": "text - 0"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "IPNav",
+              "comparison": "isEqualTo",
+              "value": "Custom"
+            },
+            "name": "CustomGroupIP"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "InvestigationType",
+        "comparison": "isEqualTo",
+        "value": "IP"
+      },
+      "name": "IPGroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "7d4ef622-5d81-47ef-b07a-13624db7dda2",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "UPN",
+                  "type": 1,
+                  "isRequired": true,
+                  "query": "datatable(Entity:string, EntityType:string)\r\n\t[\"{EntityData}\",\"{EntityType}\"]\r\n| where EntityType =~ \"account\"\r\n| extend Entity = iff(Entity contains \"@\", Entity, strcat(Entity, \"@\", \"{DefaultUPNSuffix}\"))\r\n| project Entity",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "d6455f34-39bd-479a-937e-96f69e6c85b1",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "samAccountName",
+                  "type": 1,
+                  "query": "(union isfuzzy=true\r\n(datatable(UPN:string, Priority:int)\r\n\t[\"{UPN}\", 1]\r\n| extend samAccountName = split(UPN, \"@\", 0)\r\n| project samAccountName=tostring(samAccountName[0]), Priority),\r\n(IdentityInfo\r\n| where TimeGenerated > ago(180d)\r\n| where AccountUPN =~ \"{UPN}\"\r\n| summarize arg_max(TimeGenerated, *) by AccountUPN\r\n| project samAccountName=AccountName, Priority=toint(2)))\r\n| top 1 by Priority desc\r\n| project-away Priority",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "parameters - 2"
+          },
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "a3c1474c-0fe4-4105-8928-38dc9ceffb34",
+                  "cellValue": "UserNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Location Anomalies",
+                  "subTarget": "Location",
+                  "style": "link"
+                },
+                {
+                  "id": "54e10cc1-6fa7-4458-bcdf-4d42196298a1",
+                  "cellValue": "UserNav",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Related Alerts & Bookmarks",
+                  "subTarget": "Alerts",
+                  "style": "link"
+                }
+              ]
+            },
+            "name": "links - 5"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let UPN = \"{UPN}\";\r\nlet CommonLocation = SigninLogs\r\n| where UserPrincipalName =~ UPN\r\n| extend LAT = round(todouble(LocationDetails.geoCoordinates.latitude), 1)\r\n| extend LONG = round(todouble(LocationDetails.geoCoordinates.longitude), 1)\r\n| summarize Count=count() by LAT, LONG\r\n| top 1 by Count;\r\nlet CommonLAT = toscalar(CommonLocation\r\n| project LAT);\r\nlet CommonLONG = toscalar(CommonLocation\r\n| project LONG);\r\nSigninLogs\r\n| where UserPrincipalName =~ UPN\r\n| extend LAT = round(todouble(LocationDetails.geoCoordinates.latitude), 1)\r\n| extend LONG = round(todouble(LocationDetails.geoCoordinates.longitude), 1)\r\n| extend KmFromTypicalLocation = geo_distance_2points(CommonLONG, CommonLAT, LONG, LAT) / 1000\r\n| summarize Count=count() by IPAddress, KmFromTypicalLocation, AppDisplayName, ResultDescription\r\n| sort by KmFromTypicalLocation desc\r\n",
+                    "size": 0,
+                    "title": "Distance from Typical Signin Location",
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "IPAddress",
+                    "exportParameterName": "IP",
+                    "exportDefaultValue": "None",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "KmFromTypicalLocation",
+                          "formatter": 8,
+                          "formatOptions": {
+                            "min": 100,
+                            "max": 1000,
+                            "palette": "greenRed",
+                            "aggregation": "Average"
+                          }
+                        },
+                        {
+                          "columnMatch": "Count",
+                          "formatter": 0,
+                          "formatOptions": {
+                            "aggregation": "Sum"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 0"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let UPN = \"{UPN}\";\r\nlet CommonLocation = SigninLogs\r\n| where UserPrincipalName =~ UPN\r\n| extend LAT = round(todouble(LocationDetails.geoCoordinates.latitude), 1)\r\n| extend LONG = round(todouble(LocationDetails.geoCoordinates.longitude), 1)\r\n| summarize Count=count() by LAT, LONG\r\n| top 1 by Count;\r\nlet CommonLAT = toscalar(CommonLocation\r\n| project LAT);\r\nlet CommonLONG = toscalar(CommonLocation\r\n| project LONG);\r\nSigninLogs\r\n| where UserPrincipalName =~ UPN\r\n| extend LAT = round(todouble(LocationDetails.geoCoordinates.latitude), 1)\r\n| extend LONG = round(todouble(LocationDetails.geoCoordinates.longitude), 1)\r\n| extend KmFromTypicalLocation = geo_distance_2points(CommonLONG, CommonLAT, LONG, LAT) / 1000\r\n| extend LocationString= strcat(tostring(LocationDetails[\"countryOrRegion\"]), \"/\", tostring(LocationDetails[\"state\"]), \"/\", tostring(LocationDetails[\"city\"]))\r\n| summarize Count=count() by IPAddress, KmFromTypicalLocation, LAT, LONG, LocationString\r\n",
+                    "size": 0,
+                    "title": "Signin Map",
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "map",
+                    "mapSettings": {
+                      "locInfo": "LatLong",
+                      "latitude": "LAT",
+                      "longitude": "LONG",
+                      "sizeSettings": "Count",
+                      "sizeAggregation": "Sum",
+                      "labelSettings": "LocationString",
+                      "legendMetric": "Count",
+                      "legendAggregation": "Sum",
+                      "itemColorSettings": {
+                        "nodeColorField": "KmFromTypicalLocation",
+                        "colorAggregation": "Sum",
+                        "type": "heatmap",
+                        "heatmapPalette": "greenRed",
+                        "heatmapMin": 100,
+                        "heatmapMax": 1000
+                      }
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 1"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where IPAddress == \"{IP}\"\r\n| extend ResultDetail = iff(ResultType == 0, \"Success\", ResultDescription)\r\n| parse AuthenticationDetails with * '[' AuthDetails ']' *\r\n| project TimeGenerated, AppDisplayName, ResourceDisplayName, ResultDetail, ClientAppUsed, ConditionalAccessStatus, AuthDetails, DeviceDetail, LocationDetails, IPAddress, RiskDetail, RiskState\r\n",
+                    "size": 0,
+                    "showAnalytics": true,
+                    "title": "Signin Details",
+                    "noDataMessage": "Select a Signin from the grid to see additional details",
+                    "noDataMessageStyle": 2,
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AuthDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "LocationDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - 6"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "Location"
+            },
+            "name": "LocationAnomalies"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "parameters": [
+                      {
+                        "id": "bdcb9616-6e17-4694-a76a-49fb9de8ae2a",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "SigninStatus",
+                        "type": 2,
+                        "isRequired": true,
+                        "value": ">= 0",
+                        "jsonData": "[\r\n    {\r\n        \"label\": \"Successful Logons\",\r\n        \"value\": \"== 0\"\r\n    },\r\n    {\r\n        \"label\": \"Failed Logons\",\r\n        \"value\": \"<> 0\"\r\n    },\r\n    {\r\n        \"label\": \"All Logons\",\r\n        \"value\": \">= 0\"\r\n    }\r\n]",
+                        "timeContext": {
+                          "durationMs": 0
+                        },
+                        "timeContextFromParameter": "TimeRange"
+                      },
+                      {
+                        "id": "17a6b0e5-3d86-4ba2-94ac-795bdd692378",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "PolicyName",
+                        "type": 2,
+                        "isRequired": true,
+                        "query": "SigninLogs\r\n| mv-expand ConditionalAccessPolicies\r\n| distinct tostring(ConditionalAccessPolicies.displayName)",
+                        "crossComponentResources": [
+                          "{Workspace}"
+                        ],
+                        "value": "value::1",
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::1"
+                          ]
+                        },
+                        "timeContext": {
+                          "durationMs": 604800000
+                        },
+                        "timeContextFromParameter": "TimeRange",
+                        "queryType": 0,
+                        "resourceType": "microsoft.operationalinsights/workspaces"
+                      },
+                      {
+                        "id": "d880b501-931f-4659-a360-94d5c519ddc4",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "PolicyResult",
+                        "type": 2,
+                        "isRequired": true,
+                        "multiSelect": true,
+                        "quote": "'",
+                        "delimiter": ",",
+                        "query": "SigninLogs\r\n| mv-expand ConditionalAccessPolicies\r\n| distinct tostring(ConditionalAccessPolicies.result)",
+                        "crossComponentResources": [
+                          "{Workspace}"
+                        ],
+                        "value": [
+                          "value::all"
+                        ],
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::all"
+                          ]
+                        },
+                        "timeContext": {
+                          "durationMs": 604800000
+                        },
+                        "timeContextFromParameter": "TimeRange",
+                        "queryType": 0,
+                        "resourceType": "microsoft.operationalinsights/workspaces"
+                      }
+                    ],
+                    "style": "pills",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "name": "parameters - 6"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let FilteredSignin = SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where Status.errorCode {SigninStatus}\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| mv-expand ConditionalAccessPolicies\r\n| where ConditionalAccessPolicies.displayName =~ \"{PolicyName}\" or \"{PolicyName:label}\" =~ \"Any one\"\r\n| where ConditionalAccessPolicies.result in ({PolicyResult})\r\n| distinct Id;\r\nSigninLogs\r\n| where Id in (FilteredSignin)\r\n| extend errorCode = Status.errorCode\r\n| extend SigninStatus = case(errorCode == 0, \"Success\", errorCode == 50058, \"Pending user action\",errorCode == 50140, \"Pending user action\", errorCode == 51006, \"Pending user action\", errorCode == 50059, \"Pending user action\",errorCode == 65001, \"Pending user action\", errorCode == 52004, \"Pending user action\", errorCode == 50055, \"Pending user action\", errorCode == 50144, \"Pending user action\", errorCode == 50072, \"Pending user action\", errorCode == 50074, \"Pending user action\", errorCode == 16000, \"Pending user action\", errorCode == 16001, \"Pending user action\", errorCode == 16003, \"Pending user action\", errorCode == 50127, \"Pending user action\", errorCode == 50125, \"Pending user action\", errorCode == 50129, \"Pending user action\", errorCode == 50143, \"Pending user action\", errorCode == 81010, \"Pending user action\", errorCode == 81014, \"Pending user action\", errorCode == 81012 ,\"Pending user action\", \"Failure\")\r\n| extend LocationString= strcat(tostring(LocationDetails[\"countryOrRegion\"]), \"/\", tostring(LocationDetails[\"state\"]), \"/\", tostring(LocationDetails[\"city\"]))\r\n| project TimeGenerated, Location=LocationString, IPAddress, AppDisplayName, ResourceDisplayName, ResultDescription, ['Sign-in Status'] = strcat(iff(SigninStatus == 'Success', '✔️', '❌'), ' ', SigninStatus), Id\r\n| sort by TimeGenerated desc",
+                    "size": 0,
+                    "title": "AAD Signins",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "exportFieldName": "Id",
+                    "exportParameterName": "SigninId",
+                    "exportDefaultValue": "None",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 1
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - 5"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where Status.errorCode {SigninStatus}\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where Id == \"{SigninId}\"\r\n| extend errorCode = Status.errorCode\r\n| extend SigninStatus = case(errorCode == 0, \"Success\", errorCode == 50058, \"Pending user action\",errorCode == 50140, \"Pending user action\", errorCode == 51006, \"Pending user action\", errorCode == 50059, \"Pending user action\",errorCode == 65001, \"Pending user action\", errorCode == 52004, \"Pending user action\", errorCode == 50055, \"Pending user action\", errorCode == 50144, \"Pending user action\", errorCode == 50072, \"Pending user action\", errorCode == 50074, \"Pending user action\", errorCode == 16000, \"Pending user action\", errorCode == 16001, \"Pending user action\", errorCode == 16003, \"Pending user action\", errorCode == 50127, \"Pending user action\", errorCode == 50125, \"Pending user action\", errorCode == 50129, \"Pending user action\", errorCode == 50143, \"Pending user action\", errorCode == 81010, \"Pending user action\", errorCode == 81014, \"Pending user action\", errorCode == 81012 ,\"Pending user action\", \"Failure\")\r\n| extend LocationString= strcat(tostring(LocationDetails[\"countryOrRegion\"]), \"/\", tostring(LocationDetails[\"state\"]), \"/\", tostring(LocationDetails[\"city\"]))\r\n| project TimeGenerated, ['Sign-in Status'] = strcat(iff(SigninStatus == 'Success', '✔️', '❌'), ' ', SigninStatus), ResultDescription, Id\r\n| sort by TimeGenerated asc",
+                    "size": 4,
+                    "title": "AAD Signin Sequence",
+                    "noDataMessage": "Select a Signin to see the Logon Sequence",
+                    "noDataMessageStyle": 2,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Id",
+                          "formatter": 5
+                        },
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 1
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 5 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where Status.errorCode {SigninStatus}\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where Id == \"{SigninId}\"\r\n| distinct tostring(DeviceDetail), UserAgent",
+                    "size": 4,
+                    "title": "Device and UserAgent Detail",
+                    "noDataMessage": "Select a Signin to see Device and UserAgent Details",
+                    "noDataMessageStyle": 2,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 1
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 5 - Copy - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where TimeGenerated {TimeRange}\r\n| where Status.errorCode {SigninStatus}\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where Id =~ \"{SigninId}\"\r\n| mv-expand ConditionalAccessPolicies\r\n| where ConditionalAccessPolicies.displayName =~ \"{PolicyName}\" or \"{PolicyName:label}\" =~ \"Any one\"\r\n| where ConditionalAccessPolicies.result in ({PolicyResult})\r\n| extend errorCode = Status.errorCode\r\n| extend SigninStatus = case(errorCode == 0, \"Success\", errorCode == 50058, \"Pending user action\",errorCode == 50140, \"Pending user action\", errorCode == 51006, \"Pending user action\", errorCode == 50059, \"Pending user action\",errorCode == 65001, \"Pending user action\", errorCode == 52004, \"Pending user action\", errorCode == 50055, \"Pending user action\", errorCode == 50144, \"Pending user action\", errorCode == 50072, \"Pending user action\", errorCode == 50074, \"Pending user action\", errorCode == 16000, \"Pending user action\", errorCode == 16001, \"Pending user action\", errorCode == 16003, \"Pending user action\", errorCode == 50127, \"Pending user action\", errorCode == 50125, \"Pending user action\", errorCode == 50129, \"Pending user action\", errorCode == 50143, \"Pending user action\", errorCode == 81010, \"Pending user action\", errorCode == 81014, \"Pending user action\", errorCode == 81012 ,\"Pending user action\", \"Failure\")\r\n| project TimeGenerated, ['Sign-in Status'] = strcat(iff(SigninStatus == 'Success', '✔️', '❌'), ' ', SigninStatus), GrantControl=ConditionalAccessPolicies.enforcedGrantControls, ConditionalAccessPolicyName=ConditionalAccessPolicies.displayName, ConditionalAccessResult=ConditionalAccessPolicies.result, MfaDetail\r\n| sort by TimeGenerated asc",
+                    "size": 0,
+                    "title": "Conditional Access Policy Details",
+                    "noDataMessage": "Select a Login to see Conditional Access Details",
+                    "noDataMessageStyle": 2,
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 1
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - 5 - Copy"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "CAP"
+            },
+            "name": "ConditionalAccess"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let eStatus = dynamic([\"0xC000006A\", \"0xC0000234\", \"0x18\"]);\r\nlet secEventID = dynamic([4771, 4625, 4776]);\r\nlet secEvents = SecurityEvent\r\n| where TargetUserName =~ \"{samAccountName}\"\r\n| where EventID in (secEventID)\r\n| where Level == 16\r\n| where (EventID == 4625 and SubStatus in~ (eStatus)) or (EventID == 4771 and Status in~ (eStatus)) or (EventID == 4776 and Status in~ (eStatus))\r\n| extend ResultStatus = case(EventID == 4625, SubStatus, Status)\r\n| extend SourceNameorIP = case(EventID == 4776, Workstation, (EventID == 4625 and isnotempty(WorkstationName)), WorkstationName, IpAddress)\r\n| extend ResultDescription = case(EventID == 4625, strcat(Activity, '  Logon type: ', LogonTypeName), Activity)\r\n| summarize FirstOccurance = min(TimeGenerated), LastOccurance = max(TimeGenerated), FailedSigninCount=count(), LocationCount=dcount(SourceNameorIP) by TargetUserName, SourceNameorIP, ResultDescription, StatusCode=ResultStatus\r\n| extend LogSource = \"SecurityEvent\";\r\nSigninLogs\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n// Error codes that we want to look at as they are related to the use of incorrect password.\r\n| where ResultType in (\"50126\", \"50053\" , \"50055\", \"50056\")\r\n| extend OS = DeviceDetail.operatingSystem, Browser = DeviceDetail.browser \r\n| extend LocationString= strcat(tostring(LocationDetails[\"countryOrRegion\"]), \"/\", tostring(LocationDetails[\"state\"]), \"/\", tostring(LocationDetails[\"city\"]))\r\n| summarize FirstOccurance = min(TimeGenerated), LastOccurance = max(TimeGenerated), FailedSigninCount=count(), LocationCount=dcount(LocationString) by TargetUserName=UserPrincipalName, SourceNameorIP=IPAddress, LocationString, AppDisplayName, ResultDescription, tostring(Browser), tostring(OS), StatusCode=ResultType\r\n| extend LogSource = \"SigninLogs\"\r\n| union secEvents\r\n| project TargetUserName, SourceNameorIP, ResultDescription, StatusCode, LocationString, AppDisplayName, Browser, OS, FirstOccurance, LastOccurance, FailedSigninCount, LocationCount, LogSource",
+                    "size": 1,
+                    "showAnalytics": true,
+                    "title": "Failed Signin - Bad Password",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "query - 3"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "(union isfuzzy=true\r\n(SecurityEvent\r\n| where EventID in (\"4723\",\"4724\")\r\n| where TargetUserName =~ \"{samAccountName}\" or SubjectUserName =~ \"{samAccountName}\"\r\n| extend Result = case(Level==8, \"success\", Level==16, \"failure\", \"unknown\")\r\n| project TimeGenerated, InitiatedBy=SubjectUserName, Username=TargetUserName, OperationName=Activity, Result\r\n),\r\n(AuditLogs\r\n| where OperationName contains \"password\"\r\n| sort by TimeGenerated desc\r\n| extend InitiatedBy = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)\r\n| extend Username = tostring(TargetResources[0].userPrincipalName)\r\n| where Username =~ \"{UPN}\" or InitiatedBy =~ \"{UPN}\"\r\n| project TimeGenerated, InitiatedBy, Username, OperationName, Result\r\n))\r\n| sort by TimeGenerated desc",
+                    "size": 1,
+                    "showAnalytics": true,
+                    "title": "Password Change and Resets",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "Passwords"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "(union isfuzzy=true\r\n(AuditLogs \r\n| where OperationName =~ \"Disable Strong Authentication\"\r\n| extend IPAddress = tostring(parse_json(tostring(InitiatedBy.user)).ipAddress) \r\n| extend InitiatedByUser = iff(isnotempty(tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)), \r\n tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName), tostring(parse_json(tostring(InitiatedBy.app)).displayName))\r\n| extend Targetprop = todynamic(TargetResources)\r\n| extend TargetUser = tostring(Targetprop[0].userPrincipalName) \r\n| summarize StartTimeUtc = min(TimeGenerated), EndTimeUtc = max(TimeGenerated) by User = TargetUser, InitiatedByUser , Operation = OperationName , CorrelationId, IPAddress, Category, Source = SourceSystem , AADTenantId, Type\r\n),\r\n(AWSCloudTrail\r\n| where EventName in~ (\"DeactivateMFADevice\", \"DeleteVirtualMFADevice\") \r\n| extend InstanceProfileName = tostring(parse_json(RequestParameters).InstanceProfileName)\r\n| extend TargetUser = tostring(parse_json(RequestParameters).userName)\r\n| summarize StartTimeUtc = min(TimeGenerated), EndTimeUtc = max(TimeGenerated) by User = TargetUser, Source = EventSource , Operation = EventName , TenantorInstance_Detail = InstanceProfileName, IPAddress = SourceIpAddress\r\n)\r\n)\r\n| where User =~ \"{UPN}\" or InitiatedByUser =~ \"{UPN}\"",
+                    "size": 4,
+                    "showAnalytics": true,
+                    "title": "Disabled MFA",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "customWidth": "50",
+                  "name": "query - 1"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SigninLogs\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where Status.errorCode == 500121\r\n| where Status.additionalDetails contains \"fraud\"\r\n| project TimeGenerated, AppDisplayName, IPAddress, Status=Status.additionalDetails, AuthenticationDetails, DeviceDetail, LocationDetails",
+                    "size": 4,
+                    "showAnalytics": true,
+                    "title": "MFA Fraud Reports",
+                    "timeContext": {
+                      "durationMs": 0
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AuthenticationDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "DeviceDetail",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "LocationDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 1 - Copy"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "AuditLogs\r\n| where TimeGenerated > ago(90d)\r\n| where OperationName == \"Consent to application\"\r\n| where Category == \"ApplicationManagement\"\r\n| extend UserPrincipalName = InitiatedBy.user.userPrincipalName\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| mv-expand TargetResources\r\n| extend ModifiedProperties = TargetResources.modifiedProperties\r\n| mv-apply ModifiedProperties on (\r\n    summarize Consent = make_bag(pack(tostring(ModifiedProperties.displayName), ModifiedProperties.newValue)))\r\n| project TimeGenerated, ActivityDisplayName, UserPrincipalName, isAdminConsent=Consent.['ConsentContext.IsAdminConsent'], isAppOnly=Consent.['ConsentContext.IsAppOnly'], OnBehalfOfAll=Consent.['ConsentContext.OnBehalfOfAll'], ResourceServicePrincipalName=Consent.['TargetId.ServicePrincipalNames'], ResourceDisplayName=TargetResources.displayName, Permissions=Consent.['ConsentAction.Permissions']",
+                    "size": 4,
+                    "showAnalytics": true,
+                    "title": "Application Consent",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "query - Consent"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "(union isfuzzy=true\r\n(OfficeActivity \r\n| where UserId =~ \"{UPN}\"\r\n| where Operation =~ \"Set-Mailbox\" \r\n| extend parsed = parse_json(Parameters) \r\n| extend FieldType = tostring(parsed[1].Name)\r\n| where FieldType =~ \"ForwardTo\" or FieldType =~ \"ForwardingSmtpAddress\" \r\n| extend ForwardTo = tostring(parsed[1].Value)\r\n| extend ForwardType = tostring(parsed[2].Name)\r\n| project TimeGenerated, UserId, ClientIP=split(ClientIP, \":\", 0)[0], ForwardTo, ForwardType\r\n),\r\n(OfficeActivity \r\n| where UserId =~ \"{UPN}\"\r\n| where Operation =~ \"New-InboxRule\"\r\n| mv-expand parse_json(Parameters)\r\n| extend ParamType = tostring(Parameters.Name)\r\n| where ParamType =~ \"ForwardTo\"\r\n| extend ForwardTo = tostring(Parameters.Value)\r\n| project TimeGenerated, UserId, ClientIP=split(ClientIP, \":\", 0)[0], ForwardTo, ForwardType=\"InboxRule\"\r\n))\r\n| sort by TimeGenerated desc",
+                    "size": 4,
+                    "showAnalytics": true,
+                    "title": "Mailbox Forwarding Rules",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "query - 2"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "BehaviorAnalytics\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where InvestigationPriority > 0\r\n| project TimeGenerated, InvestigationPriority, ActivityType, ActionType, SourceIPLocation, UsersInsights, DevicesInsights, ActivityInsights\r\n| sort by InvestigationPriority desc",
+                    "size": 0,
+                    "title": "UEBA Investigation Priorities",
+                    "timeContext": {
+                      "durationMs": 7776000000
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "UsersInsights",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "DevicesInsights",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "ActivityInsights",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "CellDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "name": "query - 4"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "IOC"
+            },
+            "name": "UserIOCs"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "SecurityAlert\r\n| where TimeGenerated {TimeRange}\r\n| where Entities contains \"\"\"account\"\"\"\r\n| extend AllEntities = parse_json(Entities)\r\n| mv-expand AllEntities\r\n| where AllEntities.Type == \"account\"\r\n| extend AccountEntity = iff(isnotempty(AllEntities.UPNSuffix), strcat(AllEntities.Name, '@', AllEntities.UPNSuffix), AllEntities.Name)\r\n| where AccountEntity =~ \"{UPN}\" or AccountEntity =~ \"{samAccountName}\"\r\n| project AlertSeverity, AlertName=DisplayName, ProviderName, AlertDetails=Entities, SystemAlertId",
+                    "size": 0,
+                    "title": "Related Security Alerts",
+                    "noDataMessage": "No Security Alerts were found for the selected Account.",
+                    "noDataMessageStyle": 3,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AlertDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "GenericDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "SystemAlertId",
+                          "formatter": 5
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 4"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "HuntingBookmark\r\n| where TimeGenerated {TimeRange}\r\n| extend Entities = parse_json(QueryResultRow).__entityMapping\r\n| where Entities contains \"\"\"account\"\"\" //Entity Type to match\r\n| summarize arg_max(TimeGenerated, BookmarkName, Notes, Tags, Entities) by BookmarkId\r\n| extend splitEntities = split(replace(@'[\"{}]', '', tostring(Entities)),',')\r\n| mv-expand splitEntities\r\n| extend splitEntity = split(splitEntities, ':')\r\n| where splitEntity[1] =~ \"account\"\r\n| where splitEntity[0] =~ \"{UPN}\" or splitEntity[0] =~ \"{samAccountName}\"\r\n| project BookmarkName, Notes, Tags",
+                    "size": 0,
+                    "title": "Related Bookmarks",
+                    "noDataMessage": "No Bookmarks were found for the selected Account.",
+                    "noDataMessageStyle": 3,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "AlertDetails",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "GenericDetails",
+                            "linkLabel": "View",
+                            "linkIsContextBlade": true
+                          }
+                        },
+                        {
+                          "columnMatch": "SystemAlertId",
+                          "formatter": 5
+                        }
+                      ]
+                    }
+                  },
+                  "customWidth": "50",
+                  "name": "query - 4 - Copy"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "Alerts"
+            },
+            "name": "RelatedAlerts"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "items": [
+                {
+                  "type": 9,
+                  "content": {
+                    "version": "KqlParameterItem/1.0",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "parameters": [
+                      {
+                        "id": "805e76ac-979e-4247-a304-f3897fa71be6",
+                        "version": "KqlParameterItem/1.0",
+                        "name": "LogonType",
+                        "type": 2,
+                        "isRequired": true,
+                        "multiSelect": true,
+                        "quote": "'",
+                        "delimiter": ",",
+                        "query": "let events = dynamic([4624, 4625, 4768, 4771]);\r\nlet kerbevents = dynamic([4768, 4771]);\r\n(union isfuzzy=true\r\n(SigninLogs\r\n| take 1\r\n| project LogonType=\"AAD/HDJ\"),\r\n(SecurityEvent\r\n| where EventID in (events)\r\n| where TargetUserName =~ \"{samAccountName}\"\r\n| extend LogonType = iff(EventID in (kerbevents), \"Kerberos TGT\", LogonTypeName)\r\n| distinct LogonType),\r\n(DeviceLogonEvents\r\n| where AccountName =~ \"{samAccountName}\"\r\n| distinct LogonType))\r\n| sort by LogonType asc",
+                        "crossComponentResources": [
+                          "{Workspace}"
+                        ],
+                        "typeSettings": {
+                          "additionalResourceOptions": [
+                            "value::all"
+                          ],
+                          "showDefault": false
+                        },
+                        "timeContext": {
+                          "durationMs": 0
+                        },
+                        "timeContextFromParameter": "TimeRange",
+                        "defaultValue": "value::all",
+                        "queryType": 0,
+                        "resourceType": "microsoft.operationalinsights/workspaces"
+                      }
+                    ],
+                    "style": "above",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces"
+                  },
+                  "name": "parameters - 1"
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let events = dynamic([4624, 4625, 4768, 4771]);\r\nlet kerbevents = dynamic([4768, 4771]);\r\n(union isfuzzy=true \r\n(SigninLogs\r\n| where UserPrincipalName =~ \"{UPN}\"\r\n| where AppDisplayName == \"Windows Sign In\"\r\n| extend LogonResult = iff(ResultType == 0, \"Success\", \"Failure\")\r\n| summarize Count=count(), FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated) by LogonComputerOrIP=tostring(DeviceDetail.displayName), LogonResult, LogonType=\"AAD/HDJ\", ErrorCode=ResultType, DataSource=Type),\r\n(SecurityEvent\r\n| where EventID in (events)\r\n| where TargetUserName =~ \"{samAccountName}\"\r\n| extend LogonResult = iff(Level == 8, \"Success\", \"Failure\")\r\n| extend LogonType = iff(EventID in (kerbevents), \"Kerberos TGT\", LogonTypeName)\r\n| extend LogonComputerOrIP = iff(EventID == 4768, IpAddress, Computer)\r\n| extend ErrorCode = iff(EventID in (kerbevents), Status, SubStatus)\r\n| summarize Count=count(), FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated) by LogonComputerOrIP, LogonResult, LogonType, ErrorCode, DataSource=Type),\r\n(DeviceLogonEvents\r\n| where AccountName =~ \"{samAccountName}\"\r\n| summarize Count=count(), FirstOccurance=min(TimeGenerated), LastOccurance=max(TimeGenerated) by LogonComputerOrIP=DeviceName, LogonResult=ActionType, LogonType, DataSource=Type))\r\n| where LogonType in ({LogonType})\r\n| sort by Count desc",
+                    "size": 0,
+                    "showAnalytics": true,
+                    "title": "Computer Logons",
+                    "timeContextFromParameter": "TimeRange",
+                    "showExportToExcel": true,
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ]
+                  },
+                  "name": "Computer Logons"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "Logons"
+            },
+            "name": "UserLogons"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "loadType": "always",
+              "items": [
+                {
+                  "type": 1,
+                  "content": {
+                    "json": "## To use this custom group, switch the group type from \"Editable\" to \"From Template\" and enter the ID of your custom workbook"
+                  },
+                  "name": "text - 0"
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "UserNav",
+              "comparison": "isEqualTo",
+              "value": "Custom"
+            },
+            "name": "CustomGroupAccount"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "InvestigationType",
+        "comparison": "isEqualTo",
+        "value": "Account"
+      },
+      "name": "AccountGroup"
     }
   ],
   "fallbackResourceIds": [
