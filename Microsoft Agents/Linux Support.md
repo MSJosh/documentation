@@ -32,15 +32,8 @@
 | Mariner 2                                 | ✅                  | ❌           | ✅            | ✅        |
 
 Source Documents
-Defender for Linux
-![image](https://github.com/user-attachments/assets/83f60b86-d793-4315-b61b-3d448de728cb)
-
-Defender TVM
-![image](https://github.com/user-attachments/assets/f6b25db9-689d-4f6e-9656-44fc76fc17d3)
-
-Azure Monitor Linux 
-![image](https://github.com/user-attachments/assets/b7e312ad-ebdf-414b-87b8-b379f8a0dba8)
-
-Azure ARC
-![image](https://github.com/user-attachments/assets/be83b59b-a461-409e-8fbc-cfb9a3ed062e)
+[Defender for Linux](https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux)
+[Defender TVM Linux](https://learn.microsoft.com/en-us/defender-vulnerability-management/tvm-supported-os#capabilities-per-supported-operating-systems-os-and-platforms)
+[Azure Monitor Agent Linux](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/azure-monitor-agent-supported-operating-systems#linux-operating-systems)
+[ARC Linux Agent](https://learn.microsoft.com/en-us/azure/azure-arc/servers/prerequisites#supported-operating-systems)
 
