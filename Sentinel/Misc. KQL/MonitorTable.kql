@@ -1,0 +1,10 @@
+let TimeRange = 2h;  // Define the time range for checking Needs to be 2 hours as usage data is every hour.
+Usage
+| where TimeGenerated >= ago(TimeRange)  // Filter data within the specified time range.
+| order by TimeGenerated asc  // Ensure the data is ordered by TimeGenerated.
+| project TimeGenerated, DataType, CurrentQuantity=Quantity  // Project the necessary columns.
+| extend PreviousQuantity = iif(isnull(prev(CurrentQuantity)), real(0), prev(CurrentQuantity))  // Get the previous quantity for comparison and ensure data types match.
+| extend QuantityDifference = CurrentQuantity - PreviousQuantity  // Calculate the difference between current and previous quantities.
+| extend QuantityDifferencePercentage = iif(PreviousQuantity == 0, real(0), (QuantityDifference / PreviousQuantity) * 100)  // Calculate the difference as a percentage.
+| where CurrentQuantity == 0  // Filter to only include rows where the current quantity is 0.
+| project TimeGenerated, DataType, CurrentQuantity, PreviousQuantity, QuantityDifference, QuantityDifferencePercentage  // Project the necessary columns.
