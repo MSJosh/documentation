@@ -32,9 +32,10 @@ To optimize your log ingestion, you can create a table-level transformation rule
 #### Steps to Create a Transformation Rule
 
 1. Access your Log Analytics workspace in Azure and go to **Settings > Tables**.
-2. Find `MicrosoftGraphActivityLogs` in the list of tables, click the ellipsis (`...`) to the right of the table name, and select **Edit**.
+2. Find `MicrosoftGraphActivityLogs` in the list of tables, click the ellipsis (`...`) to the right of the table name, and select ![image](https://github.com/user-attachments/assets/8f6b2861-3b13-4eab-91c6-eb1a4fc16b71).
 3. Create a collection rule (DCR) if one is not already created. This DCR is tied to the Log Analytics workspace and can be used for other table-level transformations. Note that there is currently a limit of 10 transformations per DCR.
-4. Once the DCR has been created, select **Next** to proceed to the Schema and Transformation page. This will show a sample set of data, allowing you to decide what is valuable and what might be dropped. Select **Add Transformation**, which will open a new window to enter the transformation rule.
+4. Once the DCR has been created, select **Next** to proceed to the Schema and Transformation page. This will show a sample set of data, allowing you to decide what is valuable and what might be dropped. Select ![image](https://github.com/user-attachments/assets/5ea11518-8b66-4cf4-a6e0-695853eacf98)
+, which will open a new window to enter the transformation rule.
 5. Copy and paste the following KQL query to stop ingesting data to these columns:
 
     ```kql
@@ -43,7 +44,7 @@ To optimize your log ingestion, you can create a table-level transformation rule
     ```
 
 6. Run the query to validate that the data looks correct and no errors occurred. Select **Apply** and then **Next**.
-7. Select the **Save** button to apply the transformation rule to the DCR. Allow 5-15 minutes for this rule to take effect in your environment.
+7. Select the ![image](https://github.com/user-attachments/assets/e8c86f9f-e06a-4bcd-80fb-4cea1f3e17ad) button to apply the transformation rule to the DCR. Allow 5-15 minutes for this rule to take effect in your environment.
 
 
 ## Clean Up Log Data to Be More Readable
