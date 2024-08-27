@@ -44,3 +44,53 @@ To optimize your log ingestion, you can create a table-level transformation rule
 
 6. Run the query to validate that the data looks correct and no errors occurred. Select **Apply** and then **Next**.
 7. Select the **Save** button to apply the transformation rule to the DCR. Allow 5-15 minutes for this rule to take effect in your environment.
+
+
+## Clean Up Log Data to Be More Readable
+
+To make the `MicrosoftGraphActivityLogs` data more readable, you can transform the log data with the following KQL query. This will parse and organize the data into a more manageable format:
+
+```kql
+MicrosoftGraphActivityLogs
+| extend ParsedUri = tostring(parse_url(RequestUri))
+| extend Host = tostring(parse_json(ParsedUri).Host)
+| extend GraphAPIPath = tolower(replace_string(ParsedUri, "//", "/"))
+| extend GraphAPIResource = tostring(split(GraphAPIPath, "/")[2])
+| project TimeGenerated, RequestMethod, IPAddress, Roles, AppId, ServicePrincipalId, Host, GraphAPIResource
+```
+## Quantity
+The transformation above converts the data into a more readable format and excludes columns that are less relevant for security purposes. The next step is to ensure that your organization is not ingesting excessive data due to specific applications. This document aims to help you stay within the average data ingestion limits based on user activity.
+
+![image](https://github.com/user-attachments/assets/3fad6f01-7799-4cc6-89c5-7a8e7d9e4056)
+
+## Access Microsoft Graph Activity Logs
+
+### Usage
+
+To monitor data usage, you can use the following KQL query to analyze the amount of data ingested over the last 30 days:
+
+```kql
+Usage
+| where TimeGenerated >= ago(30d)
+| where DataType == "MicrosoftGraphActivityLogs"
+| summarize DataGB = sum(Quantity) / 1000
+```
+
+
+Once you determine that your data usage is within the average range, you may need to review the types of data sources being ingested. This query pulls a list of published static Entra Application IDs. For non-static application IDs, you will need to map the AppId results with Entra Applications.
+```kql
+let ApplicationInformation = externaldata (ApplicationName: string, AppId: string, Reference: string ) [h"https://raw.githubusercontent.com/Beercow/Azure-App-IDs/master/Azure_Application_IDs.csv"] with (ignoreFirstRecord=true, format="csv");
+MicrosoftGraphActivityLogs
+| lookup kind=leftouter ApplicationInformation on $left.AppId == $right.AppId
+| project-reorder AppId, ApplicationName
+| summarize count() by ApplicationName
+```
+
+Important Note
+Since Microsoft Graph API is central to Microsoft 365, many applications access this API. Tools like Abnormal Security, which query the Graph API in near real-time to review behavior, email delivery, and blocked messages, can significantly increase the size of MicrosoftGraphActivityLogs and potentially lead to higher costs.
+
+If an application is found to be generating excessive logs and is not deemed valid, you can update the transformation to exclude the top querying AppId:
+```kql
+| where AppId != "Appid"
+```
+## Detections
