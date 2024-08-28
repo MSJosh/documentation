@@ -9,7 +9,7 @@ For more information, see: [Microsoft Graph Activity Logs Overview](https://lear
 
 The logs are stored in Log Analytics for analysis. Additionally, they can be stored in the archive tier for long-term storage in Log Analytics Workspace (LAW). You can also export them to Azure Storage for long-term storage or stream them with Azure Event Hubs to external SIEM tools for alerting, analysis, or archival.
 
-For more details, see: [Manage Data Retention in a Log Analytics Workspace - Azure Monitor](https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview)
+For more details, see: [Manage Data Retention in a Log Analytics Workspace - Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-retention-configure?tabs=portal-3%2Cportal-1%2Cportal-2)
 
 ### Reviewing and Implementing Detection Methods
 
