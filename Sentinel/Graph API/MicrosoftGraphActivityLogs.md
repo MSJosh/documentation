@@ -87,7 +87,7 @@ MicrosoftGraphActivityLogs
 | summarize count() by ApplicationName
 ```
 
-###Important Note
+### Important Note
 
 Since Microsoft Graph API is central to Microsoft 365, many applications access this API. Tools like Abnormal Security, which query the Graph API in near real-time to review behavior, email delivery, and blocked messages, can significantly increase the size of MicrosoftGraphActivityLogs and potentially lead to higher costs.
 
