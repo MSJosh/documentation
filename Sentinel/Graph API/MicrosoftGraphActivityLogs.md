@@ -96,3 +96,16 @@ If an application is found to be generating excessive logs and is not deemed val
 | where AppId != "Appid"
 ```
 ## Detections
+* [Analyzing Malicious Microsoft Graph API Rate Limit Count](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Analyzing%20Malicious%20Microsoft%20Graph%20API%20Rate%20Limit%20Count.kql)
+* [Azure Hound](https://github.com/Bert-JanP/Hunting-Queries-Detection-Rules/blob/main/Graph%20API/AzureHound.md)
+* [Suspicious API Traffic- Entra ID](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/NEW%20Microsoft%20Graph%20API%20Identity%20Protection%20KQL%20Detection.kql)
+
+
+## Supporting resource
+Special thanks to people/blogs below and others in the security community.
+
+* [Bert-Jan Pals](https://kqlquery.com/posts/graphactivitylogs/)
+* [Invictus Incident Response](https://www.invictus-ir.com/nieuws/everything-you-need-to-know-about-the-microsoftgraphactivitylogs)
+* [Cloudbrothers](https://www.cloudbrothers.info/detect-threats-microsoft-graph-logs-part-1/)
+* [KQLSearch](https://www.kqlsearch.com/)
+* [Steven Lim](https://www.linkedin.com/in/0x534c/)
