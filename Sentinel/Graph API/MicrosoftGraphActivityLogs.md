@@ -21,7 +21,7 @@ Ingesting Microsoft Graph Activity Logs is an effective way to review access via
 
 Like other tables within Azure and Entra, Microsoft provides additional columns in the `MicrosoftGraphActivityLogs` table that may not be beneficial for security teams. As of this writing, Microsoft is creating 24 columns that are written to this table.
 
-For more details, see: [Access Microsoft Graph activity logs - Microsoft Graph | Microsoft Learn](https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview)
+For more details, see: [Access Microsoft Graph activity logs - Microsoft Graph | Microsoft Learn](https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview#what-data-is-available-in-the-microsoft-graph-activity-logs)
 
 This article focuses on security-related detections and hunting. If an organization needs to retain all items of the log, it's recommended to have a separate pipeline configured to go to lower-cost storage.
 
