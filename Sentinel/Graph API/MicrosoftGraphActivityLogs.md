@@ -70,6 +70,7 @@ The output log contains many fields. The following table lists the fields that a
 To make the `MicrosoftGraphActivityLogs` data more readable, you can transform the log data with the following KQL query. This will parse and organize the data into a more manageable format:
 
 ```kql
+//Clean up Uri and API path to be more readable 
 MicrosoftGraphActivityLogs
 | extend ParsedUri = tostring(parse_url(RequestUri))
 | extend Host = tostring(parse_json(ParsedUri).Host)
@@ -77,6 +78,24 @@ MicrosoftGraphActivityLogs
 | extend GraphAPIResource = tostring(split(GraphAPIPath, "/")[2])
 | project TimeGenerated, RequestMethod, IPAddress, Roles, AppId, ServicePrincipalId, Host, GraphAPIResource
 ```
+
+```kql
+//Join with Identityinfo to align to user.
+MicrosoftGraphActivityLogs
+| where isnotempty(UserId)
+| join kind=leftouter IdentityInfo on $left.UserId == $right.AccountObjectId
+| where isnotempty(AccountUPN)
+| project-reorder TimeGenerated, AppId, IPAddress, AccountUPN, AccountCreationTime, AssignedRoles, ServicePrincipalId, RequestId, RequestMethod, ResponseStatusCode, RequestUri, ResponseSizeBytes, Roles
+```
+```kql
+//Clean up location information
+MicrosoftGraphActivityLogs
+| extend GeoIPInfo = geo_info_from_ip_address(IPAddress)
+| extend country = tostring(parse_json(GeoIPInfo).country)
+| extend state = tostring(parse_json(GeoIPInfo).state)
+| extend city = tostring(parse_json(GeoIPInfo).city)
+```
+
 ## Quantity
 The transformation above converts the data into a more readable format and excludes columns that are less relevant for security purposes. The next step is to ensure that your organization is not ingesting excessive data due to specific applications. This document aims to help you stay within the average data ingestion limits based on user activity.
 
