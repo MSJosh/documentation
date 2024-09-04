@@ -1,0 +1,32 @@
+//The following query helps to identify the types of Entra applications that have accesses with high-impact permissions.
+//Use App Governance to monitor this behavior also. 
+let PrivilegeAbuse = datatable (Type: string, Permission: string, Privilege: string, Reason: string) [
+    "Application","Mail.ReadWrite","High","BroadImpact",
+    "Application","Mail.Read","High","Collection",
+    "Application","Contacts","High","Phishing",
+    "Application","MailboxSettings","High","Phishing",
+    "Application","People","High","Phishing",
+    "Application","Files","High","Collection",
+    "Application","Notes","High","Collection",
+    "Application","Directory.AccessAsUser.All","High","Phishing",
+    "Application","user_impersonation","High","Phishing",
+    "Application","Application.ReadWrite.All","High","BroadImpact",
+    "Application","Directory.ReadWrite.All","High","BroadImpact",
+    "Application","Domain.ReadWrite.All","High","BroadImpact",
+    "Application","EduRoster.ReadWrite.All","High","BroadImpact",
+    "Application","Group.ReadWrite.All","High","BroadImpact",
+    "Application","Member.Read.Hidden","High","BroadImpact",
+    "Application","RoleManagement.ReadWrite.Directory","High","BroadImpact",
+    "Application","User.ReadWrite.All","High","BroadImpact",
+    "Application","User.ManageCreds.All","High","BroadImpact",
+    "Application","AppRoleAssignment.ReadWrite.All","High","PrivEscalation"
+];
+MicrosoftGraphActivityLogs
+| where TimeGenerated between (ago(7d) .. now())
+| extend ObjectType = iff(isempty(UserId), "ServicePrincipal", "User")
+| where ObjectType == 'ServicePrincipal'
+| extend RolesTemp = split(Roles, " ")
+| mv-expand RolesTemp
+| where RolesTemp has_any (( PrivilegeAbuse | distinct Permission ))
+| extend Role = tostring(RolesTemp)
+| summarize Calls=count(), MinTime=min(TimeGenerated), MaxTime=max(TimeGenerated) by AppId, Role
