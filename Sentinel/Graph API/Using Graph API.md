@@ -1,4 +1,3 @@
-```markdown
 # Optimizing Microsoft Graph Activity Logs
 
 Microsoft Graph Activity Logs provide an audit trail of all HTTP requests received and processed by the Microsoft Graph service for a tenant. These logs are crucial for monitoring and analyzing activities within your Microsoft Graph environment. Tenant administrators can enable log collection and configure destinations using diagnostic settings in Azure Monitor. Logs include API requests from various sources, including business applications, API clients, SDKs, and Microsoft applications like Outlook, Microsoft Teams, or the Microsoft Entra admin center.
@@ -149,6 +148,3 @@ know-about-the-microsoftgraphactivitylogs)
 * [Cloudbrothers](https://www.cloudbrothers.info/detect-threats-microsoft-graph-logs-part-1/)
 * [KQLSearch](https://www.kqlsearch.com/)
 * [Steven Lim](https://www.linkedin.com/in/0x534c/)
-```
-
-Feel free to adjust the formatting or content based on your preferences!
