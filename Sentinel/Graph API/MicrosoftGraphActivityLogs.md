@@ -29,6 +29,24 @@ This article focuses on security-related detections and hunting. If an organizat
 
 To optimize your log ingestion, you can create a table-level transformation rule for the `MicrosoftGraphActivityLogs` table. This will help reduce the amount of unnecessary data written to the table, which might not be needed for security operations. Note that these are general recommendations and each environment may have different requirements. Be sure to understand each column you are excluding.
 
+# Notable Activity Log Fields
+
+The output log contains many fields. The following table lists the fields that are relevant to threat investigations.
+
+| Field                | Details                                                       |
+|----------------------|---------------------------------------------------------------|
+| **TimeGenerated [UTC]** | The date and time the request was received.                 |
+| **AppId**            | The identifier of the application.                            |
+| **IPAddress**        | The IP address of the client from where the request occurred. |
+| **ServicePrincipalId** | The identifier of the service principal making the request.  |
+| **RequestId**        | The identifier that represents the request.                   |
+| **RequestMethod**    | The HTTP method of the event.                                 |
+| **ResponseStatusCode** | The HTTP response status code for the event.                 |
+| **RequestUri**       | The URI of the request.                                      |
+| **ResponseSizeBytes** | The size of the response in bytes.                           |
+| **Roles**            | The roles in token claims.                                   |
+
+
 #### Steps to Create a Transformation Rule
 
 1. Access your Log Analytics workspace in Azure and go to **Settings > Tables**.
