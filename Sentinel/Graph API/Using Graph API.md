@@ -142,9 +142,7 @@ Special thanks to the following contributors and blogs:
 
 * [Bert-Jan Pals](https://kqlquery.com/posts/graphactivitylogs/)
 * [Hunting with Microsoft Graph Activity Logs](https://techcommunity.microsoft.com/t5/microsoft-security-experts-blog/hunting-with-microsoft-graph-activity-logs/ba-p/4234632)
-* [Invictus Incident Response](https://www.invictus-ir.com/nieuws/everything-you-need-to-
-
-know-about-the-microsoftgraphactivitylogs)
+* [Invictus Incident Response](https://www.invictus-ir.com/nieuws/everything-you-need-to-know-about-the-microsoftgraphactivitylogs)
 * [Cloudbrothers](https://www.cloudbrothers.info/detect-threats-microsoft-graph-logs-part-1/)
 * [KQLSearch](https://www.kqlsearch.com/)
 * [Steven Lim](https://www.linkedin.com/in/0x534c/)
