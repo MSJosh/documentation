@@ -136,6 +136,11 @@ If an application is found to be generating excessive logs and is not deemed val
 * [Analyzing Malicious Microsoft Graph API Rate Limit Count](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Analyzing%20Malicious%20Microsoft%20Graph%20API%20Rate%20Limit%20Count.kql)
 * [Azure Hound](https://github.com/Bert-JanP/Hunting-Queries-Detection-Rules/blob/main/Graph%20API/AzureHound.md)
 * [Suspicious API Traffic- Entra ID](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/NEW%20Microsoft%20Graph%20API%20Identity%20Protection%20KQL%20Detection.kql)
+* [Email collection](https://github.com/MSJosh/documentation/blob/main/Sentinel/Graph%20API/Email%20collection.md)
+* [Exfiltration](https://github.com/MSJosh/documentation/blob/main/Sentinel/Graph%20API/Exfiltration.md)
+* [Internal Phising](https://github.com/MSJosh/documentation/blob/main/Sentinel/Graph%20API/Internal%20phishing.md)
+* [AccountManipulation](https://github.com/MSJosh/documentation/blob/main/Sentinel/Graph%20API/Privilege%20escalation.md)
+* [User Delete](https://github.com/MSJosh/documentation/blob/main/Sentinel/Graph%20API/User%20Delete.md)
 
 
 ## Supporting resource
