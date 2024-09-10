@@ -11,7 +11,7 @@
 | Ubuntu 18.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
 | Ubuntu 20.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
 | Ubuntu 22.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
-| Ubuntu 24.04 LTS                          |         -           |      -       |       -       |    -      |
+| Ubuntu 24.04 LTS                          | ✅            |      -       |       -       |    -      |
 | Debian 9                                  | ✅                  | ✅           | ✅            | ❌        |
 | Debian 10                                 | ✅                  | ✅           | ✅            | ✅        |
 | Debian 11                                 | ✅                  | ✅           | ✅            | ✅        |
