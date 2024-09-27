@@ -1,0 +1,15 @@
+let CoreUsage = (Usage
+| where TimeGenerated > ago(30d)
+| where DataType in ("SigninLogs", "AuditLogs", "AzureActivity", "SecurityEvent", "IdentityLogonEvents", "IdentityDirectoryEvents", "IdentityQueryEvents")//Data Sources for UEBA
+| summarize ['Table Size'] =sum(Quantity) / 1000. by DataType
+| extend ['UEBA GB Prediction'] = 0.1*['Table Size'] //UEBA estimation
+| order by ['UEBA GB Prediction'] desc
+);
+let UEBAUsage = (Usage
+| where TimeGenerated > ago(30d)
+| where DataType in ("BehaviorAnalytics","IdentityInfo","UserPeerAnalytics", "Anomalies")//Data Sources for UEBA
+| summarize ['Table Size'] =sum(Quantity) / 1000. by DataType
+| extend ['Actual GB'] = ['Table Size'] //UEBA estimation
+| order by ['Actual GB'] desc)
+;
+union CoreUsage, UEBAUsage
