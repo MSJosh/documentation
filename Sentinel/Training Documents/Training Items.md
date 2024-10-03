@@ -26,6 +26,8 @@
 2. [KQL Search](https://kqlquery.com)
 3. [Cloud Brothers](https://cloudbrothers.info)
 4. [LinkedIn Sentinel Group](https://www.linkedin.com/groups/8768381/)
+5. [Cyber Detective Game](https://kc7cyber.com/go/F201F9)
+
 
 ## **Prebuilt KQL queries**
 1. [KQL Search](https://www.kqlsearch.com)
