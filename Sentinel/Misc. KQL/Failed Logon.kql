@@ -1,0 +1,32 @@
+let LearningPeriod = 14d; // Define the learning period duration
+let BinTime = 1h; // Define the binning time interval
+let RunTime = 1h; // Define the runtime duration
+let StartTime = now(); // Define the start time
+let sensitivity = 2; // Define the sensitivity for anomaly detection
+let baseline = 3; // Define baseline based on failed sign-ins
+
+let aadFunc = (tableName:string) {
+    table(tableName)
+    | where TimeGenerated between (ago(LearningPeriod) .. StartTime) // Filter data within the learning period
+    | where ResultType != 0 // Exclude successful logins
+    | make-series FailedLogins = count() on TimeGenerated from ago(LearningPeriod) to StartTime step BinTime by UserPrincipalName, ResultType // Create a time series of failed logins
+    | extend (Anomalies, Score, Baseline) = series_decompose_anomalies(FailedLogins, sensitivity, -1, 'linefit') // Detect anomalies
+    | mv-expand FailedLogins to typeof(double), TimeGenerated to typeof(datetime), Anomalies to typeof(double), Score to typeof(double), Baseline to typeof(long) // Expand the series
+    | where TimeGenerated >= ago(RunTime) // Filter data within the runtime
+    | where Anomalies > 0 and Baseline > 0 // Focus on positive anomalies
+    | join kind=inner (
+        table(tableName)
+        | where TimeGenerated between (StartTime - RunTime .. StartTime) // Filter data within the runtime
+        | where ResultType != 0 // Exclude successful logins
+        | summarize StartTime = min(TimeGenerated), EndTime = max(TimeGenerated), IPAddresses = make_set(IPAddress, 100), Locations = make_set(LocationDetails, 20), Devices = make_set(DeviceDetail, 20) by UserPrincipalName, UserId, AppDisplayName // Summarize additional details
+    ) on UserPrincipalName // Join on UserPrincipalName
+    | project-away UserPrincipalName1 // Remove unnecessary column
+    | extend Name = tostring(split(UserPrincipalName, '@', 0)), UPNSuffix = tostring(split(UserPrincipalName, '@', 1)) // Extract name and UPN suffix
+    | extend IPAddressFirst = tostring(IPAddresses) // Extract the first IP address
+};
+
+let aadSignin = aadFunc("SigninLogs"); // Invoke the function for SigninLogs
+let aadNonInt = aadFunc("AADNonInteractiveUserSignInLogs"); // Invoke the function for AADNonInteractiveUserSignInLogs
+union isfuzzy=true aadSignin, aadNonInt // Perform a fuzzy union of the results
+| where TimeGenerated >= ago(1h) // Filter results to show only the past hour
+| where Baseline >= baseline // Filter results based on baseline
