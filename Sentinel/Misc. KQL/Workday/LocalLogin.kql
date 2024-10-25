@@ -1,0 +1,3 @@
+ASimAuditEventLogs
+|where EventVendor == "Workday"
+| where ActorUsername !contains "@"
