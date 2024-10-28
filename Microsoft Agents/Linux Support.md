@@ -11,7 +11,7 @@
 | Ubuntu 18.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
 | Ubuntu 20.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
 | Ubuntu 22.04 LTS                          | ✅                  | ✅           | ✅            | ✅        |
-| Ubuntu 24.04 LTS                          | ✅            |      -       |       -       |    -      |
+| Ubuntu 24.04 LTS                          | ✅            |      -       |       ✅       |    ✅      |
 | Debian 9                                  | ✅                  | ✅           | ✅            | ❌        |
 | Debian 10                                 | ✅                  | ✅           | ✅            | ✅        |
 | Debian 11                                 | ✅                  | ✅           | ✅            | ✅        |
@@ -23,7 +23,7 @@
 | Oracle Linux 8.x                          | ✅                  | ✅           | ✅            | ✅        |
 | Oracle Linux 9.x                          | ✅                  | ✅           | ✅            | ✅        |
 | Amazon Linux 2                            | ✅                  | ✅           | ✅            | ✅        |
-| Amazon Linux 2023                         | ✅                  |      -       |       -       | ✅        |
+| Amazon Linux 2023                         | ✅                  |      -       |       ✅       | ✅        |
 | Fedora 33-38                              | ✅                  | ✅           | ❌            | ❌        |
 | Rocky 8.7 and higher                      | ✅                  | ❌           | ✅            | ✅        |
 | Rocky 9.2 and higher                      | ✅                  | ❌           | ✅            | ✅        |
