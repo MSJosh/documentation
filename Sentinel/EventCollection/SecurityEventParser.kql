@@ -1,6 +1,6 @@
 SecurityEvent
-//|where EventID == "4768"
-| where EventID !in (4634, 4624,4799,8002,4688, 4662,4672, 4648, 5059,4673, 4798, 4702,4768, 4663)  
+//|where EventID == "4700"
+| where EventID !in (4634, 4624,4799,8002,4688, 4662,4672, 4648, 5059,4673, 4798, 4702,4768, 4663, 4946,4948,4700)  //Testing list
 | extend SubjectUserSid = extract('<Data Name="SubjectUserSid">([^<]+)</Data>', 1, EventData)
 | extend SubjectUserName = extract('<Data Name="SubjectUserName">([^<]+)</Data>', 1, EventData)
 | extend SubjectDomainName = extract('<Data Name="SubjectDomainName">([^<]+)</Data>', 1, EventData)
@@ -72,5 +72,5 @@ SecurityEvent
 | extend ServiceSid = extract('<Data Name="ServiceSid">([^<]+)</Data>', 1, EventData)
 | extend CertIssuerName = extract('<Data Name="CertIssuerName">([^<]+)</>', 1, EventData)//Need test data
 | extend CertSerialNumber = extract('<Data Name="CertSerialNumber">([^<]+)</>', 1, EventData)//Need test data
-
-
+| extend RuleId = extract('<Data Name="RuleId">([^<]+)</Data>', 1, EventData)
+| extend TaskContent = extract('<Data Name="TaskContent">([^<]+)</Data>', 1, EventData)
