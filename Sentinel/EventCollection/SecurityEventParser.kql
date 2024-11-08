@@ -1,5 +1,5 @@
 SecurityEvent
-| where EventID !in (4634, 4624,4799,8002,4688, 4662,4672, 4648, 5059,4673, 4798, 4702,4768, 4663, 4946,4948,4700, 4719)  //Testing list
+| where EventID !in (4634, 4624,4799,8002,4688, 4662,4672, 4648, 5059,4673, 4798, 4702,4768, 4663, 4946,4948,4700,4719,8001, 5136)  //Testing list
 | extend SubjectUserSid = extract('<Data Name="SubjectUserSid">([^<]+)</Data>', 1, EventData)
 | extend SubjectUserName = extract('<Data Name="SubjectUserName">([^<]+)</Data>', 1, EventData)
 | extend SubjectDomainName = extract('<Data Name="SubjectDomainName">([^<]+)</Data>', 1, EventData)
@@ -73,3 +73,13 @@ SecurityEvent
 | extend CertSerialNumber = extract('<Data Name="CertSerialNumber">([^<]+)</>', 1, EventData)//Need test data
 | extend RuleId = extract('<Data Name="RuleId">([^<]+)</Data>', 1, EventData)
 | extend TaskContent = extract('<Data Name="TaskContent">([^<]+)</Data>', 1, EventData)
+| extend OpCorrelationID = extract('<Data Name="OpCorrelationID">([^<]+)</Data>', 1, EventData)
+| extend AppCorrelationID = extract('<Data Name="AppCorrelationID">([^<]+)</Data>', 1, EventData)
+| extend DSName = extract('<Data Name="DSName">([^<]+)</Data>', 1, EventData)
+| extend DSType = extract('<Data Name="DSType">([^<]+)</Data>', 1, EventData)
+| extend ObjectDN = extract('<Data Name="ObjectDN">([^<]+)</Data>', 1, EventData)
+| extend ObjectGUID = extract('<Data Name="ObjectGUID">([^<]+)</Data>', 1, EventData)
+| extend ObjectClass = extract('<Data Name="ObjectClass">([^<]+)</Data>', 1, EventData)
+| extend AttributeLDAPDisplayName = extract('<Data Name="AttributeLDAPDisplayName">([^<]+)</Data>', 1, EventData)
+| extend AttributeSyntaxOID = extract('<Data Name="AttributeSyntaxOID">([^<]+)</Data>', 1, EventData)
+| extend AttributeValue = extract('<Data Name="AttributeValue">([^<]+)</Data>', 1, EventData)
