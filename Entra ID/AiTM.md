@@ -1,7 +1,6 @@
-# Harden Entra ID for Advisory/Attacker-in-the-Middle (AiTM) and Other Attack Methods
+# Harden Entra ID Advisory/Attacker-in-the-Middle (AiTM)
 
-1. If applicable via licensing, enable Entra ID Protection across the entire tenant.**
-  - [What is Microsoft Entra ID Protection](https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection)
+1. If applicable via licensing, enable Entra ID Protection across the entire tenant. - [What is Microsoft Entra ID Protection](https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection)
 
 ![image](https://github.com/user-attachments/assets/43d46612-40a2-41b9-8816-73d2a668e23d)
 
