@@ -77,15 +77,15 @@ NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent 
 - EvilProxy
 
 
-#Sample Analytic Rules 
+## Sample Analytic Rules available in Content Hub
 - MFA Spamming followed by Successful login
--Possible AiTM Phishing Attempt Against Microsoft Entra ID
--Risky user signin observed in non-Microsoft network device
--Suspicious application consent similar to O365 Attack Toolkit
--Suspicious application consent similar to PwnAuth
+- Possible AiTM Phishing Attempt Against Microsoft Entra ID
+- Risky user signin observed in non-Microsoft network device
+- Suspicious application consent similar to O365 Attack Toolkit
+- Suspicious application consent similar to PwnAuth
 
 
-## AADSignInEventsBeta
+## AADSignInEventsBeta Detections
 
 ```kusto
 AADSignInEventsBeta
