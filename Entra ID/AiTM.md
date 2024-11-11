@@ -56,10 +56,9 @@
 
 
    - **Enforce Conditional Access Policies associated with Device Trust and compliance where possible.**
-     - Ensure low risk and patch level with MDE and Intune - *An external link was removed to protect your privacy.*
+     - Ensure low risk and patch level with MDE and Intune 
      - Utilize Edge Browser where possible to enforce Cloud Apps seamlessly for external partners and non-company-owned devices.
-       - *An external link was removed to protect your privacy.*
-       - *An external link was removed to protect your privacy.*
+
 
 ## AiTM Phishing Tool Kits
 
