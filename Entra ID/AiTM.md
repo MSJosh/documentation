@@ -29,7 +29,7 @@
            - For Sign In risk it is recommended to utilize higher levels of MFA validation that require user interaction such as Authenticator where it shows the location of the sign in, or passkey sign in.  While no solution fool proof, you can implement notification of the user by Microsoft Teams via an automation by Sentinel to validate the user did sign into the location and update alert information. [Notifiy User via Teams](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/IdentityProtection-TeamsBotResponse)
 
 
-***Harden Entra ID***
+# ***Harden Entra ID***
 -While ensuring proper detections and mitigations are in place, the first priority of security is hardening the enviroment to prevent such attacks from happening. Below are some methods available to Microsoft customers to secure their enviroment.
 
 - **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
