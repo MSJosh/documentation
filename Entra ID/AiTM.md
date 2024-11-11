@@ -35,13 +35,16 @@
 - **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
    -[Require phishing-resistant multifactor authentication for Microsoft Entra administrator roles](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-phish-resistant-mfa)
    -[Enable passkeys for your organization](https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2)
-      - Start to test out Passkey with Authenticator.
+      - Entra Customers can start using Authenticator and Android/iOS devices to create a passkey
       - Transition to Windows Hello for Business (WHfB) for End Users.
 
-4. **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
+- **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
    - **Secure Score and Exposure Management**
-     - *An external link was removed to protect your privacy.*
+     - [What is the identity secure score?](https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-identity-secure-score)
      - Be sure to utilize Defender secure score with MDI data to harden local AD to protect against lateral movement and on-premises attacks.
+     - Utilize OpenSource tools like [Maester](https://maester.dev/)
+    
+  
    - **Restrict access to Microsoft Entra admin center**
      - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - *An external link was removed to protect your privacy.*
      - Block user access with Conditional Access policy.
