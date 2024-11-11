@@ -28,11 +28,15 @@
            - Sign In risk can be triggered by VPN traffic so it is important to configure known location IPs as part of Entra ID and dismiss false postives to help the machine learning modules to learn behavior.
            - For Sign In risk it is recommended to utilize higher levels of MFA validation that require user interaction such as Authenticator where it shows the location of the sign in, or passkey sign in.  While no solution fool proof, you can implement notification of the user by Microsoft Teams via an automation by Sentinel to validate the user did sign into the location and update alert information. [Notifiy User via Teams](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/IdentityProtection-TeamsBotResponse)
 
-3. **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
-   - *An external link was removed to protect your privacy.*
-   - *An external link was removed to protect your privacy.*
-     - Start to test out Passkey with Authenticator.
-   - Transition to Windows Hello for Business (WHfB) for End Users.
+
+*Harden Entra ID*
+-While ensuring proper detections and mitigations are in place, the first priority of security is hardening the enviroment to prevent such attacks from happening. Below are some methods available to Microsoft customers to secure their enviroment.
+
+- **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
+   -[Require phishing-resistant multifactor authentication for Microsoft Entra administrator roles](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-phish-resistant-mfa)
+   -[Enable passkeys for your organization](https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2)
+      - Start to test out Passkey with Authenticator.
+      - Transition to Windows Hello for Business (WHfB) for End Users.
 
 4. **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
    - **Secure Score and Exposure Management**
