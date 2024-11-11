@@ -13,24 +13,24 @@
                - Review both sign-in and non-interactive logs to ensure no other successful sign-ins have happened.
                - Validate that User MFA is at the highest available for the organization. Be sure to retire MFA by SMS/phone call.
                - Review both sign-in and non-interactive logs to ensure no other successful sign-ins have happened.
-               - Confirm or Dismiss User Risk based on findings
+               - Confirm or Dismiss User Risk based on findings.
                   - [Confirm](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/Confirm-EntraIDRiskyUser)
                   - [Dismiss](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/Dismiss-EntraIDRiskyUser)
-               - Review user mailbox for potential email that had bad URL
-               - Review user's devices for potential bad acts done from device
+               - Review user mailbox for potential email that had bad URL.
+               - Reviewing user's devices for potential bad acts done from device.
                - Sample Queries - https://github.com/MSJosh/TTTTUB/tree/main/MFA%20Bypass
             -Once resources have cleared user from the event.
-               - Reset user password and communicate the new password to the end user, have them change password again. This will dismiss the risk of the user in Entra Portal
-               - Security team can also dismiss risk also in Entra Portal or Sentinel/Defender XDR
+               - Reset the user password and communicate the new password to the end user, have them change password again. This will dismiss the risk of the user in Entra Portal
+               - Security team can also dismiss risks also in Entra Portal or Sentinel/Defender XDR
 
-      - **Sign-in risk policy** - Similar to User based risks, detections happen both Real-time and Offline based on type of detections. Detections related to user travel, sign in location and correlation between Defender for Office help to trigger events.
-           - Conditional Access policies should be configured to require Microsoft Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to prove it's them by using one of their registered authentication methods, remediating the sign-in risk.
-           - Sign In risk can be triggered by VPN traffic so it is important to configure known location IPs as part of Entra ID and dismiss false postives to help the machine learning modules to learn behavior.
-           - For Sign In risk it is recommended to utilize higher levels of MFA validation that require user interaction such as Authenticator where it shows the location of the sign in, or passkey sign in.  While no solution fool proof, you can implement notification of the user by Microsoft Teams via an automation by Sentinel to validate the user did sign into the location and update alert information. [Notifiy User via Teams](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/IdentityProtection-TeamsBotResponse)
+      - **Sign-in risk policy** - Like User based risks, detections happen both Real-time and Offline based on type of detections. Detections related to user travel, sign-in location and correlation between Defender for Office help to trigger events.
+           - Conditional Access policies should be configured to require Microsoft Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to validate that this sign is from them by using one of their registered authentication methods, remediating the sign-in risk.
+           - Sign In Risk can be triggered by VPN traffic, so it is important to configure known location IPs as part of Entra ID and dismiss false positives to help the machine learning modules to learn behavior.
+           - For Sign In Risk, it is recommended to utilize higher levels of MFA validation that require user interaction such as Authenticator where it shows the location of the sign in, or passkey sign-in.  While there is no solution fool proof, you can implement notification of the user by Microsoft Teams via an automation by Sentinel to confirm the user did sign into the location and update alert information. [Notifiy User via Teams](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/IdentityProtection-TeamsBotResponse)
 
 
 # ***Harden Entra ID***
--While ensuring proper detections and mitigations are in place, the first priority of security is hardening the enviroment to prevent such attacks from happening. Below are some methods available to Microsoft customers to secure their enviroment.
+-While ensuring proper detections and mitigations are in place, the priority of security is hardening the environment to prevent such attacks from happening. Listed below are some methods available to Microsoft customers to secure their environment.
 
 - **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
    - [Require phishing-resistant multifactor authentication for Microsoft Entra administrator roles](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-phish-resistant-mfa)
@@ -41,15 +41,15 @@
 - **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
    - **Secure Score and Exposure Management**
      - [What is the identity secure score?](https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-identity-secure-score)
-     - Be sure to utilize Defender secure score with MDI data to harden local AD to protect against lateral movement and on-premises attacks.
-     - Utilize OpenSource tools like [Maester](https://maester.dev/)
+     - Be sure to use Defender secure score with MDI data to harden local AD to protect against lateral movement and on-premises attacks.
+     - Utilize Open Source tools like [Maester](https://maester.dev/)
     
 - **Restrict access to Microsoft Entra admin center**
      - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - [Restrict User Access](https://learn.microsoft.com/en-us/entra/fundamentals/users-default-permissions#restrict-member-users-default-permissions)
      - Block user access with Conditional Access policy.
        - Creating a Conditional Access policy for Windows Azure Service Management API will block non-administrative access.
 ![image](https://github.com/user-attachments/assets/5b2df056-b1b1-4c5a-ba1d-936260b67628)
-         - Start with report-only and monitor the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
+         - Start with report-only and check the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
         
 
 
