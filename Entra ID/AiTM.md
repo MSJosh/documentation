@@ -54,8 +54,11 @@
 ![image](https://github.com/user-attachments/assets/42c8b32c-0774-462a-ba7f-c52f916d67b1)
 
    - **Enforce Conditional Access Policies associated with Device Trust and compliance where possible.**
-     - Ensure low risk and patch level with MDE and Intune 
+     - [Ensure low risk and patch level with MDE and Intune](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-all-users-device-compliance)
      - Utilize Edge Browser where possible to enforce Cloud Apps seamlessly for external partners and non-company-owned devices.
+       - https://medium.com/@giannicastaldi/journey-with-microsoft-security-from-casb-to-project-breeze-72338c1529ae
+       - https://cloudbrothers.info/en/data-protection-breeze-mda-integration-edge-business/
+       - https://learn.microsoft.com/en-us/defender-cloud-apps/in-browser-protection 
 
 
 
