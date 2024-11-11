@@ -1,10 +1,11 @@
 # Harden Entra ID for Advisory/Attacker-in-the-Middle (AiTM) and Other Attack Methods
 
-1. **If applicable via licensing, enable Entra ID Protection across the entire tenant.**
-   - What is Microsoft Entra ID Protection? - Microsoft Entra ID Protection | Microsoft Learn
+1. If applicable via licensing, enable Entra ID Protection across the entire tenant.**
+  - [What is Microsoft Entra ID Protection](https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection)
+
 ![image](https://github.com/user-attachments/assets/43d46612-40a2-41b9-8816-73d2a668e23d)
 
-   a. Configure block and MFA based on organizational requirements in addition to implementing automated responses where possible. This will allow security analysts to focus on higher alerts and detections.
+   - Configure block and MFA based on organizational requirements in addition to implementing automated responses where possible. This will allow security analysts to focus on higher alerts and detections.
       - **User risk policy** – Focuses on both offline and real-time protections that review user behavior, such as the use of hacking tools, anomalies based on user norms, and threat intelligence provided by the Microsoft Threat Research team.
         - While Microsoft recommends password change for high-level alerts through SSPR, blocking high user alerts and allowing security analysts to review the detection more closely leads to improved security posture and removal of misconfigurations.
           - **Block on High User Risk Alert**
@@ -18,13 +19,13 @@
           - *An external link was removed to protect your privacy.*
         - Notify user via Teams - *An external link was removed to protect your privacy.*
 
-2. **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
+3. **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
    - *An external link was removed to protect your privacy.*
    - *An external link was removed to protect your privacy.*
      - Start to test out Passkey with Authenticator.
    - Transition to Windows Hello for Business (WHfB) for End Users.
 
-3. **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
+4. **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
    - **Secure Score and Exposure Management**
      - *An external link was removed to protect your privacy.*
      - Be sure to utilize Defender secure score with MDI data to harden local AD to protect against lateral movement and on-premises attacks.
