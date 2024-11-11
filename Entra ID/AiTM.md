@@ -81,10 +81,9 @@ NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent 
 
 ## Sample Analytic Rules available in Content Hub
 - [MFA Spamming followed by Successful login](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/MFASpammingfollowedbySuccessfullogin.yaml)
-- Possible AiTM Phishing Attempt Against Microsoft Entra ID
-- Risky user signin observed in non-Microsoft network device
-- Suspicious application consent similar to O365 Attack Toolkit
-- Suspicious application consent similar to PwnAuth
+- [Possible AiTM Phishing Attempt Against Microsoft Entra ID](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/SecurityThreatEssentialSolution/Analytic%20Rules/PossibleAiTMPhishingAttemptAgainstAAD.yaml)
+- [Suspicious application consent similar to PwnAuth](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/MaliciousOAuthApp_PwnAuth.yaml)
+- [Suspicious application consent similar to O365 Attack Toolkit](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/MaliciousOAuthApp_O365AttackToolkit.yaml)
 - [Anomalous sign-in location by user account and authenticating application](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/AnomalousUserAppSigninLocationIncrease-detection.yaml)
 - [Azure Portal Signin from another Azure Tenant](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/AzurePortalSigninfromanotherAzureTenant.yaml)
 - [User Accounts - Sign in Failure due to CA Spike](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/UserAccounts-CABlockedSigninSpikes.yaml)
