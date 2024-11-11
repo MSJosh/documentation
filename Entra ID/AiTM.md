@@ -48,7 +48,10 @@
      - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - [Restrict User Access](https://learn.microsoft.com/en-us/entra/fundamentals/users-default-permissions#restrict-member-users-default-permissions)
      - Block user access with Conditional Access policy.
        - Creating a Conditional Access policy for Windows Azure Service Management API will block non-administrative access.
-![image](https://github.com/user-attachments/assets/5b2df056-b1b1-4c5a-ba1d-936260b67628)
+![image](https://github.com/user-attachments/assets/42c8b32c-0774-462a-ba7f-c52f916d67b1)
+
+   -Users Exclude Roles that would require this access like Global Admin. This will still allow the users to utilize PIM to activate their account. Be sure to include Break Glass Accounts in addition to accounts that need this permission.
+  - Utilize Known locations also to reduce blocking users
          - Start with report-only and check the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
         
 
