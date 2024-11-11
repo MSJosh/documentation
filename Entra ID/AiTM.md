@@ -48,22 +48,21 @@
      - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - [Restrict User Access](https://learn.microsoft.com/en-us/entra/fundamentals/users-default-permissions#restrict-member-users-default-permissions)
      - Block user access with Conditional Access policy.
        - Creating a Conditional Access policy for Windows Azure Service Management API will block non-administrative access.
+       - Users Exclude Roles that would require this access like Global Admin. This will still allow the users to utilize PIM to activate their account. Be sure to include Break Glass Accounts in addition to accounts that need this permission.
+       - Utilize Known locations also to reduce blocking users
+       - Start with report-only and check the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
 ![image](https://github.com/user-attachments/assets/42c8b32c-0774-462a-ba7f-c52f916d67b1)
-
-   -Users Exclude Roles that would require this access like Global Admin. This will still allow the users to utilize PIM to activate their account. Be sure to include Break Glass Accounts in addition to accounts that need this permission.
-  - Utilize Known locations also to reduce blocking users
-         - Start with report-only and check the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
-        
-
-
-
 
    - **Enforce Conditional Access Policies associated with Device Trust and compliance where possible.**
      - Ensure low risk and patch level with MDE and Intune 
      - Utilize Edge Browser where possible to enforce Cloud Apps seamlessly for external partners and non-company-owned devices.
 
 
-## AiTM Phishing Tool Kits
+
+
+
+
+# AiTM Phishing Tool Kits
 
 NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent multi-factor authentication (MFA) through reverse-proxy. Kits such as NakedPages, EvilProxy, and Evilginx are part of an increasing trend of AiTM phishing and have supplanted many other less advanced forms of phishing. NakedPages is open source, focuses on automating setup and phishing activity, and provides support services to customers. These attributes lower the barrier-to-entry to phishing activity, making the kit attractive to many different actors who have continually leveraged the kit since its first appearance in May-June 2022. Actors using this kit have varying motivations for targeting and could target any industry or sector.
 
@@ -71,6 +70,8 @@ NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent 
 - Muraena
 - Modlishka
 - EvilProxy
+
+##Detection Methods##
 
 ## AADSignInEventsBeta
 
