@@ -75,15 +75,23 @@ NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent 
 - Muraena
 - Modlishka
 - EvilProxy
+- Caffeine Phishing as a Service Platform
+
 
 
 ## Sample Analytic Rules available in Content Hub
-- MFA Spamming followed by Successful login
+- [MFA Spamming followed by Successful login](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/MFASpammingfollowedbySuccessfullogin.yaml)
 - Possible AiTM Phishing Attempt Against Microsoft Entra ID
 - Risky user signin observed in non-Microsoft network device
 - Suspicious application consent similar to O365 Attack Toolkit
 - Suspicious application consent similar to PwnAuth
-
+- [Anomalous sign-in location by user account and authenticating application](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/AnomalousUserAppSigninLocationIncrease-detection.yaml)
+- [Azure Portal Signin from another Azure Tenant](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/AzurePortalSigninfromanotherAzureTenant.yaml)
+- [User Accounts - Sign in Failure due to CA Spike](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/UserAccounts-CABlockedSigninSpikes.yaml)
+- [Signins From VPS Providers](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Cloud%20Identity%20Threat%20Protection%20Essentials/Hunting%20Queries/Signins-From-VPS-Providers.yaml)
+- [Anomalous Azure Active Directory apps based on authentication location](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/AnomalousUserAppSigninLocationIncrease-detection.yaml)
+- [Anomalous sign-in location by user account and authenticating application](https://github.com/Azure/Azure-Sentinel/blob/master/Hunting%20Queries/SigninLogs/AnomalousUserAppSigninLocationIncreaseDetail.yaml)
+- [Azure Active Directory sign-in burst from multiple locations](https://github.com/Azure/Azure-Sentinel/blob/29baa345363c7ba258e0ea59a931874ee886e2b4/Solutions/Microsoft%20Entra%20ID/Analytic%20Rules/Sign-in%20Burst%20from%20Multiple%20Locations.yaml)
 
 ## AADSignInEventsBeta Detections
 
