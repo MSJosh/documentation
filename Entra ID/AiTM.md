@@ -23,17 +23,10 @@
                - Reset user password and communicate the new password to the end user, have them change password again. This will dismiss the risk of the user in Entra Portal
                - Security team can also dismiss risk also in Entra Portal or Sentinel/Defender XDR
 
-         
-
-
-
-
-
-
-      - **Sign-in risk policy**
-        - Require Microsoft Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to prove it's them by using one of their registered authentication methods, remediating the sign-in risk. Revoking Session for High automatically can be done through Sentinel and will help to reduce AiTM.
-          - *An external link was removed to protect your privacy.*
-        - Notify user via Teams - *An external link was removed to protect your privacy.*
+      - **Sign-in risk policy** - Similar to User based risks, detections happen both Real-time and Offline based on type of detections. Detections related to user travel, sign in location and correlation between Defender for Office help to trigger events.
+           - Conditional Access policies should be configured to require Microsoft Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to prove it's them by using one of their registered authentication methods, remediating the sign-in risk.
+           - Sign In risk can be triggered by VPN traffic so it is important to configure known location IPs as part of Entra ID and dismiss false postives to help the machine learning modules to learn behavior.
+           - For Sign In risk it is recommended to utilize higher levels of MFA validation that require user interaction such as Authenticator where it shows the location of the sign in, or passkey sign in.  While no solution fool proof, you can implement notification of the user by Microsoft Teams via an automation by Sentinel to validate the user did sign into the location and update alert information. [Notifiy User via Teams](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/IdentityProtection-TeamsBotResponse)
 
 3. **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
    - *An external link was removed to protect your privacy.*
