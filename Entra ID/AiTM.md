@@ -8,11 +8,28 @@
       - **User risk policy** – Focuses on both offline and real-time protections that review user behavior, such as the use of hacking tools, anomalies based on user norms, and threat intelligence provided by the Microsoft Threat Research team.
         - While Microsoft recommends password change for high-level alerts through SSPR, blocking high user alerts and allowing security analysts to review the detection more closely leads to improved security posture and removal of misconfigurations.
           - **Block on High User Risk Alert**
-            - Initiate Revoke of Session - *An external link was removed to protect your privacy.*
-            - Notify Helpdesk to reset user password and communicate the new password to the end user.
-            - Validate that User MFA is at the highest available for the organization. Be sure to retire MFA by SMS/phone call.
-            - Review both sign-in and non-interactive logs to ensure no other successful sign-ins have happened.
-          - Recommends blocking on high vs. password change if RH has resources. Choosing to block access rather than allowing self-remediation options, like secure password change and multifactor authentication, affects your users and administrators even more. Weigh these choices when configuring your policies.
+            -Follow procedure to resolve incident. (below are steps that can be used)
+                - Initiate Revoke of Session - [Session Reset](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID/Playbooks/Revoke-AADSignInSessions)
+               - Review both sign-in and non-interactive logs to ensure no other successful sign-ins have happened.
+               - Validate that User MFA is at the highest available for the organization. Be sure to retire MFA by SMS/phone call.
+               - Review both sign-in and non-interactive logs to ensure no other successful sign-ins have happened.
+               - Confirm or Dismiss User Risk based on findings
+                  - [Confirm](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/Confirm-EntraIDRiskyUser)
+                  - [Dismiss](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Microsoft%20Entra%20ID%20Protection/Playbooks/Dismiss-EntraIDRiskyUser)
+               - Review user mailbox for potential email that had bad URL
+               - Review user's devices for potential bad acts done from device
+               - Sample Queries - https://github.com/MSJosh/TTTTUB/tree/main/MFA%20Bypass
+            -Once resources have cleared user from the event.
+               - Reset user password and communicate the new password to the end user, have them change password again. This will dismiss the risk of the user in Entra Portal
+               - Security team can also dismiss risk also in Entra Portal or Sentinel/Defender XDR
+
+         
+
+
+
+
+
+
       - **Sign-in risk policy**
         - Require Microsoft Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to prove it's them by using one of their registered authentication methods, remediating the sign-in risk. Revoking Session for High automatically can be done through Sentinel and will help to reduce AiTM.
           - *An external link was removed to protect your privacy.*
