@@ -49,8 +49,12 @@
      - Block user access with Conditional Access policy.
        - Creating a Conditional Access policy for Windows Azure Service Management API will block non-administrative access.
 ![image](https://github.com/user-attachments/assets/5b2df056-b1b1-4c5a-ba1d-936260b67628)
+         - Start with report-only and monitor the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
+        
 
-         - Start with report-only and monitor the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [RAzure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
+
+
+
    - **Enforce Conditional Access Policies associated with Device Trust and compliance where possible.**
      - Ensure low risk and patch level with MDE and Intune - *An external link was removed to protect your privacy.*
      - Utilize Edge Browser where possible to enforce Cloud Apps seamlessly for external partners and non-company-owned devices.
