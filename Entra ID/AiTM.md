@@ -33,10 +33,10 @@
 -While ensuring proper detections and mitigations are in place, the first priority of security is hardening the enviroment to prevent such attacks from happening. Below are some methods available to Microsoft customers to secure their enviroment.
 
 - **Enforce Phishing Resistant MFA in Conditional Access where applicable (ideally everywhere).**
-   -[Require phishing-resistant multifactor authentication for Microsoft Entra administrator roles](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-phish-resistant-mfa)
-   -[Enable passkeys for your organization](https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2)
-      - Entra Customers can start using Authenticator and Android/iOS devices to create a passkey
-      - Transition to Windows Hello for Business (WHfB) for End Users.
+   - [Require phishing-resistant multifactor authentication for Microsoft Entra administrator roles](https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-admin-phish-resistant-mfa)
+   - [Enable passkeys for your organization](https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2)
+   - Entra Customers can start using Authenticator and Android/iOS devices to create a passkey
+   - Transition to Windows Hello for Business (WHfB) for End Users.
 
 - **Harden Entra ID to find gaps within your environment based on best practices from Microsoft.**
    - **Secure Score and Exposure Management**
@@ -44,12 +44,13 @@
      - Be sure to utilize Defender secure score with MDI data to harden local AD to protect against lateral movement and on-premises attacks.
      - Utilize OpenSource tools like [Maester](https://maester.dev/)
     
-  
-   - **Restrict access to Microsoft Entra admin center**
-     - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - *An external link was removed to protect your privacy.*
+- **Restrict access to Microsoft Entra admin center**
+     - Restricting Access to Entra Admin portals does not limit access to PowerShell and graph only from the UI. This might help against a user poking around but is not a security practice that will harden the environment - [Restrict User Access](https://learn.microsoft.com/en-us/entra/fundamentals/users-default-permissions#restrict-member-users-default-permissions)
      - Block user access with Conditional Access policy.
        - Creating a Conditional Access policy for Windows Azure Service Management API will block non-administrative access.
-         - Start with report-only and monitor the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. *An external link was removed to protect your privacy.*
+![image](https://github.com/user-attachments/assets/5b2df056-b1b1-4c5a-ba1d-936260b67628)
+
+         - Start with report-only and monitor the behavior of this conditional access policy. Several services utilize this service, so you might impact services like Fabric and Data Lake. [RAzure API Management](https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts)
    - **Enforce Conditional Access Policies associated with Device Trust and compliance where possible.**
      - Ensure low risk and patch level with MDE and Intune - *An external link was removed to protect your privacy.*
      - Utilize Edge Browser where possible to enforce Cloud Apps seamlessly for external partners and non-company-owned devices.
