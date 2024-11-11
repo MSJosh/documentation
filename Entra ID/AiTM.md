@@ -69,12 +69,21 @@
 
 NakedPages is an adversary-in-the-middle (AiTM) phishing kit used to circumvent multi-factor authentication (MFA) through reverse-proxy. Kits such as NakedPages, EvilProxy, and Evilginx are part of an increasing trend of AiTM phishing and have supplanted many other less advanced forms of phishing. NakedPages is open source, focuses on automating setup and phishing activity, and provides support services to customers. These attributes lower the barrier-to-entry to phishing activity, making the kit attractive to many different actors who have continually leveraged the kit since its first appearance in May-June 2022. Actors using this kit have varying motivations for targeting and could target any industry or sector.
 
+![image](https://github.com/user-attachments/assets/e19abd39-8eb1-453a-9e7d-f49372dc0b22)
+
 - Evilginx
 - Muraena
 - Modlishka
 - EvilProxy
 
-##Detection Methods##
+
+#Sample Analytic Rules 
+- MFA Spamming followed by Successful login
+-Possible AiTM Phishing Attempt Against Microsoft Entra ID
+-Risky user signin observed in non-Microsoft network device
+-Suspicious application consent similar to O365 Attack Toolkit
+-Suspicious application consent similar to PwnAuth
+
 
 ## AADSignInEventsBeta
 
@@ -90,3 +99,47 @@ AADSignInEventsBeta
 | where isnotempty (AccountUpn)
 | where isnotempty (IPAddress)
 | project Timestamp,AccountObjectId,AccountUpn,IPAddress, SessionId, CorrelationId
+```
+```kusto
+//Cookies that were first seen after OfficeHome application authentication (as seen when the user authenticated to the AiTM phishing site) and then seen being used in other applications in other countries
+let OfficeHomeSessionIds = 
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| where ApplicationId == "4765445b-32c6-49b0-83e6-1d93765276ca" //OfficeHome application 
+| where ClientAppUsed == "Browser" 
+| where LogonType has "interactiveUser" 
+| summarize arg_min(Timestamp, Country) by SessionId;
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ApplicationId != "4765445b-32c6-49b0-83e6-1d93765276ca"
+| where ClientAppUsed == "Browser" 
+| project OtherTimestamp = Timestamp, Application, ApplicationId, AccountObjectId, AccountDisplayName, OtherCountry = Country, SessionId
+| join OfficeHomeSessionIds on SessionId
+| where OtherTimestamp > Timestamp and OtherCountry != Country
+```
+```kusto
+//Use this query to summarize for each user the countries that authenticated to the OfficeHome application and find uncommon or untrusted ones
+AADSignInEventsBeta 
+| where Timestamp > ago(7d) 
+| where ApplicationId == "4765445b-32c6-49b0-83e6-1d93765276ca" //OfficeHome application 
+| where ClientAppUsed == "Browser" 
+| where LogonType has "interactiveUser" 
+| summarize Countries = make_set(Country) by AccountObjectId, AccountDisplayName
+```
+```kusto
+//Find suspicious tokens tagged by AAD "Anomalous Token" alert
+let suspiciousSessionIds = materialize(
+AlertInfo
+| where Timestamp > ago(7d)
+| where Title == "Anomalous Token"
+| join (AlertEvidence | where Timestamp > ago(7d) | where EntityType == "CloudLogonSession") on AlertId
+| project sessionId = todynamic(AdditionalFields).SessionId);
+//Find Inbox rules created during a session that used the anomalous token
+let hasSuspiciousSessionIds = isnotempty(toscalar(suspiciousSessionIds));
+CloudAppEvents
+| where hasSuspiciousSessionIds
+| where Timestamp > ago(21d)
+| where ActionType == "New-InboxRule"
+| where RawEventData.SessionId in (suspiciousSessionIds)
+```
