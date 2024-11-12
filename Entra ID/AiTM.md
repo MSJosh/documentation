@@ -1,5 +1,9 @@
 # Harden Entra ID Advisory/Attacker-in-the-Middle (AiTM)
 
+In today's rapidly evolving digital landscape, AiTM has been an evolving method to attack and compromise organizations big and small. As organizations strive to stay ahead of bad actors, they often find themselves navigating complex methods that impact end user experience and create frustration between teams. Below are a number of methods and detections that can be implemented in an enviorment to catch, stop, and mitigate AiTM while not impacting end user experience.
+
+
+# ***Entra Identity Protection***
 1. If applicable via licensing, enable Entra ID Protection across the entire tenant. - [What is Microsoft Entra ID Protection](https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection)
 
 ![image](https://github.com/user-attachments/assets/43d46612-40a2-41b9-8816-73d2a668e23d)
