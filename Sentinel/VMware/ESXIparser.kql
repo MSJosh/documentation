@@ -1,0 +1,43 @@
+let likely_vmware_hosts = Syslog 
+    | where ProcessName has_any ("vpxd-main", "vmkwarning", "hostd-probe", "healthd","kmxa", "hostd-probe","vmkernel","sps", "rhttpproxy", "fdm", "envoy-access", "vsansystem", "dpd", "apiForwarder", "hostdCgiServer", "hostd","healthdPlugins", "esxtokend", "envoy", "sandboxd" ) 
+    | distinct Computer;
+Syslog
+| where CollectorHostName in (likely_vmware_hosts) or Computer in (likely_vmware_hosts)
+| where Facility == "local4"
+| extend Parser = extract_all(@"^(\w+)?\s?(\w+)\[(\w+)\]\s([\s\S]+)", dynamic([1,2,3,4]), SyslogMessage)
+| extend Substring =  iif(isnotempty(Parser), tostring(Parser),"")
+| extend Sub = iif(Substring has ("sub="), extract(@"sub=([\w\d\(\)\-\.]+)\]?",1, Substring), dynamic("")),
+         OpId = iif(Substring has ("opID="), extract(@"opID=([\w\d\(\)\-@]+)\s?\]?",1, Substring), dynamic("")),
+         UserName = iif(Substring has("suser="), extract(@"\suser=([\w\d\(\)\-]+)\]",1, Substring), dynamic (""))
+| extend Message = iif(isnotempty(Substring), extract(@"\[([\S\s]+)\]\s([\S\s]+)",2, Substring), "")
+| extend Message = iif(isempty(Message), SyslogMessage, Message)
+| extend Message = trim(@"^-- ", Message)
+| extend SSLHandshake = iif(ProcessName == "rhttpproxy" and Substring has "Failed to SSL handshake", extract(@"Failed to SSL handshake SSL\(([\s\S]+?)\)", 1, Substring), dynamic("")),
+         SSLException = iif(ProcessName == "rhttpproxy" and Substring has "SSL Exception", extract(@"SSL Exception: ([\s\S]+?)\)", 1, Substring), dynamic("")),
+         Duration = iif(ProcessName == "rhttpproxy" and Substring has "duration:", extract(@"duration: (\d+msec)", 1, Substring), dynamic("")),
+         LROStatus = iif(ProcessName == "fdm" and Substring has_any ("BEGIN", "FINISH"), extract(@"-- (BEGIN|FINISH) lro-\d+", 1, Substring), dynamic("")),
+         FdmService = iif(ProcessName == "fdm" and Substring has "fdmService", extract(@"-- fdmService -- ([\w\.]+) --", 1, Substring), dynamic("")),
+         HeartbeatID = iif(ProcessName == "fdm" and Substring has "fdmService", extract(@"-- ([\w\d\-]+)$", 1, Substring), dynamic("")),
+         HostId = iif(ProcessName == "fdm" and Substring has "hostId=", extract(@"hostId=([\w\-]+)", 1, Substring), dynamic("")),
+         State = iif(ProcessName == "fdm" and Substring has "state=", extract(@"state=([\w\-]+)", 1, Substring), dynamic("")),
+         Master = iif(ProcessName == "fdm" and Substring has "master=", extract(@"master=([\w\-]+)", 1, Substring), dynamic("")),
+         Isolated = iif(ProcessName == "fdm" and Substring has "isolated=", extract(@"isolated=([\w\-]+)", 1, Substring), dynamic("")),
+         HostListVersion = iif(ProcessName == "fdm" and Substring has "host-list-version=", extract(@"host-list-version=(\d+)", 1, Substring), dynamic("")),
+         ConfigVersion = iif(ProcessName == "fdm" and Substring has "config-version=", extract(@"config-version=(\d+)", 1, Substring), dynamic("")),
+         VmMetadataVersion = iif(ProcessName == "fdm" and Substring has "vm-metadata-version=", extract(@"vm-metadata-version=(\d+)", 1, Substring), dynamic("")),
+         SlvMstTdiffSec = iif(ProcessName == "fdm" and Substring has "slv-mst-tdiff-sec=", extract(@"slv-mst-tdiff-sec=(\d+)", 1, Substring), dynamic("")),
+         EnvoyAccessMethod = iif(ProcessName == "envoy-access", extract(@"^(\w+)", 1, SyslogMessage), dynamic("")),
+         EnvoyAccessPath = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)", 2, SyslogMessage), dynamic("")),
+         EnvoyAccessStatus = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)", 3, SyslogMessage), dynamic("")),
+         EnvoyAccessUpstream = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)", 4, SyslogMessage), dynamic("")),
+         EnvoyAccessBytesSent = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)", 5, SyslogMessage), dynamic("")),
+         EnvoyAccessBytesReceived = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)", 6, SyslogMessage), dynamic("")),
+         EnvoyAccessProtocol = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)", 7, SyslogMessage), dynamic("")),
+         EnvoyAccessTlsVersion = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)\s(\S+)", 8, SyslogMessage), dynamic("")),
+         EnvoyAccessClientIp = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)\s(\S+)\s(\S+)", 9, SyslogMessage), dynamic("")),
+         EnvoyAccessServerIp = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)", 10, SyslogMessage), dynamic("")),
+         EnvoyAccessRequestId = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)", 11, SyslogMessage), dynamic("")),
+         EnvoyAccessUserAgent = iif(ProcessName == "envoy-access", extract(@"^(\w+)\s(\S+)\s(\d+)\s(\S+)\s(\d+)\s(\d+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)\s(\S+)", 12, SyslogMessage), dynamic("")),
+         KmxaState = iif(ProcessName == "kmxa" and Substring has "STATE:", extract(@"STATE: ([\s\S]+)", 1, Substring), dynamic(""))
+| project-away Substring, Parser,_ResourceId, Type,CollectorHostName, Facility
+
