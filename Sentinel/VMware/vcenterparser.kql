@@ -17,13 +17,20 @@ let vCenter_Logout = () {
     Syslog
     | project-rename Message = SyslogMessage
     | where Message has "UserLogoutSessionEvent"
-    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " DomainName:string "\\" Username:string "@" SourceIP " logged out (login time:" LoginTime:string ", number of API invocations: " APIInvocationCount:int ", user agent:" UserAgent:string ")]" *
+    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " DomainName:string "\\" Username:string "@" SourceIP " logged out (login time:" LoginTime:string ", number of API invocations: " APIInvocationCount:string ", user agent:" UserAgent:string ")]" *
     | extend DomainName = iff(isnull(DomainName), "", DomainName),
              Username = iff(isnull(Username), "", Username),
              SourceIP = iff(isnull(SourceIP), "", SourceIP),
              LoginTime = iff(isnull(LoginTime), "", LoginTime),
-             APIInvocationCount = iff(isnull(APIInvocationCount), 0, APIInvocationCount),
+             APIInvocationCount = toint(replace_string(APIInvocationCount, ",", "")),
              UserAgent = iff(isnull(UserAgent), "", UserAgent)
+    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " Username:string "@" SourceIP " logged out (login time:" LoginTime:string ", number of API invocations: " APIInvocationCount:string ", user agent:" UserAgent:string ")]" *
+    | extend DomainName = iff(isnull(DomainName), "", DomainName),
+             Username = iff(isnull(Username), Username, Username),
+             SourceIP = iff(isnull(SourceIP), SourceIP, SourceIP),
+             LoginTime = iff(isnull(LoginTime), LoginTime, LoginTime),
+             APIInvocationCount = toint(replace_string(APIInvocationCount, ",", "")),
+             UserAgent = iff(isnull(UserAgent), UserAgent, UserAgent)
 };
 let vCenter_Role = () {
     Syslog
@@ -47,4 +54,4 @@ let vCenter_RoleModified = () {
 };
 union vCenter_Login, vCenter_Logout, vCenter_Role, vCenter_RoleModified
 | extend ClientIP = SourceIP
-|project EventTime, Computer, HostIP, Message, ProcessName,ProcessID,EventType, EventSeverity,DomainName, Username, SourceIP, UserAgent, LoginTime,RoleName,Operation, OldRoleName, NewRoleName, AddedPriviledges, RemovedPriviledges
+| project EventTime, Computer, HostIP, Message, ProcessName, ProcessID, EventType, EventSeverity, DomainName, Username, SourceIP, UserAgent, APIInvocationCount, LoginTime, RoleName, Operation, OldRoleName, NewRoleName, AddedPriviledges, RemovedPriviledges
