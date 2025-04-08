@@ -1,26 +1,50 @@
-let vCenter_Login =() {
-        Syslog
-        |project-rename Message=SyslogMessage
-        | where Message has ("UserLoginSessionEvent")
-        | parse Message  with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " DomainName:string "\\" Username:string "@" SourceIP " logged in as " UserAgent:string "]" *
-    };
-    let vCenter_Logout =() {
-        Syslog
-        |project-rename Message=SyslogMessage
-        | where Message has ("UserLogoutSessionEvent")
-        | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User" DomainName:string "\\" Username:string "@" SourceIP " logged out (login time:" LoginTime:string ", number of API invocations: " APIInvocationCount:int ", user agent:" UserAgent:string ")]" *
-    };
-    let vCenter_Role=() {
-        Syslog
-        |project-rename Message=SyslogMessage
-        | where Message has_any("RoleAddedEvent","RoleRemovedEvent")
-        | parse Message with * " " * " " Hostname:string "vpxd" * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity:string "]" * "[New role " RoleName:string " " Operation:string  "]" *
-    };
-    let vCenter_RoleModified=() {
-        Syslog
-        |project-rename Message=SyslogMessage
-        | where Message has ("RoleUpdatedEvent")
-        | parse Message with * " " * " " Hostname:string "vpxd" * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity:string "]" * "Previous name: " OldRoleName:string ", new name "NewRoleName:string " Added privileges: " AddedPriviledges:string " Removed privileges: " RemovedPriviledges:string "]" *
-    };
-    union vCenter_Login,vCenter_Logout,vCenter_Role,vCenter_RoleModified
-    | extend ClientIP = SourceIP
+let vCenter_Login = () {
+    Syslog
+    | project-rename Message = SyslogMessage
+    | where Message has "UserLoginSessionEvent"
+    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " DomainName:string "\\" Username:string "@" SourceIP " logged in as " UserAgent:string "]" *
+    | extend DomainName = iff(isnull(DomainName), "", DomainName),
+             Username = iff(isnull(Username), "", Username),
+             SourceIP = iff(isnull(SourceIP), "", SourceIP),
+             UserAgent = iff(isnull(UserAgent), "", UserAgent)
+    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " Username:string "@" SourceIP " logged in as " UserAgent:string "]" *
+    | extend DomainName = iff(isnull(DomainName), "", DomainName),
+             Username = iff(isnull(Username), Username, Username),
+             SourceIP = iff(isnull(SourceIP), SourceIP, SourceIP),
+             UserAgent = iff(isnull(UserAgent), UserAgent, UserAgent)
+};
+let vCenter_Logout = () {
+    Syslog
+    | project-rename Message = SyslogMessage
+    | where Message has "UserLogoutSessionEvent"
+    | parse Message with * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity "]" * "[User " DomainName:string "\\" Username:string "@" SourceIP " logged out (login time:" LoginTime:string ", number of API invocations: " APIInvocationCount:int ", user agent:" UserAgent:string ")]" *
+    | extend DomainName = iff(isnull(DomainName), "", DomainName),
+             Username = iff(isnull(Username), "", Username),
+             SourceIP = iff(isnull(SourceIP), "", SourceIP),
+             LoginTime = iff(isnull(LoginTime), "", LoginTime),
+             APIInvocationCount = iff(isnull(APIInvocationCount), 0, APIInvocationCount),
+             UserAgent = iff(isnull(UserAgent), "", UserAgent)
+};
+let vCenter_Role = () {
+    Syslog
+    | project-rename Message = SyslogMessage
+    | where Message has_any("RoleAddedEvent", "RoleRemovedEvent")
+    | parse Message with * " " * " " Hostname:string "vpxd" * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity:string "]" * "[New role " RoleName:string " " Operation:string "]" *
+    | extend Hostname = iff(isnull(Hostname), "", Hostname),
+             RoleName = iff(isnull(RoleName), "", RoleName),
+             Operation = iff(isnull(Operation), "", Operation)
+};
+let vCenter_RoleModified = () {
+    Syslog
+    | project-rename Message = SyslogMessage
+    | where Message has "RoleUpdatedEvent"
+    | parse Message with * " " * " " Hostname:string "vpxd" * "Event [" EventId:string "] [1-1] [" EventTime:datetime "] [" EventType:string "] [" EventSeverity:string "]" * "Previous name: " OldRoleName:string ", new name " NewRoleName:string " Added privileges: " AddedPriviledges:string " Removed privileges: " RemovedPriviledges:string "]" *
+    | extend Hostname = iff(isnull(Hostname), "", Hostname),
+             OldRoleName = iff(isnull(OldRoleName), "", OldRoleName),
+             NewRoleName = iff(isnull(NewRoleName), "", NewRoleName),
+             AddedPriviledges = iff(isnull(AddedPriviledges), "", AddedPriviledges),
+             RemovedPriviledges = iff(isnull(RemovedPriviledges), "", RemovedPriviledges)
+};
+union vCenter_Login, vCenter_Logout, vCenter_Role, vCenter_RoleModified
+| extend ClientIP = SourceIP
+|project EventTime, Computer, HostIP, Message, ProcessName,ProcessID,EventType, EventSeverity,DomainName, Username, SourceIP, UserAgent, LoginTime,RoleName,Operation, OldRoleName, NewRoleName, AddedPriviledges, RemovedPriviledges
