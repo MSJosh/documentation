@@ -1,0 +1,6 @@
+MessageEvents 
+|where IsExternalThread == "1"
+|where ThreadType == "chat"
+| extend SenderDomain = split(SenderEmailAddress, "@")[1]
+| extend RecipientSmtpAddress = tostring(parse_json(RecipientDetails)[0].RecipientSmtpAddress)
+| extend RecipientDomain = split(RecipientSmtpAddress, "@")[1]
