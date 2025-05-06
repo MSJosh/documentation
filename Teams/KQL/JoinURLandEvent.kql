@@ -1,0 +1,7 @@
+MessageUrlInfo
+|project Timestamp,TeamsMessageId, Url,UrlDomain
+| join kind=inner (
+    MessageEvents
+    | project TeamsMessageId,SenderDisplayName,SenderEmailAddress, SenderType, RecipientDetails,ConfidenceLevel, Subject, DeliveryAction, DeliveryLocation
+) on TeamsMessageId
+|project-away TeamsMessageId, TeamsMessageId1
