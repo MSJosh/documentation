@@ -1,13 +1,10 @@
-let SourceIPRegex = @"([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){0,6}:[0-9a-fA-F]{1,4}"; // IPv4 and IPv6 with shorthand notation
+let SourceIPRegex = @"([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){0,6}:[0-9a-fA-F]{1,4}";
 let PortRegex = @"^\d+$";
-CommonSecurityLog
-| where DeviceVendor contains "Cisco"
-| where DeviceFacility contains "local6"
+Firepower_CL
 | extend 
     ConnectionID = extract(@"connection (\d+)", 1, Message),
     Action = extract(@"([A-Za-z0-9\s\-]+ connection)", 1, Message),
-    // Adjusted Device extraction to capture the device name from the beginning of the log message
-    Device = extract(@"^%([A-Za-z0-9\-]+-\d+-\d+)", 1, Message), // Captures something like "FTD-6-430002"
+    Device = extract(@"^%([A-Za-z0-9\-]+-\d+-\d+)", 1, Message),
     SourceIP_temp = iif(Message has "faddr", extract(@"faddr ([0-9a-fA-F:.]+)", 1, Message), 
                        iif(Message has "from", extract(@"from [A-Za-z0-9_\-]+:([0-9a-fA-F:.]+)", 1, Message),
                            extract(@":([0-9a-fA-F:.]+)/", 1, Message))),
@@ -43,7 +40,19 @@ CommonSecurityLog
     ResponderBytes = extract(@"ResponderBytes:\s*(\d+)", 1, Message),
     NAPPolicy = extract(@"NAPPolicy:\s*([^\s,]+)", 1, Message),
     VLAN_ID = extract(@"VLAN_ID:\s*(\d+)", 1, Message),
-    EventType = extract(@"FIN Timeout", 0, Message)
+    EventType = extract(@"FIN Timeout", 0, Message),
+    Client = extract(@"Client:\s*([^,]+)", 1, Message),
+    ApplicationProtocol = extract(@"ApplicationProtocol:\s*([^,]+)", 1, Message),
+    DNSQuery = extract(@"DNSQuery:\s*([^,]+)", 1, Message),
+    DNSRecordType = extract(@"DNSRecordType:\s*([^,]+)", 1, Message),
+    DNSResponseType = extract(@"DNSResponseType:\s*([^,]+)", 1, Message),
+    ReferencedHost = extract(@"ReferencedHost:\s*([^,]+)", 1, Message),
+    ClientAppDetector = extract(@"ClientAppDetector:\s*([^,]+)", 1, Message),
+    TeardownType = extract(@"^%FTD-\d+-(\d+):\s*(Teardown [^:]+ connection)", 2, Message),
+    TeardownConnectionID = extract(@"Teardown [^:]+ connection (\d+)", 1, Message),
+    TeardownReason = extract(@"bytes \d+ ([^\s]+ Timeout)", 1, Message),
+    SourceZoneFromTeardown = extract(@"from ([^:]+):[0-9a-fA-F:.]+/\d+", 1, Message),
+    DestZoneFromTeardown = extract(@"to ([^:]+):[0-9a-fA-F:.]+/\d+", 1, Message)
 | extend
     SourceIP = iif(SourceIP_temp matches regex SourceIPRegex, SourceIP_temp, ""),
     SourcePort = iif(SourcePort_temp matches regex PortRegex, SourcePort_temp, ""),
@@ -52,7 +61,7 @@ CommonSecurityLog
     EventType = iif(isnull(EventType), "Unknown", EventType)
 | project 
     ConnectionID,
-    Device,  // Now populated with the correct device (e.g., FTD-6-430002)
+    Device,
     Action,
     SourceIP,
     SourcePort,
@@ -77,5 +86,17 @@ CommonSecurityLog
     ResponderBytes,
     NAPPolicy,
     VLAN_ID,
-    EventType,   
+    EventType,
+    Client,
+    ApplicationProtocol,
+    DNSQuery,
+    DNSRecordType,
+    DNSResponseType,
+    ReferencedHost,
+    ClientAppDetector,
+    TeardownType,
+    TeardownConnectionID,
+    TeardownReason,
+    SourceZoneFromTeardown,
+    DestZoneFromTeardown,
     Message
