@@ -52,12 +52,27 @@ Firepower_CL
     TeardownConnectionID = extract(@"Teardown [^:]+ connection (\d+)", 1, Message),
     TeardownReason = extract(@"bytes \d+ ([^\s]+ Timeout)", 1, Message),
     SourceZoneFromTeardown = extract(@"from ([^:]+):[0-9a-fA-F:.]+/\d+", 1, Message),
-    DestZoneFromTeardown = extract(@"to ([^:]+):[0-9a-fA-F:.]+/\d+", 1, Message)
+    DestZoneFromTeardown = extract(@"to ([^:]+):[0-9a-fA-F:.]+/\d+", 1, Message),
+    TeardownProtocol = extract(@"Teardown (\w+) connection", 1, Message),
+    TeardownFaddr = extract(@"faddr ([0-9.]+)", 1, Message),
+    TeardownFport = extract(@"faddr [0-9.]+/(\d+)", 1, Message),
+    TeardownGaddr = extract(@"gaddr ([0-9.]+)", 1, Message),
+    TeardownGport = extract(@"gaddr [0-9.]+/(\d+)", 1, Message),
+    TeardownLaddr = extract(@"laddr ([0-9.]+)", 1, Message),
+    TeardownLport = extract(@"laddr [0-9.]+/(\d+)", 1, Message),
+    TeardownTypeCode = extract(@"type (\d+)", 1, Message),
+    TeardownCode = extract(@"code (\d+)", 1, Message)
 | extend
     SourceIP = iif(SourceIP_temp matches regex SourceIPRegex, SourceIP_temp, ""),
-    SourcePort = iif(SourcePort_temp matches regex PortRegex, SourcePort_temp, ""),
+    SourcePort = toint(iif(SourcePort_temp matches regex PortRegex, SourcePort_temp, "0")),
     DestIP = iif(DestIP_temp matches regex SourceIPRegex, DestIP_temp, ""),
-    DestPort = iif(DestPort_temp matches regex PortRegex, DestPort_temp, ""),
+    DestPort = toint(iif(DestPort_temp matches regex PortRegex, DestPort_temp, "0"))
+| extend
+    SourceIP = iif(isempty(SourceIP) and Message has "from", extract(@"from ([0-9.]+)/\d+", 1, Message), SourceIP),
+    SourcePort = iif(SourcePort == 0 and Message has "from", toint(extract(@"from [0-9.]+/(\d+)", 1, Message)), SourcePort),
+    DestIP = iif(isempty(DestIP) and Message has "to", extract(@"to ([0-9.]+)/\d+", 1, Message), DestIP),
+    DestPort = iif(DestPort == 0 and Message has "to", toint(extract(@"to [0-9.]+/(\d+)", 1, Message)), DestPort),
+    Protocol = iif(Protocol == "Unknown" and Message has "protocol=", extract(@"protocol=([A-Z]+)", 1, Message), Protocol),
     EventType = iif(isnull(EventType), "Unknown", EventType)
 | project 
     ConnectionID,
@@ -99,4 +114,13 @@ Firepower_CL
     TeardownReason,
     SourceZoneFromTeardown,
     DestZoneFromTeardown,
+    TeardownProtocol,
+    TeardownFaddr,
+    TeardownFport,
+    TeardownGaddr,
+    TeardownGport,
+    TeardownLaddr,
+    TeardownLport,
+    TeardownTypeCode,
+    TeardownCode,
     Message
