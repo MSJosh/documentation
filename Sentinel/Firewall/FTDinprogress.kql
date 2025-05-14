@@ -55,7 +55,10 @@ Firepower_CL
     AvgRateCurrent = toint(extract(@"Current average rate is (\d+)", 1, Message)),
     AvgRateMax = toint(extract(@"Current average rate is \d+ per second, max configured rate is (\d+)", 1, Message)),
     CumulativeDropCount = toint(extract(@"Cumulative total count is (\d+)", 1, Message)),
-    Reason = extract(@"(SYN Timeout|FIN Timeout|TCP Reset by peer|Connection expired|Connection terminated)", 1, Message)
+    Reason = coalesce(
+        extract(@"(SYN Timeout|FIN Timeout|TCP Reset by peer|Connection expired|Connection terminated)", 1, Message),
+        extract(@"type\s+\d+\s+code\s+\d+", 0, Message)
+    )
 | extend
     SourceIP = iif(SourceIP_temp matches regex SourceIPRegex, SourceIP_temp, ""),
     SourcePort = toint(iif(SourcePort_temp matches regex PortRegex, SourcePort_temp, "0")),
@@ -119,4 +122,5 @@ Firepower_CL
 |where Action !contains "Teardown TCP state-bypass connection"
 |where Action !contains "Teardown UDP connection"
 |where Action !contains "Built inbound UDP connection"
+|where Action !contains "Built inbound ICMP connection"
 |take 1000
