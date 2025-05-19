@@ -1,0 +1,192 @@
+{
+    "properties": {
+        "schema": {
+            "name": "Firepower_CL",
+            "columns": [
+                {
+                    "name": "ConnectionID",
+                    "type": "string"
+                },
+                {
+                    "name": "Device",
+                    "type": "string"
+                },
+                {
+                    "name": "Action",
+                    "type": "string"
+                },
+                {
+                    "name": "SourceIP",
+                    "type": "string"
+                },
+                {
+                    "name": "SourcePort",
+                    "type": "int"
+                },
+                {
+                    "name": "DestIP",
+                    "type": "string"
+                },
+                {
+                    "name": "DestPort",
+                    "type": "int"
+                },
+                {
+                    "name": "Duration",
+                    "type": "string"
+                },
+                {
+                    "name": "Bytes",
+                    "type": "string"
+                },
+                {
+                    "name": "EventPriority",
+                    "type": "string"
+                },
+                {
+                    "name": "DeviceUUID",
+                    "type": "string"
+                },
+                {
+                    "name": "InstanceID",
+                    "type": "string"
+                },
+                {
+                    "name": "FirstPacketSecond",
+                    "type": "string"
+                },
+                {
+                    "name": "AccessControlRuleAction",
+                    "type": "string"
+                },
+                {
+                    "name": "Protocol",
+                    "type": "string"
+                },
+                {
+                    "name": "IngressInterface",
+                    "type": "string"
+                },
+                {
+                    "name": "IngressZone",
+                    "type": "string"
+                },
+                {
+                    "name": "ACPolicy",
+                    "type": "string"
+                },
+                {
+                    "name": "AccessControlRuleName",
+                    "type": "string"
+                },
+                {
+                    "name": "PrefilterPolicy",
+                    "type": "string"
+                },
+                {
+                    "name": "InitiatorPackets",
+                    "type": "string"
+                },
+                {
+                    "name": "ResponderPackets",
+                    "type": "string"
+                },
+                {
+                    "name": "InitiatorBytes",
+                    "type": "string"
+                },
+                {
+                    "name": "ResponderBytes",
+                    "type": "string"
+                },
+                {
+                    "name": "NAPPolicy",
+                    "type": "string"
+                },
+                {
+                    "name": "VLAN_ID",
+                    "type": "string"
+                },
+                {
+                    "name": "EventType",
+                    "type": "string"
+                },
+                {
+                    "name": "Client",
+                    "type": "string"
+                },
+                {
+                    "name": "ApplicationProtocol",
+                    "type": "string"
+                },
+                {
+                    "name": "DNSQuery",
+                    "type": "string"
+                },
+                {
+                    "name": "DNSRecordType",
+                    "type": "string"
+                },
+                {
+                    "name": "DNSResponseType",
+                    "type": "string"
+                },
+                {
+                    "name": "ReferencedHost",
+                    "type": "string"
+                },
+                {
+                    "name": "ClientAppDetector",
+                    "type": "string"
+                },
+                {
+                    "name": "DropRateExceeded",
+                    "type": "string"
+                },
+                {
+                    "name": "BurstRateCurrent",
+                    "type": "int"
+                },
+                {
+                    "name": "BurstRateMax",
+                    "type": "int"
+                },
+                {
+                    "name": "AvgRateCurrent",
+                    "type": "int"
+                },
+                {
+                    "name": "AvgRateMax",
+                    "type": "int"
+                },
+                {
+                    "name": "CumulativeDropCount",
+                    "type": "int"
+                },
+                {
+                    "name": "SourceZoneFromTeardown",
+                    "type": "string"
+                },
+                {
+                    "name": "DestZoneFromTeardown",
+                    "type": "string"
+                },
+                {
+                    "name": "Reason",
+                    "type": "string"
+                },
+                {
+                    "name": "Message",
+                    "type": "string"
+                },
+		{
+                            "name": "TimeGenerated",
+                            "type": "datetime"
+                }
+
+            ]
+        },
+        "totalRetentionInDays": 365,
+        "plan": "Auxiliary"
+    }
+}
