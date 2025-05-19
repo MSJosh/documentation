@@ -1,0 +1,60 @@
+let SourceIPRegex = @"([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){0,6}:[0-9a-fA-F]{1,4}";
+let PortRegex = @"^\d+$";
+Firepower_CL
+| extend 
+    ConnectionID = iif(Message has "ConnectionID:", extract(@"ConnectionID:\s*(\d+)", 1, Message), extract(@"connection (\d+)", 1, Message)),
+    Action = iif(Message has "drop rate-", extract(@"\[ Scanning\] (drop rate-\d+ exceeded)", 1, Message), extract(@"([A-Za-z0-9\s\-]+ connection)", 1, Message)),
+    Device = extract(@"^%([A-Za-z0-9\-]+-\d+-\d+)", 1, Message),
+    SourceIP_temp = iif(Message has "SrcIP", extract(@"SrcIP:\s*([0-9a-fA-F:.]+)", 1, Message),
+                    iif(Message has "faddr", extract(@"faddr ([0-9a-fA-F:.]+)", 1, Message), 
+                    iif(Message has "from", extract(@"from [A-Za-z0-9_\-]+:([0-9a-fA-F:.]+)", 1, Message),
+                        extract(@":([0-9a-fA-F:.]+)/", 1, Message)))),
+    SourcePort_temp = iif(Message has "SrcPort", extract(@"SrcPort:\s*(\d+)", 1, Message),
+                      iif(Message has "/", extract(@"(?:[0-9a-fA-F:.]+/)(\d+)", 1, Message), 
+                      iif(Message has "from", extract(@"from [A-Za-z0-9_\-]+:[0-9a-fA-F:.]+/(\d+)", 1, Message),
+                          extract(@":([0-9]+)/", 1, Message)))),
+    DestIP_temp = iif(Message has "DstIP", extract(@"DstIP:\s*([0-9a-fA-F:.]+)", 1, Message),
+                  iif(Message has "gaddr", extract(@"gaddr ([0-9a-fA-F:.]+)", 1, Message), 
+                  iif(Message has "to", extract(@"to [A-Za-z0-9_\-]+:([0-9a-fA-F:.]+)", 1, Message),
+                      extract(@":([0-9a-fA-F:.]+)/", 1, Message)))),
+    DestPort_temp = iif(Message has "DstPort", extract(@"DstPort:\s*(\d+)", 1, Message),
+                    iif(Message has "gaddr", extract(@"gaddr [0-9a-fA-F:.]+/(\d+)", 1, Message), 
+                    iif(Message has "to", extract(@"to [A-Za-z0-9_\-]+:[0-9a-fA-F:.]+/(\d+)", 1, Message),
+                        extract(@":([0-9]+)/", 1, Message)))),
+    DeviceUUID = extract(@"DeviceUUID:\s*([a-f0-9\-]+)", 1, Message),
+    InstanceID = extract(@"InstanceID:\s*(\d+)", 1, Message),
+    FirstPacketSecond = extract(@"FirstPacketSecond:\s*([^\s,]+)", 1, Message),
+    Protocol = iif(Message matches regex @"(?i)protocol:", extract(@"(?i)protocol:\s*([a-zA-Z0-9\-]+)", 1, Message),
+                   iif(isnotempty(extract(@"\b(TCP|UDP|ICMP|GRE|NetBIOS-ns)\b", 1, Message)), extract(@"\b(TCP|UDP|ICMP|GRE|NetBIOS-ns)\b", 1, Message), "Unknown")),
+    IngressInterface = extract(@"IngressInterface:\s*([^\s,]+)", 1, Message),
+    IngressZone = extract(@"IngressZone:\s*([^\s,]+)", 1, Message),
+    ACPolicy = extract(@"ACPolicy:\s*([^\s,]+)", 1, Message),
+    NAPPolicy = extract(@"NAPPolicy:\s*([^,\n]+)", 1, Message)
+| extend
+    SourceIP = iif(SourceIP_temp matches regex SourceIPRegex, SourceIP_temp, ""),
+    SourcePort = toint(iif(SourcePort_temp matches regex PortRegex, SourcePort_temp, "0")),
+    DestIP = iif(DestIP_temp matches regex SourceIPRegex, DestIP_temp, ""),
+    DestPort = toint(iif(DestPort_temp matches regex PortRegex, DestPort_temp, "0"))
+| extend
+    SourceIP = iif(isempty(SourceIP) and Message has "from", extract(@"from ([0-9.]+)/\d+", 1, Message), SourceIP),
+    SourcePort = iif(SourcePort == 0 and Message has "from", toint(extract(@"from [0-9.]+/(\d+)", 1, Message)), SourcePort),
+    DestIP = iif(isempty(DestIP) and Message has "to", extract(@"to ([0-9.]+)/\d+", 1, Message), DestIP),
+    DestPort = iif(DestPort == 0 and Message has "to", toint(extract(@"to [0-9.]+/(\d+)", 1, Message)), DestPort),
+    Protocol = iif(Protocol == "Unknown" and Message has "protocol=", extract(@"protocol=([A-Z]+)", 1, Message), Protocol)
+| where Action contains "PUA"
+| project 
+    ConnectionID,
+    Device,
+    Action,
+    SourceIP,
+    SourcePort,
+    DestIP,
+    DestPort,
+    DeviceUUID,
+    InstanceID,
+    FirstPacketSecond,
+    Protocol,
+    IngressInterface,
+    IngressZone,
+    ACPolicy,
+    NAPPolicy
