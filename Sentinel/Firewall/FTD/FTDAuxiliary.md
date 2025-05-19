@@ -3,7 +3,7 @@
 
 ## Instructions
 
-Cisco Firepower logs are a great source of information, however can be quite costly when ingesting into Sentinel or other SIEMS. In this document I will walk through creating an Auxilary table in a Sentinel workspace and utilize Cisco ASA/FTD AMA Data Collection Rule to land FTD data into the lower cost table.Follow these steps to create the Firepower Auxiliary table in your Sentinel instance.
+Cisco Firepower logs are a great source of information, however can be quite costly when ingesting into Sentinel or other SIEMS. In this document, I will walk through creating an Auxiliary table in a Sentinel workspace and utilize Cisco ASA/FTD AMA Data Collection Rule to land FTD data into the lower cost table. Follow these steps to create the Firepower Auxiliary table in your Sentinel instance.
 
 ### Step 1: Get the following information
 - Workspace Name
@@ -30,30 +30,32 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 
 ![Run Status](https://github.com/user-attachments/assets/606a1002-a61f-41f5-aeb8-e01f3eda775c)
 
-### Step 10: Validate table's existance by going to the Log Analytics Workspace (LAW), Select Tables, and find the Firepower_CL table.
+### Step 10: Validate table's existence by going to the Log Analytics Workspace (LAW), Select Tables, and find the Firepower_CL table.
 ![image](https://github.com/user-attachments/assets/d41ad831-f403-452b-840d-674ea2460086)
 
 ## Create Data Collection Rule for FTD
 
-### Step 1. Go to Content Hub in your Sentinel Instance and download/install 
+### Step 1: Go to Content Hub in your Sentinel Instance and download/install 
   - Cisco ASA Solution
   - Data Collection Rule Toolkit 
-### Step 2. Create a new data collection rule by going to Data Connectors (Might need to refesh page)
+
+### Step 2: Create a new data collection rule by going to Data Connectors (Might need to refresh page)
 - Follow steps in documentation ensuring you select the facility Cisco FTD logs are being sent.
 - Data will land in CommonSecurityLog until transformation in the data collection rule has been updated.
-### Step 3. Open Workbooks and Select Data Collection Rule Toolkit ***Needs to be done in Azure Portal at time of me writing this**
+
+### Step 3: Open Workbooks and Select Data Collection Rule Toolkit **Needs to be done in Azure Portal at time of me writing this**
 - Select proper subscription and workspace
 - Select the third option **Review/Modify DCR Rules** (yes it is Data Collection Rules Rules)
-- Your DCRs will show up select the DCR created for CISCO FTD ad select **Modify DCR**
+- Your DCRs will show up, select the DCR created for CISCO FTD and select **Modify DCR**
   ![image](https://github.com/user-attachments/assets/e70d7a74-0019-46b3-8da1-6a90fabea3e4)
--Scroll to the bottom of the JSON until you find Destination
+- Scroll to the bottom of the JSON until you find Destination
 ![image](https://github.com/user-attachments/assets/2ce177cf-8df1-4388-8e0a-6a6b0cf70682)
-- Add a , after the ] and enter the two additional rows after the ],
- "transformKql": "source",
- "outputStream": "Custom-Firepower_CL"
+- Add a comma after the closing bracket `]` and enter the two additional rows after the comma:
+  "transformKql": "source",
+  "outputStream": "Custom-Firepower_CL"
 
 It should look like this
-### Step 4. Select **Deploy Update** at the bottom of the window. 
+
+### Step 4: Select **Deploy Update** at the bottom of the window. 
 - It will pop up a side bar confirming what is being done. When you hit the **Update DCR** button in this section it will do an API call to update the collection rule
-- If it is successful you will get a green checkbox in the bell/status area in Azure.  
-      
+- If it is successful you will get a green checkbox in the bell/status area in Azure.
