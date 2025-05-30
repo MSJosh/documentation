@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspace": {
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/de667330-b535-44aa-afb0-e81e6dcfd502')]",
+            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/de667330-b535-44aa-afb0-e81e6dcfd502')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+            "kind": "Scheduled",
+            "apiVersion": "2023-12-01-preview",
+            "properties": {
+                "displayName": "Privileged Microsoft Entra ID Role Management Permission Granted with Lookups",
+                "description": "This detection pulls data from UEBA and TI data sources to help reduce false positive detections when monitoring Entra ID admin behavior.  Detection can be tuned by if IP address was found in TI table(s) and/or based on number of Sign ins from UEBA tracking.  Less sign ins from IP address may have a higher risk and can filter.",
+                "severity": "Medium",
+                "enabled": true,
+                "query": "let PrivilegedRoles = datatable(RoleName:string, RoleGuid:string)\r\n[\r\n    \"Application Administrator\", \"9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3\",\r\n    \"Application Developer\", \"cf1c38e5-3621-4004-a7cb-879624dced7c\",\r\n    \"Authentication Administrator\", \"c4e39bd9-1100-46d3-8c65-fb160da0071f\",\r\n    \"Authentication Extensibility Administrator\", \"25a516ed-2fa0-40ea-a2d0-12923a21473a\",\r\n    \"B2C IEF Keyset Administrator\", \"aaf43236-0c0d-4d5f-883a-6955382ac081\",\r\n    \"Cloud Application Administrator\", \"158c047a-c907-4556-b7ef-446551a6b5f7\",\r\n    \"Cloud Device Administrator\", \"7698a772-787b-4ac8-901f-60d6b08affd2\",\r\n    \"Conditional Access Administrator\", \"b1be1c3e-b65d-4f19-8427-f6fa0d97feb9\",\r\n    \"Directory Writers\", \"9360feb5-f418-4baa-8175-e2a00bac4301\",\r\n    \"Domain Name Administrator\", \"8329153b-31d0-4727-b945-745eb3bc5f31\",\r\n    \"External Identity Provider Administrator\", \"be2f45a1-457d-42af-a067-6ec1fa63bc45\",\r\n    \"Global Administrator\", \"62e90394-69f5-4237-9190-012177145e10\",\r\n    \"Global Reader\", \"f2ef992c-3afb-46b9-b7cf-a126ee74c451\",\r\n    \"Helpdesk Administrator\", \"729827e3-9c14-49f7-bb1b-9608f156bbb8\",\r\n    \"Hybrid Identity Administrator\", \"8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2\",\r\n    \"Intune Administrator\", \"3a2c62db-5318-420d-8d74-23affee5d9d5\",\r\n    \"Lifecycle Workflows Administrator\", \"59d46f88-662b-457b-bceb-5c3809e5908f\",\r\n    \"Password Administrator\", \"966707d0-3269-4727-9be2-8c3a10f19b9d\",\r\n    \"Privileged Authentication Administrator\", \"7be44c8a-adaf-4e2a-84d6-ab2649e08a13\",\r\n    \"Privileged Role Administrator\", \"e8611ab8-c189-46e8-94e1-60213ab1f814\",\r\n    \"Security Administrator\", \"194ae4cb-b126-40b2-bd5b-6091b380977d\",\r\n    \"Security Operator\", \"5f2222b1-57c3-48ba-8ad5-d4759f1fde6f\",\r\n    \"Security Reader\", \"5d6b6bb7-de71-4623-b4af-96380a352509\",\r\n    \"User Administrator\", \"fe930be7-5e62-47db-91af-98c3a49a38b1\"\r\n];\r\n\r\nlet RoleAssignments = AuditLogs\r\n| where TimeGenerated >= ago(1h) //can change based on lookback\r\n| where OperationName has_all (\"add\",\"member to role\",\"completed\")\r\n| where OperationName has_any('timebound','permanent')\r\n//| where LoggedByService != \"PIM\" //Uncomment out if you don't needed detections related to PIM\r\n| where TargetResources has_any(PrivilegedRoles | project RoleGuid)\r\n| project TimeGenerated, AADTenantId,TargetResources, OperationName, InitiatedBy, AdditionalDetails, ResultReason, ActivityDisplayName\r\n| extend\r\n    TargetId = tostring(TargetResources[2].id),\r\n    TargetType = tostring(TargetResources[2].type),\r\n    TargetUser = tostring(TargetResources[2].userPrincipalName),\r\n    TargetDisplayName = tostring(TargetResources[2].displayName),\r\n    TargetRole = tostring(TargetResources[0].displayName),\r\n    SourceId = tostring(InitiatedBy.user.id),\r\n    SourceUser = tostring(InitiatedBy.user.userPrincipalName),\r\n    SourceDisplayName = tostring(InitiatedBy.user.displayName)\r\n| parse AdditionalDetails with * 'ipaddr\",\"value\":\"' IPAddress '\"' *\r\n| extend\r\n    TargetUserName = tostring(split(TargetUser, \"@\")[0]),\r\n    TargetUPNSuffix = tostring(split(TargetUser, \"@\")[1]),\r\n    SourceUserName = tostring(split(SourceUser, \"@\")[0]),\r\n    SourceUPNSuffix = tostring(split(SourceUser, \"@\")[1])\r\n| project-away InitiatedBy, AdditionalDetails, TargetResources\r\n| project TimeGenerated, OperationName, TargetDisplayName, TargetUser, TargetUserName, TargetUPNSuffix, TargetRole, SourceDisplayName, SourceUser, SourceUserName, SourceUPNSuffix, IPAddress, TargetId, SourceId;\r\n\r\nlet IPUsageCounts = BehaviorAnalytics\r\n| where TimeGenerated >= ago(7d)\r\n| summarize IPUsageCount = count(), SourceIPLocation = any(SourceIPLocation) by UserPrincipalName, SourceIPAddress;\r\n\r\nlet ThreatIPs = ThreatIntelligenceIndicator\r\n| where TimeGenerated >= ago(14d)\r\n| where isnotempty(NetworkSourceIP)\r\n| summarize by NetworkSourceIP;\r\n\r\nRoleAssignments\r\n| join kind=leftouter (\r\n    IPUsageCounts\r\n) on $left.SourceUser == $right.UserPrincipalName and $left.IPAddress == $right.SourceIPAddress\r\n| join kind=leftouter (\r\n    ThreatIPs\r\n) on $left.IPAddress == $right.NetworkSourceIP\r\n| extend IPInThreatIntel = iff(isnotempty(NetworkSourceIP), true, false)\r\n| project TimeGenerated, OperationName, TargetDisplayName, TargetUser, TargetUserName, TargetUPNSuffix, TargetRole, SourceDisplayName, SourceUser, SourceUserName, SourceUPNSuffix, IPAddress, TargetId, SourceId, IPUsageCount, SourceIPLocation, IPInThreatIntel\r\n",
+                "queryFrequency": "PT1H",
+                "queryPeriod": "PT1H",
+                "triggerOperator": "GreaterThan",
+                "triggerThreshold": 0,
+                "suppressionDuration": "PT5H",
+                "suppressionEnabled": false,
+                "startTimeUtc": null,
+                "tactics": [
+                    "Persistence",
+                    "PrivilegeEscalation"
+                ],
+                "techniques": [
+                    "T1098",
+                    "T1078",
+                    "T0890"
+                ],
+                "subTechniques": [
+                    "T1078.004"
+                ],
+                "alertRuleTemplateName": null,
+                "incidentConfiguration": {
+                    "createIncident": true,
+                    "groupingConfiguration": {
+                        "enabled": false,
+                        "reopenClosedIncident": false,
+                        "lookbackDuration": "PT5H",
+                        "matchingMethod": "AllEntities",
+                        "groupByEntities": [],
+                        "groupByAlertDetails": [],
+                        "groupByCustomDetails": []
+                    }
+                },
+                "eventGroupingSettings": {
+                    "aggregationKind": "SingleAlert"
+                },
+                "alertDetailsOverride": null,
+                "customDetails": null,
+                "entityMappings": [
+                    {
+                        "entityType": "Account",
+                        "fieldMappings": [
+                            {
+                                "identifier": "DisplayName",
+                                "columnName": "TargetDisplayName"
+                            },
+                            {
+                                "identifier": "AadUserId",
+                                "columnName": "TargetId"
+                            },
+                            {
+                                "identifier": "Name",
+                                "columnName": "TargetUserName"
+                            }
+                        ]
+                    },
+                    {
+                        "entityType": "Account",
+                        "fieldMappings": [
+                            {
+                                "identifier": "DisplayName",
+                                "columnName": "SourceDisplayName"
+                            },
+                            {
+                                "identifier": "AadUserId",
+                                "columnName": "TargetId"
+                            },
+                            {
+                                "identifier": "Name",
+                                "columnName": "SourceUserName"
+                            }
+                        ]
+                    },
+                    {
+                        "entityType": "IP",
+                        "fieldMappings": [
+                            {
+                                "identifier": "Address",
+                                "columnName": "IPAddress"
+                            }
+                        ]
+                    }
+                ],
+                "sentinelEntitiesMappings": null,
+                "templateVersion": null
+            }
+        }
+    ]
+}
