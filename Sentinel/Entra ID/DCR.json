@@ -1,0 +1,40 @@
+    "dataFlows": [
+      {
+        "streams": [
+          "Microsoft-Table-SigninLogs"
+        ],
+        "destinations": [
+          "NA"
+        ],
+        "transformKql": "source"
+      },
+      {
+        "streams": [
+          "Microsoft-Table-SigninLogs"
+        ],
+        "destinations": [
+          "NA"
+        ],
+        "transformKql": "source | extend Agent = tostring(Agent), AppliedEventListeners = tostring(AppliedEventListeners), ConditionalAccessPolicies = tostring(ConditionalAccessPolicies), DeviceDetail = tostring(DeviceDetail), LocationDetails = tostring(LocationDetails), Status = tostring(Status), TokenProtectionStatusDetails = tostring(TokenProtectionStatusDetails),MfaDetail = tostring(MfaDetail), OriginalRequestId = tostring(OriginalRequestId)",
+        "outputStream": "Custom-EntraSignIn_CL"
+      },
+      {
+        "streams": [
+          "Microsoft-Table-AADNonInteractiveUserSignInLogs"
+        ],
+        "destinations": [
+          "NA"
+        ],
+        "transformKql": "source | project-away ConditionalAccessPolicies",
+        "outputStream": "Microsoft-AADNonInteractiveUserSignInLogs"
+      },
+      {
+        "streams": [
+          "Microsoft-Table-AADNonInteractiveUserSignInLogs"
+        ],
+        "destinations": [
+          "NA"
+        ],
+        "transformKql": "source | extend AppliedEventListeners = tostring(AppliedEventListeners), ConditionalAccessPoliciesV2 = tostring(ConditionalAccessPoliciesV2)",
+        "outputStream": "Custom-AADNON_CL"
+      }
