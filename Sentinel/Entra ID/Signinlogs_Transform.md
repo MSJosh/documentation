@@ -12,8 +12,8 @@ This guide explains how to:
 - Resource Group Name (Log Analytics Workspace location)
 - Subscription Name
 - Sample JSON files:
-- - SigninLogs:
-- - AADNonInteractiveUserSignInLogs:
+- - SigninLogs:[Signinlogs.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Entra%20ID/Signinlogs.json)
+- - AADNonInteractiveUserSignInLogs:[AADNON.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Entra%20ID/AADNON.json)
 ## Instructions
 - Go to the
 - Use an authorized account to create tables in Sentinel.
@@ -24,6 +24,7 @@ This guide explains how to:
 - - Paste the full JSON into the request body
 - Click Run. A 202 response indicates success.
 - Repeat for the non-interactive table, adjusting names and retention accordingly.
+![image](https://github.com/user-attachments/assets/75a4dfdf-25ab-4d26-ab8c-4537db3bc3b7)
 
 # Step 2: Create the Table Transform Rule
 ## Instructions
@@ -37,9 +38,11 @@ This guide explains how to:
 - - Name it clearly for future reference
 - Click Next through the wizard without changes.
 - Validate creation under Monitor > Settings > Data Collection Rules.
+![image](https://github.com/user-attachments/assets/ad3622dc-6647-4f75-8fb7-ff1e3fb17233)
 
 # Step 3: Use Data Collection Tool Kit Workbook
 ## Instructions
+- [Data Collection Toolkit](https://techcommunity.microsoft.com/blog/microsoftsentinelblog/create-edit-and-monitor-data-collection-rules-with-the-data-collection-rule-tool/3810987)
 - Go to Content Hub and search for Data Collection Toolkit.
 - Install the workbook.
 - Navigate to Threat Management > Workbooks and open the toolkit.
@@ -49,7 +52,7 @@ This guide explains how to:
 - Scroll to the bottom of the JSON to find:
 - - "Microsoft-Table-SigninLogs"
 - - "Microsoft-Table-AADNonInteractiveUserSignInLogs"
-- Follow the sample :
+- Follow the sample : [DCR.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Entra%20ID/DCR.json)
 - - Stream data to both Log Analytics and Auxiliary tables
 - Click Deploy Update, then Update DCR.
 - If successful, a green check will appear. If not, check Azure Activity Logs for error details.
