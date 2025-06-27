@@ -53,6 +53,7 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 - Select the third option **Review/Modify DCR Rules** (yes it is Data Collection Rules Rules)
 - Your DCRs will show up, select the DCR created for  Common Event Formatand select **Modify DCR**
  ![image](https://github.com/user-attachments/assets/121f16a2-0b4f-4f93-b571-d681f237644a)
+
 - Scroll to the bottom of the JSON until you find Destination
 
 ![image](https://github.com/user-attachments/assets/b3f18174-92fa-428b-a01a-d07a56746499)
