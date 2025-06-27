@@ -59,8 +59,8 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 ![image](https://github.com/user-attachments/assets/b3f18174-92fa-428b-a01a-d07a56746499)
 
 - Add a comma after the closing bracket `]` and enter the two additional rows after the comma:
-  "transformKql": "source",
-  "outputStream": "Custom-Firepower_CL"
+          "transformKql": "source\n",
+          "outputStream": "Custom-CEF_CL"
 
 It should look like this
 
