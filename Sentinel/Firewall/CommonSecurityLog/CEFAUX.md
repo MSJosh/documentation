@@ -1,10 +1,6 @@
-1. Create Data Connector with common security
-2. Validate log generation into common security (Add steps)
-3. Create Aux Table
-
 ## Instructions
 
-Cisco Firepower logs are a great source of information, however can be quite costly when ingesting into Sentinel or other SIEMS. In this document, I will walk through creating an Auxiliary table in a Sentinel workspace and utilize Cisco ASA/FTD AMA Data Collection Rule to land FTD data into the lower cost table. Follow these steps to create the Firepower Auxiliary table in your Sentinel instance.
+CommonSecurityLog is a great source of information, however, they can be quite costly when ingesting into Sentinel or other SIEMs. In this document, I will walk through creating an Auxiliary table in a Sentinel workspace and utilizing the CommonSecurityLog AMA Data Collection Rule to land data into the lower-cost table. Follow these steps to create the CommonSecurityLog Auxiliary table in your Sentinel instance.
 
 ### Step 1: Get the following information
 - Workspace Name
