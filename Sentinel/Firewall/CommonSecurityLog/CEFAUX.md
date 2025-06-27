@@ -59,10 +59,11 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 ![image](https://github.com/user-attachments/assets/b3f18174-92fa-428b-a01a-d07a56746499)
 
 - Add a comma after the closing bracket `]` and enter the two additional rows after the comma:
+  
           "transformKql": "source\n",
           "outputStream": "Custom-CEF_CL"
 
-It should look like this
+It should look like this ^
 
 ### Step 4: Select **Deploy Update** at the bottom of the window. 
 - It will pop up a side bar confirming what is being done. When you hit the **Update DCR** button in this section it will do an API call to update the collection rule
