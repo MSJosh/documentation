@@ -48,7 +48,7 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 
 - Data will land in CommonSecurityLog until transformation in the data collection rule has been updated.
 
-### Step 3: Open Workbooks and Select Data Collection Rule Toolkit **Needs to be done in Azure Portal at time of me writing this**
+### Step 3: Open Workbooks and Select Data Collection Rule Toolkit 
 - Select proper subscription and workspace
 - Select the third option **Review/Modify DCR Rules** (yes it is Data Collection Rules Rules)
 - Your DCRs will show up, select the DCR created for  Common Event Formatand select **Modify DCR**
