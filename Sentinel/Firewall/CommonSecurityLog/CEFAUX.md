@@ -32,24 +32,27 @@ Cisco Firepower logs are a great source of information, however can be quite cos
 
 ![Run Status](https://github.com/user-attachments/assets/606a1002-a61f-41f5-aeb8-e01f3eda775c)
 
-### Step 10: Validate table's existence by going to the Log Analytics Workspace (LAW), Select Tables, and find the Firepower_CL table.
-![image](https://github.com/user-attachments/assets/d41ad831-f403-452b-840d-674ea2460086)
+### Step 10: Validate table's existence by going to the Log Analytics Workspace (LAW), Select Tables, and find the CEF_CL table.
+![image](https://github.com/user-attachments/assets/d3e814d1-c149-4553-879c-af020ced1aab)
 
-## Create Data Collection Rule for FTD
+
+## Create Data Collection Rule for CommonSecurityLog
 
 ### Step 1: Go to Content Hub in your Sentinel Instance and download/install 
-  - Cisco ASA Solution
+  - Common Event Format
   - Data Collection Rule Toolkit 
 
 ### Step 2: Create a new data collection rule by going to Data Connectors (Might need to refresh page)
-- Follow steps in documentation ensuring you select the facility Cisco FTD logs are being sent.
+- Follow steps in documentation ensuring you select the facilities CEF logs are being sent.
+  ![image](https://github.com/user-attachments/assets/66bceaa1-aae0-4ff5-addd-220a74b690ed)
+
 - Data will land in CommonSecurityLog until transformation in the data collection rule has been updated.
 
 ### Step 3: Open Workbooks and Select Data Collection Rule Toolkit **Needs to be done in Azure Portal at time of me writing this**
 - Select proper subscription and workspace
 - Select the third option **Review/Modify DCR Rules** (yes it is Data Collection Rules Rules)
-- Your DCRs will show up, select the DCR created for CISCO FTD and select **Modify DCR**
-  ![image](https://github.com/user-attachments/assets/e70d7a74-0019-46b3-8da1-6a90fabea3e4)
+- Your DCRs will show up, select the DCR created for  Common Event Formatand select **Modify DCR**
+ ![image](https://github.com/user-attachments/assets/121f16a2-0b4f-4f93-b571-d681f237644a)
 - Scroll to the bottom of the JSON until you find Destination
 ![image](https://github.com/user-attachments/assets/2ce177cf-8df1-4388-8e0a-6a6b0cf70682)
 - Add a comma after the closing bracket `]` and enter the two additional rows after the comma:
