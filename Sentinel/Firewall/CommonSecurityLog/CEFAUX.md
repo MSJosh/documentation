@@ -1,66 +1,149 @@
-## Instructions
+# CommonSecurityLog Auxiliary Table Setup Guide
 
-CommonSecurityLog is a great source of information, however, they can be quite costly when ingesting into Sentinel or other SIEMs. In this document, I will walk through creating an Auxiliary table in a Sentinel workspace and utilizing the CommonSecurityLog AMA Data Collection Rule to land data into the lower-cost table. Follow these steps to create the CommonSecurityLog Auxiliary table in your Sentinel instance.
+## Overview
 
-### Step 1: Get the following information
-- Workspace Name
-- Resource Group
-- Subscription
+CommonSecurityLog provides valuable security information, but can be costly when ingesting into Microsoft Sentinel or other SIEMs. This guide walks you through creating an Auxiliary table in a Sentinel workspace and configuring the CommonSecurityLog AMA Data Collection Rule to redirect data to a lower-cost table.
 
-### Step 2: Go to the [Create or Update Table API](https://learn.microsoft.com/en-us/rest/api/loganalytics/tables/create-or-update?view=rest-loganalytics-2022-10-01&tabs=HTTP) and select the **Try It** button.
+> **💡 Key Benefit**: Auxiliary tables offer significant cost savings while maintaining essential security data accessibility.
 
-### Step 3: Sign in with an account that has proper permissions to create tables in your Sentinel instance.
+## Prerequisites
 
-### Step 4: Populate the required fields with the data fetched above.
+Before starting, ensure you have:
+- Administrative access to your Microsoft Sentinel workspace
+- Permissions to create tables and data collection rules
+- The following information ready:
+  - Workspace Name
+  - Resource Group
+  - Subscription ID
 
-### Step 5: Enter `CEF_CL` for `tableName`.
+## Part 1: Creating the CEF Auxiliary Table
 
-### Step 6: Change API version to `2023-01-01-preview`.
+### Step 1: Gather Required Information
+Collect the following details from your Azure environment:
+- **Workspace Name**: Your Log Analytics workspace name
+- **Resource Group**: The resource group containing your workspace
+- **Subscription**: Your Azure subscription ID
 
-![image](https://github.com/user-attachments/assets/1430ff9c-cc59-4446-b5de-07b2b4112a3e)
+### Step 2: Access the Table Creation API
+1. Navigate to the [Create or Update Table API](https://learn.microsoft.com/en-us/rest/api/loganalytics/tables/create-or-update?view=rest-loganalytics-2022-10-01&tabs=HTTP)
+2. Click the **Try It** button to open the interactive API console
 
+### Step 3: Authenticate
+Sign in with an account that has the necessary permissions to create tables in your Sentinel instance.
 
-### Step 7: Paste contents of `CEFAux.json` in the Body Section - [CEFAux.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Firewall/CommonSecurityLog/CEFAux.json).
+### Step 4: Configure API Parameters
+Fill in the required fields using the information gathered in Step 1:
+- **Subscription ID**: Your Azure subscription
+- **Resource Group Name**: Your workspace's resource group
+- **Workspace Name**: Your Log Analytics workspace name
 
-### Step 8: Change retention to the desired time period. **Note:** Auxiliary only keeps data hot for 30 days.
+### Step 5: Set Table Name
+Enter `CEF_CL` as the `tableName` parameter.
 
-### Step 9: Select **Run** and you should receive a `202` status code.
+### Step 6: Update API Version
+⚠️ **Important**: Change the API version to `2023-01-01-preview`
+
+![API Configuration](https://github.com/user-attachments/assets/1430ff9c-cc59-4446-b5de-07b2b4112a3e)
+
+### Step 7: Configure Table Schema
+1. Paste the contents of the `CEFAux.json` file into the Body Section
+2. **Reference**: [CEFAux.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Firewall/CommonSecurityLog/CEFAux.json)
+
+### Step 8: Set Data Retention
+Configure the retention period according to your requirements.
+
+> **📝 Note**: Auxiliary tables keep data "hot" (readily accessible) for only 30 days. Plan your retention strategy accordingly.
+
+### Step 9: Execute the Request
+Click **Run** to create the table. You should receive a `202 Accepted` status code indicating successful creation.
 
 ![Run Status](https://github.com/user-attachments/assets/606a1002-a61f-41f5-aeb8-e01f3eda775c)
 
-### Step 10: Validate table's existence by going to the Log Analytics Workspace (LAW), Select Tables, and find the CEF_CL table.
-![image](https://github.com/user-attachments/assets/d3e814d1-c149-4553-879c-af020ced1aab)
+### Step 10: Verify Table Creation
+1. Navigate to your Log Analytics Workspace (LAW)
+2. Go to **Tables** section
+3. Locate the newly created `CEF_CL` table
+
+![Table Verification](https://github.com/user-attachments/assets/d3e814d1-c149-4553-879c-af020ced1aab)
 
 
-## Create Data Collection Rule for CommonSecurityLog
+## Part 2: Configuring Data Collection Rule
 
-### Step 1: Go to Content Hub in your Sentinel Instance and download/install 
-  - Common Event Format
-  - Data Collection Rule Toolkit 
+### Step 1: Install Required Content
+Navigate to **Content Hub** in your Sentinel instance and install the following solutions:
+- 📦 **Common Event Format**
+- 🛠️ **Data Collection Rule Toolkit**
 
-### Step 2: Create a new data collection rule by going to Data Connectors (Might need to refresh page)
-- Follow steps in documentation ensuring you select the facilities CEF logs are being sent.
-  ![image](https://github.com/user-attachments/assets/66bceaa1-aae0-4ff5-addd-220a74b690ed)
+### Step 2: Create Initial Data Collection Rule
+1. Go to **Data Connectors** (you may need to refresh the page after installing content)
+2. Follow the setup documentation for Common Event Format
+3. **Important**: Ensure you select the correct syslog facilities where CEF logs are being sent
 
-- Data will land in CommonSecurityLog until transformation in the data collection rule has been updated.
+![CEF Configuration](https://github.com/user-attachments/assets/66bceaa1-aae0-4ff5-addd-220a74b690ed)
 
-### Step 3: Open Workbooks and Select Data Collection Rule Toolkit 
-- Select proper subscription and workspace
-- Select the third option **Review/Modify DCR Rules** (yes it is Data Collection Rules Rules)
-- Your DCRs will show up, select the DCR created for  Common Event Formatand select **Modify DCR**
- ![image](https://github.com/user-attachments/assets/121f16a2-0b4f-4f93-b571-d681f237644a)
+> **⚠️ Temporary Behavior**: Initially, data will land in the standard `CommonSecurityLog` table until we update the transformation rule in the next step.
 
-- Scroll to the bottom of the JSON until you find Destination
+### Step 3: Modify Data Collection Rule
+1. Navigate to **Workbooks** and select **Data Collection Rule Toolkit**
+2. Configure the following:
+   - Select your **subscription**
+   - Select your **workspace**
+3. Choose the third option: **Review/Modify DCR Rules**
+4. Locate and select the DCR created for **Common Event Format**
+5. Click **Modify DCR**
 
-![image](https://github.com/user-attachments/assets/b3f18174-92fa-428b-a01a-d07a56746499)
+![DCR Selection](https://github.com/user-attachments/assets/121f16a2-0b4f-4f93-b571-d681f237644a)
 
-- Add a comma after the closing bracket `]` and enter the two additional rows after the comma:
-  
-          "transformKql": "source\n",
-          "outputStream": "Custom-CEF_CL"
+### Step 4: Update JSON Configuration
+1. Scroll to the bottom of the JSON configuration until you find the **Destination** section
 
-It should look like this ^
+![Destination Section](https://github.com/user-attachments/assets/b3f18174-92fa-428b-a01a-d07a56746499)
 
-### Step 4: Select **Deploy Update** at the bottom of the window. 
-- It will pop up a side bar confirming what is being done. When you hit the **Update DCR** button in this section it will do an API call to update the collection rule
-- If it is successful you will get a green checkbox in the bell/status area in Azure.
+2. Add a comma after the closing bracket `]`
+3. Insert the following two lines after the comma:
+
+```json
+"transformKql": "source\n",
+"outputStream": "Custom-CEF_CL"
+```
+
+**Example of the final configuration:**
+```json
+{
+  // ...existing configuration...
+  "destinations": {
+    // ...existing destinations...
+  },
+  "transformKql": "source\n",
+  "outputStream": "Custom-CEF_CL"
+}
+```
+
+### Step 5: Deploy the Updated Configuration
+1. Click **Deploy Update** at the bottom of the window
+2. A sidebar will appear confirming the changes
+3. Click **Update DCR** to execute the API call
+4. Monitor the notification bell in Azure for a green checkmark indicating successful deployment
+
+## ✅ Verification and Next Steps
+
+After completing these steps:
+- CEF logs will now flow to your cost-effective `CEF_CL` auxiliary table
+- Monitor data ingestion in the Log Analytics workspace
+- Update any existing queries or alerting rules to reference the new table name
+- Consider adjusting retention policies based on your compliance requirements
+
+## 🔍 Troubleshooting
+
+**Common Issues:**
+- **API 4xx errors**: Verify permissions and API version
+- **Missing table**: Check resource group and workspace names
+- **No data flow**: Ensure DCR transformation is correctly configured
+- **Permission errors**: Verify account has Log Analytics Contributor role
+
+---
+
+**📚 Additional Resources:**
+- [Microsoft Sentinel Documentation](https://docs.microsoft.com/azure/sentinel/)
+- [Log Analytics Table Management](https://docs.microsoft.com/azure/azure-monitor/logs/tables-feature-support)
+- [Data Collection Rules Overview](https://docs.microsoft.com/azure/azure-monitor/essentials/data-collection-rule-overview)
