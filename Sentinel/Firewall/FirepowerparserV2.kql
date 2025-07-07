@@ -1,6 +1,6 @@
 let SourceIPRegex = @"([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){0,6}:[0-9a-fA-F]{1,4}";
 let PortRegex = @"^\d+$";
-Firepower_CL
+CommonSecurityLog
 | extend 
     ConnectionID = coalesce(
         extract(@"ConnectionID:\s*(\d+)", 1, Message),
@@ -9,8 +9,11 @@ Firepower_CL
     Device = extract(@"^%([A-Za-z0-9\-]+-\d+-\d+)", 1, Message),
     MessageLower = tolower(Message),
     Action = case(
+        Message has "AccessControlRuleAction:", extract(@"AccessControlRuleAction:\s*([^,]+)", 1, Message),
         Message has "drop rate-", extract(@"\[ Scanning\] (drop rate-\d+ exceeded)", 1, Message),
         Message has "connection", extract(@"([A-Za-z0-9\s\-]+ connection)", 1, Message),
+        Message has "Deny", extract(@"(Deny [^:]+)", 1, Message),
+        Message has "Allow", extract(@"(Allow [^:]+)", 1, Message),
         ""
     ),
     SrcIPFromSrcIP = extract(@"SrcIP:\s*([0-9a-fA-F:.]+)", 1, Message),
@@ -51,6 +54,19 @@ Firepower_CL
     DNSRecordType = extract(@"DNSRecordType:\s*([^,]+)", 1, Message),
     DNSResponseType = extract(@"DNSResponseType:\s*([^,]+)", 1, Message),
     ReferencedHost = extract(@"ReferencedHost:\s*([^,]+)", 1, Message),
+    URL = extract(@"URL:\s*([^,]+)", 1, Message),
+    UserAgent = extract(@"UserAgent:\s*([^,]+)", 1, Message),
+    ConnectionDuration = toint(extract(@"ConnectionDuration:\s*(\d+)", 1, Message)),
+    User = extract(@"User:\s*([^,]+)", 1, Message),
+    EgressInterface = extract(@"EgressInterface:\s*([^,]+)", 1, Message),
+    EgressZone = extract(@"EgressZone:\s*([^,]+)", 1, Message),
+    IngressVRF = extract(@"IngressVRF:\s*([^,]+)", 1, Message),
+    EgressVRF = extract(@"EgressVRF:\s*([^,]+)", 1, Message),
+    EVE_Fingerprint = extract(@"EVE_Fingerprint:\s*([^,]+)", 1, Message),
+    EVE_Process = extract(@"EVE_Process:\s*([^,]+)", 1, Message),
+    EVE_ProcessConfidencePct = toint(extract(@"EVE_ProcessConfidencePct:\s*(\d+)", 1, Message)),
+    EVE_ThreatConfidencePct = toint(extract(@"EVE_ThreatConfidencePct:\s*(\d+)", 1, Message)),
+    EVE_ThreatConfidenceIndex = toint(extract(@"EVE_ThreatConfidenceIndex:\s*(\d+)", 1, Message)),
     DropRateExceeded = extract(@"\[ Scanning\] (drop rate-\d+ exceeded)", 1, Message),
     BurstRateCurrent = toint(extract(@"Current burst rate is (\d+)", 1, Message)),
     BurstRateMax = toint(extract(@"max configured rate is (\d+)", 1, Message)),
@@ -114,6 +130,7 @@ Firepower_CL
     ReasonFromTimeout, ReasonFromType, EventTypeFromFIN,
     SourceIP_temp, SourcePort_temp, DestIP_temp, DestPort_temp
 | project 
+    TimeGenerated,
     ConnectionID,
     Device,
     Action,
@@ -147,6 +164,19 @@ Firepower_CL
     DNSRecordType,
     DNSResponseType,
     ReferencedHost,
+    URL,
+    UserAgent,
+    ConnectionDuration,
+    User,
+    EgressInterface,
+    EgressZone,
+    IngressVRF,
+    EgressVRF,
+    EVE_Fingerprint,
+    EVE_Process,
+    EVE_ProcessConfidencePct,
+    EVE_ThreatConfidencePct,
+    EVE_ThreatConfidenceIndex,
     ClientAppDetector,
     DropRateExceeded,
     BurstRateCurrent,
