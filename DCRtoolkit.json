@@ -7772,7 +7772,7 @@
                     "size": 0,
                     "title": "Ingestion per GB per Custom Table in {Workspace:name}",
                     "timeContextFromParameter": "TimeRange",
-                    "queryType": 0,
+                    "queryType": 1,
                     "resourceType": "microsoft.operationalinsights/workspaces",
                     "crossComponentResources": [
                       "{Workspace}"
@@ -7804,7 +7804,7 @@
                     "size": 0,
                     "title": "Ingestion per GB per Custom Table",
                     "timeContextFromParameter": "TimeRange",
-                    "queryType": 0,
+                    "queryType": 1,
                     "resourceType": "microsoft.operationalinsights/workspaces",
                     "crossComponentResources": [
                       "{Workspace}"
