@@ -1482,13 +1482,13 @@
                         "type": 3,
                         "content": {
                           "version": "KqlItem/1.0",
-                          "query": "table('{Table}')\r\n| getschema\r\n| order by ColumnName asc",
+                          "query": "search *\r\n| where $table == '{Table}'\r\n| getschema\r\n| order by ColumnName asc",
                           "size": 2,
                           "title": "Available Schema for {Table}",
                           "timeContext": {
                             "durationMs": 86400000
                           },
-                          "queryType": 0,
+                          "queryType": 1,
                           "resourceType": "microsoft.operationalinsights/workspaces",
                           "crossComponentResources": [
                             "{TransformWorkspace}"
