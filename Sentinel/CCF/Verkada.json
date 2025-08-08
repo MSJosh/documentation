@@ -87,7 +87,7 @@
               "properties": {
                 "connectorUiConfig": {
                   "id": "VerkadaCameraAlertsCCPDefinition",
-                  "title": "Verkada Camera Alerts (CCP)",
+                  "title": "Verkada Camera Alerts (CCF)",
                   "publisher": "Microsoft",
                   "descriptionMarkdown": "The Verkada Camera Alerts data connector provides the capability to ingest [Verkada Camera Alerts](https://apidocs.verkada.com/reference/getnotificationsviewv1) into Microsoft Sentinel using the Verkada REST API. Refer to [Verkada documentation](https://apidocs.verkada.com/reference/getnotificationsviewv1) for more information.",
                   "graphQueriesTableName": "Verkada_Camera_Alerts_CL",
@@ -138,7 +138,7 @@
                   },
                   "instructionSteps": [
                     {
-                      "description": ">**NOTE:** This connector uses Codeless Connecor Platform (CCP) to connect to the Verkada REST API to pull Camera Alerts logs into Microsoft Sentinel."
+                      "description": ">**NOTE:** This connector uses Codeless Connecor Framework (CCF) to connect to the Verkada REST API to pull Camera Alerts logs into Microsoft Sentinel."
                     },
                     {
                       "description": "**STEP 1 - Create Verkada API Key**\n\nSee documentation to [setup client credentials authentication](https://developer.verkada.com/guides/authentication/client-credentials/client-credentials-setup/)\n"
@@ -224,6 +224,10 @@
                   "Custom-Verkada_Camera_Alerts_CL": {
                     "columns": [
                       {
+                        "name": "TimeGenerated",
+                        "type": "Datetime"
+                      },
+                      {
                         "name": "camera_id",
                         "type": "string"
                       },
@@ -291,6 +295,10 @@
                 "schema": {
                   "name": "Verkada_Camera_Alerts_CL",
                   "columns": [
+                      {
+                        "name": "TimeGenerated",
+                        "type": "Datetime"
+                      },
                     {
                       "name": "camera_id",
                       "type": "string"
