@@ -225,7 +225,7 @@
                     "columns": [
                       {
                         "name": "TimeGenerated",
-                        "type": "Datetime"
+                        "type": "datetime"
                       },
                       {
                         "name": "camera_id",
@@ -233,7 +233,7 @@
                       },
                       {
                         "name": "created",
-                        "type": "string"
+                        "type": "datetime"
                       },
                       {
                         "name": "crowd_threshold",
@@ -279,7 +279,7 @@
                     "destinations": [
                       "sh-sentinel"
                     ],
-                    "transformKql": "source\n| extend TimeGenerated = unixtime_milliseconds_todatetime(created), camera_id = tostring(camera_id), crowd_threshold = toint(crowd_threshold), image_url = tostring(image_url), notification_type = tostring(notification_type), objects = todynamic(objects), person_label = tostring(person_label), video_url = tostring(video_url)\n| project TimeGenerated, camera_id, crowd_threshold, image_url, notification_type, objects, person_label, video_url",
+                    "transformKql": "source\n| extend created_dt = unixtime_milliseconds_todatetime(created)\n| extend TimeGenerated = created_dt,\n         camera_id = tostring(camera_id),\n         crowd_threshold = toint(crowd_threshold),\n         image_url = tostring(image_url),\n         notification_type = tostring(notification_type),\n         objects = todynamic(objects),\n         person_label = tostring(person_label),\n         video_url = tostring(video_url),\n         created = created_dt\n| project TimeGenerated, camera_id, created, crowd_threshold, image_url, notification_type, objects, person_label, video_url",
                     "outputStream": "Custom-Verkada_Camera_Alerts_CL"
                   }
                 ]
@@ -290,14 +290,13 @@
               "apiVersion": "2022-10-01",
               "type": "Microsoft.OperationalInsights/workspaces/tables",
               "location": "[parameters('workspace-location')]",
-              "kind": null,
               "properties": {
                 "schema": {
                   "name": "Verkada_Camera_Alerts_CL",
                   "columns": [
                       {
                         "name": "TimeGenerated",
-                        "type": "Datetime"
+                        "type": "datetime"
                       },
                     {
                       "name": "camera_id",
@@ -486,7 +485,8 @@
       "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/', variables('dataConnectorTemplateNameConnections1'), variables('dataConnectorCCPVersion'))]",
       "location": "[parameters('workspace-location')]",
       "dependsOn": [
-        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]"
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentPackages', variables('_solutionId'))]",
+        "[extensionResourceId(resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace')), 'Microsoft.SecurityInsights/contentTemplates', concat(variables('dataConnectorTemplateNameConnectorDefinition1'), variables('dataConnectorCCPVersion')))]"
       ],
       "properties": {
         "contentId": "[variables('_dataConnectorContentIdConnections1')]",
@@ -497,7 +497,7 @@
           "contentVersion": "[variables('dataConnectorCCPVersion')]",
           "parameters": {
             "guidValue": {
-              "defaultValue": "[[newGuid()]",
+              "defaultValue": "[newGuid()]",
               "type": "securestring"
             },
             "innerWorkspace": {
@@ -556,7 +556,7 @@
               }
             },
             {
-              "name": "[[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'VerkadaCamerapoller', parameters('guidValue'))]",
+              "name": "[concat(parameters('innerWorkspace'),'/Microsoft.SecurityInsights/', 'VerkadaCamerapoller', parameters('guidValue'))]",
               "apiVersion": "2023-02-01-preview",
               "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
               "location": "[parameters('workspace-location')]",
@@ -579,7 +579,7 @@
                   "type": "JwtToken",
                   "password": {
                     "key": "apiKey",
-                    "value": "[[parameters('password')]"
+                    "value": "[parameters('password')]"
                   },
                   "TokenEndpoint": "https://api.verkada.com/token",
                   "IsJsonRequest": true
@@ -599,8 +599,8 @@
                   }
                 },
                 "dcrConfig": {
-                  "dataCollectionEndpoint": "[[parameters('dcrConfig').dataCollectionEndpoint]",
-                  "dataCollectionRuleImmutableId": "[[parameters('dcrConfig').dataCollectionRuleImmutableId]",
+                  "dataCollectionEndpoint": "[parameters('dcrConfig').dataCollectionEndpoint]",
+                  "dataCollectionRuleImmutableId": "[parameters('dcrConfig').dataCollectionRuleImmutableId]",
                   "streamName": "Custom-Verkada_Camera_Alerts_CL"
                 }
               }
