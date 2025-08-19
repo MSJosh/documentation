@@ -1,0 +1,30 @@
+SigninLogs
+| where AppId in (
+    "c44b4083-3bb0-49c1-b47d-974e53cbdf3c",
+    "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+    "1950a258-227b-4e31-a9cf-717495945fc2",
+    "0c1307d4-29d6-4389-a11c-5cbe7f65d7fa"
+)
+| where TimeGenerated > ago(30d)
+| extend AuthDetails = todynamic(AuthenticationDetails)
+| mv-expand AuthDetails
+| extend AuthenticationMethod = tostring(AuthDetails.authenticationMethod)
+| where AuthenticationMethod !in ("Password", "Previously satisfied", "Other", "")
+| summarize
+    TotalSignins = count(),
+    FailedSignins = countif(ResultType != 0),
+    PercentFailed = round(100.0 * countif(ResultType != 0) / count(), 2),
+    PhoneTxtMFACount = countif(AuthenticationMethod has "Text message"),
+    PhoneCallMFACount = countif(AuthenticationMethod has "Phone call"),
+    MobileApp = countif(AuthenticationMethod has "Mobile app"),
+    WHfB = countif(AuthenticationMethod has "Windows Hello for Business"),
+    NonMSFTApp = countif(AuthenticationMethod has "Companion mobile app notification"),
+    Passkey = countif(AuthenticationMethod has "Passkey"),
+    PhonePush = countif(AuthenticationMethod has "Passwordless phone sign-in"),
+    Oath = countif(AuthenticationMethod has "OATH verification code"),
+    TAP = countif(AuthenticationMethod has "Temporary Access Pass"),
+    FIDO2 = countif(AuthenticationMethod has "FIDO2 security key"),
+    MethodsUsed = make_set(AuthenticationMethod),
+    MostRecentPhoneMFA = maxif(TimeGenerated, AuthenticationMethod has "Text message" or AuthenticationMethod has "Phone call")
+by AppDisplayName, UserPrincipalName
+| order by AppDisplayName asc, TotalSignins desc
