@@ -2,3 +2,11 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
 | where ProcessCommandLine has "Add-MpPreference"
 | project Timestamp, DeviceName, InitiatingProcessFileName, FileName, ProcessCommandLine, ReportId, InitiatingProcessAccountName
+
+
+//Or
+
+DeviceProcessEvents
+| where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
+| where ProcessCommandLine has_any ("Add-MpPreference", "Set-MpPreference")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, ProcessCommandLine, ReportId
