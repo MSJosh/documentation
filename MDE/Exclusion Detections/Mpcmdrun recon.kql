@@ -1,0 +1,8 @@
+let arguments = dynamic(['ScanType 3 -File',"-CheckExclusion"]);
+DeviceProcessEvents
+| where FileName == "MpCmdRun.exe"
+| where ProcessCommandLine has_any (arguments)
+| project TimeGenerated, DeviceName, FileName, ProcessCommandLine, ReportId
+| summarize Count = count(), Commands = make_set(ProcessCommandLine) by bin(TimeGenerated,1m), DeviceName
+// exclude threshold or tune as per your needs
+// | where Count > 1
