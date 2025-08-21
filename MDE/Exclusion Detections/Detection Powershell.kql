@@ -1,3 +1,5 @@
+//https://learn.microsoft.com/en-us/powershell/module/defender/add-mppreference?view=windowsserver2025-ps
+
 DeviceProcessEvents
 | where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
 | where ProcessCommandLine has "Add-MpPreference"
