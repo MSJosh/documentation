@@ -10,3 +10,11 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
 | where ProcessCommandLine has_any ("Add-MpPreference", "Set-MpPreference")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, ProcessCommandLine, ReportId
+
+//or
+
+DeviceProcessEvents
+| where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
+| where ProcessCommandLine has_any ("Add-MpPreference", "Set-MpPreference")
+| where ProcessCommandLine has_any ("DisableRealtimeMonitoring","ExclusionPath") //tune detections to specific actions
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, ProcessCommandLine, ReportId
