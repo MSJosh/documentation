@@ -1,0 +1,19 @@
+CloudAppEvents
+| where Application == "Salesforce" and ActionType == "Manage users"
+| extend AppChange = tostring(RawEventData.Action)
+| where AppChange has "changed from"
+// Extract unique ID from RawEventData
+| extend ID = tostring(parse_json(RawEventData)["Id"])
+// Extract OauthApp from two possible patterns
+| extend OauthApp_fls = trim(' ', extract(@"(?i)field[\-\s]*level\s+security\s+for\s+([^:]+)", 1, AppChange))
+| extend OauthApp_param = trim(' ', extract(@"(?i)Changed\s+profile\s+[^:]+:\s+([^:]+?)\s+Parameter\s+object\s+permissions\s+were\s+changed", 1, AppChange))
+| extend OauthApp = coalesce(OauthApp_fls, OauthApp_param)
+// Extract old and new values
+| extend OldValue = trim(' ', extract(@"(?i)\b(?:was|were)?\s*changed\s+from\s+(.+?)\s+to\s+.+$", 1, AppChange))
+| extend NewValue = trim(' ', extract(@"(?i)\bto\s+(.+)$", 1, AppChange))
+// Filter for specific permission changes
+| where NewValue has_any ("Write", "Create", "Edit", "Delete")
+// Deduplicate by ID, keeping the latest record
+| summarize arg_max(Timestamp, *) by ID
+// Select final columns
+| project Timestamp, AccountDisplayName, AccountObjectId, AppChange, OauthApp, OldValue, NewValue, ID, RawEventData
