@@ -1,0 +1,62 @@
+let app           = "Salesforce";
+let currentWindow = 7d;   // evaluate "new" during this window
+let baselineWindow= 90d;  // baseline immediately before the current window
+let maxBagSize    = 20000;
+let GetCountry = (rd:dynamic) {
+    tostring(coalesce(
+        rd.LocationCountryOrRegion,
+        rd.CountryOrRegion,
+        rd.Country,
+        rd["Geo.Country"],
+        rd.GeoCountry,
+        rd["ClientGeo.Country"],
+        rd.client_geographical_region,
+        ""        // default
+    ))
+};
+let GetASN = (rd:dynamic) {
+    tostring(coalesce(
+        rd.LocationASN,
+        rd.ASN,
+        rd.ClientIPASN,
+        rd["Network.ASN"],
+        rd.ASNOrganization,
+        ""        // default
+    ))
+};
+let baseline =
+    CloudAppEvents
+    | where Application has_cs app and isnotempty(IPAddress)
+    | where Timestamp between (ago(currentWindow + baselineWindow) .. ago(currentWindow))
+    | extend rd = todynamic(RawEventData)
+    | extend Country = GetCountry(rd), ASN = GetASN(rd)
+    | where isnotempty(Country) or isnotempty(ASN)
+    | summarize
+        BL_Country = make_set_if(Country, isnotempty(Country), maxBagSize)
+      by AccountObjectId, AccountDisplayName;
+let current =
+    CloudAppEvents
+    | where Application has_cs app and isnotempty(IPAddress)
+    | where Timestamp > ago(currentWindow)
+    | extend rd = todynamic(RawEventData)
+    | extend Country = GetCountry(rd), ASN = GetASN(rd)
+    | where isnotempty(Country) or isnotempty(ASN)
+    | summarize
+        Cur_Country = make_set_if(Country, isnotempty(Country), maxBagSize)
+      by AccountObjectId, AccountDisplayName;
+current
+| join kind=leftouter baseline on AccountObjectId, AccountDisplayName
+| extend BL_Country = coalesce(BL_Country, dynamic([]))
+| extend New_Country = set_difference(Cur_Country, BL_Country)
+| extend NewCountryCount = array_length(coalesce(New_Country, dynamic([])))
+| where NewCountryCount > 0
+| extend Severity = "High: New Country"
+| project
+    Timestamp = now(),
+    Application = app,
+    AccountDisplayName,
+    AccountObjectId,
+    Severity,
+    NewCountryCount,
+    New_Country
+| order by NewCountryCount desc, AccountDisplayName asc
