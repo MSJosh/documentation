@@ -1,0 +1,68 @@
+let app            = "Salesforce";   // exact value from CloudAppEvents.Application
+let currentWindow  = 7d;             // evaluate "new" within this window
+let baselineWindow = 30d;            // compare against this historical window (immediately before currentWindow)
+let maxBag         = 10000;          // caps for make_set/make_list
+
+// --- Baseline distinct public IPv4s per user BEFORE current window ---
+let baselineIPs = materialize(
+    CloudAppEvents
+    | where Application == app
+    | where isnotempty(IPAddress) and isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false
+    | where Timestamp between (ago(currentWindow + baselineWindow) .. ago(currentWindow))
+    | summarize by AccountObjectId, AccountDisplayName, IPAddress
+    | summarize BL_IPs = make_set(IPAddress, maxBag) by AccountObjectId, AccountDisplayName
+);
+
+// --- Current distinct public IPv4s per user (with geo/ISP) ---
+let currentUnique = materialize(
+    CloudAppEvents
+    | where Application == app
+    // Optional noise reduction: drop big-cloud egress (keep if you want ONLY non-cloud ISPs)
+    | where ISP !in ("Amazon Web Services", "Microsoft Azure")
+    | where isnotempty(IPAddress) and isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false
+    | where Timestamp > ago(currentWindow)
+    | summarize
+        FirstSeen   = min(Timestamp),
+        LastSeen    = max(Timestamp),
+        CountryCode = any(CountryCode),
+        City        = any(City),
+        ISP         = any(ISP)
+      by AccountObjectId, AccountDisplayName, IPAddress
+);
+
+// --- Per-user current IP sets ---
+let currentSets = materialize(
+    currentUnique
+    | summarize CurIPs = make_set(IPAddress, maxBag) by AccountObjectId, AccountDisplayName
+);
+
+// --- Set-diff (new IPs), then join back to add geo/ISP per new IP ---
+let deltas =
+    currentSets
+    | join kind=leftouter baselineIPs on AccountObjectId, AccountDisplayName
+    | extend BL_IPs = coalesce(BL_IPs, dynamic([]))
+    | extend NewIPs = set_difference(CurIPs, BL_IPs)
+    | extend NewIPCount = array_length(NewIPs)
+    | where NewIPCount > 0;
+
+deltas
+| mv-expand NewIP = NewIPs to typeof(string)
+| join kind=innerunique (
+    currentUnique
+    | project AccountObjectId, AccountDisplayName, IPAddress, CountryCode, City, ISP, FirstSeen, LastSeen
+) on $left.AccountObjectId == $right.AccountObjectId and $left.NewIP == $right.IPAddress
+| summarize
+    NewIPCount = dcount(NewIP),  // distinct count of new IPs per user
+    NewIPs = make_list(
+        pack(
+            "ip",        NewIP,
+            "country",   CountryCode,
+            "city",      City,
+            "isp",       ISP,
+            "firstSeen", format_datetime(FirstSeen, "yyyy-MM-dd HH:mm:ss"),
+            "lastSeen",  format_datetime(LastSeen,  "yyyy-MM-dd HH:mm:ss")
+        ),
+        maxBag
+    )
+  by AccountObjectId, AccountDisplayName
+| order by NewIPCount desc, AccountDisplayName asc
