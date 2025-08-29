@@ -1,68 +1,165 @@
-let app            = "Salesforce";   // exact value from CloudAppEvents.Application
-let currentWindow  = 7d;             // evaluate "new" within this window
-let baselineWindow = 30d;            // compare against this historical window (immediately before currentWindow)
-let maxBag         = 10000;          // caps for make_set/make_list
+//////////////////////////
+// Tunables
+//////////////////////////
+let app = "Salesforce";             // exact Application value
+let currentWindow = 7d;             // current lookback
+let baselineWindow = 30d;           // baseline lookback BEFORE currentWindow
+let maxBag = 10000;                 // caps for make_set/make_list
 
-// --- Baseline distinct public IPv4s per user BEFORE current window ---
-let baselineIPs = materialize(
+//////////////////////////
+// Helper: IPv4 to /24 (a.b.c.0/24)
+//////////////////////////
+let to_p24 = (ip:string) {
+    let parts = split(ip, ".");
+    // we only pass valid IPv4 below, so this is safe
+    strcat(parts[0], ".", parts[1], ".", parts[2], ".0/24")
+};
+
+//////////////////////////
+// BASELINE: 30d before current window
+//////////////////////////
+let BaselinePerUser =
     CloudAppEvents
     | where Application == app
-    | where isnotempty(IPAddress) and isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false
-    | where Timestamp between (ago(currentWindow + baselineWindow) .. ago(currentWindow))
-    | summarize by AccountObjectId, AccountDisplayName, IPAddress
-    | summarize BL_IPs = make_set(IPAddress, maxBag) by AccountObjectId, AccountDisplayName
-);
-
-// --- Current distinct public IPv4s per user (with geo/ISP) ---
-let currentUnique = materialize(
-    CloudAppEvents
-    | where Application == app
-    // Optional noise reduction: drop big-cloud egress (keep if you want ONLY non-cloud ISPs)
     | where ISP !in ("Amazon Web Services", "Microsoft Azure")
-    | where isnotempty(IPAddress) and isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false
-    | where Timestamp > ago(currentWindow)
+    | where isnotempty(IPAddress)
+    | where isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false   // public IPv4 only
+    | where Timestamp between (ago(currentWindow + baselineWindow) .. ago(currentWindow))
+    | extend Prefix24 = to_p24(IPAddress)
     | summarize
-        FirstSeen   = min(Timestamp),
-        LastSeen    = max(Timestamp),
-        CountryCode = any(CountryCode),
-        City        = any(City),
-        ISP         = any(ISP)
-      by AccountObjectId, AccountDisplayName, IPAddress
-);
+        BL_IPs   = make_set(IPAddress,   maxBag),
+        BL_P24   = make_set(Prefix24,    maxBag),
+        BL_ISPs  = make_set(ISP,         maxBag),
+        BL_Cntry = make_set(CountryCode, maxBag),
+        BL_City  = make_set(City,        maxBag)
+      by AccountObjectId, AccountDisplayName;
 
-// --- Per-user current IP sets ---
-let currentSets = materialize(
-    currentUnique
-    | summarize CurIPs = make_set(IPAddress, maxBag) by AccountObjectId, AccountDisplayName
-);
+//////////////////////////
+// CURRENT WINDOW: raw + unique rows
+//////////////////////////
+let CurrentEvents =
+    CloudAppEvents
+    | where Application == app
+    | where ISP !in ("Amazon Web Services", "Microsoft Azure")
+    | where isnotempty(IPAddress)
+    | where isnotnull(parse_ipv4(IPAddress)) and ipv4_is_private(IPAddress) == false
+    | where Timestamp > ago(currentWindow)
+    | extend Prefix24 = to_p24(IPAddress)
+    | project Timestamp, AccountObjectId, AccountDisplayName, IPAddress, Prefix24, CountryCode, City, ISP;
 
-// --- Set-diff (new IPs), then join back to add geo/ISP per new IP ---
-let deltas =
-    currentSets
-    | join kind=leftouter baselineIPs on AccountObjectId, AccountDisplayName
-    | extend BL_IPs = coalesce(BL_IPs, dynamic([]))
-    | extend NewIPs = set_difference(CurIPs, BL_IPs)
-    | extend NewIPCount = array_length(NewIPs)
-    | where NewIPCount > 0;
+let CurrentUnique =
+    CurrentEvents
+    | summarize
+        FirstSeen = min(Timestamp),
+        LastSeen  = max(Timestamp)
+      by AccountObjectId, AccountDisplayName, IPAddress, Prefix24, CountryCode, City, ISP;
 
-deltas
-| mv-expand NewIP = NewIPs to typeof(string)
-| join kind=innerunique (
-    currentUnique
-    | project AccountObjectId, AccountDisplayName, IPAddress, CountryCode, City, ISP, FirstSeen, LastSeen
-) on $left.AccountObjectId == $right.AccountObjectId and $left.NewIP == $right.IPAddress
-| summarize
-    NewIPCount = dcount(NewIP),  // distinct count of new IPs per user
-    NewIPs = make_list(
-        pack(
-            "ip",        NewIP,
-            "country",   CountryCode,
-            "city",      City,
-            "isp",       ISP,
-            "firstSeen", format_datetime(FirstSeen, "yyyy-MM-dd HH:mm:ss"),
-            "lastSeen",  format_datetime(LastSeen,  "yyyy-MM-dd HH:mm:ss")
-        ),
-        maxBag
+//////////////////////////
+// CURRENT per-user sets
+//////////////////////////
+let CurrentSetsPerUser =
+    CurrentUnique
+    | summarize
+        Cur_IPs   = make_set(IPAddress,   maxBag),
+        Cur_P24   = make_set(Prefix24,    maxBag),
+        Cur_ISPs  = make_set(ISP,         maxBag),
+        Cur_Cntry = make_set(CountryCode, maxBag),
+        Cur_City  = make_set(City,        maxBag)
+      by AccountObjectId, AccountDisplayName;
+
+//////////////////////////
+// DELTAS (user-level): new /24s, ISPs, geo
+//////////////////////////
+let Deltas =
+    CurrentSetsPerUser
+    | join kind=leftouter BaselinePerUser on AccountObjectId, AccountDisplayName
+    | extend
+        BL_IPs   = coalesce(BL_IPs,   dynamic([])),
+        BL_P24   = coalesce(BL_P24,   dynamic([])),
+        BL_ISPs  = coalesce(BL_ISPs,  dynamic([])),
+        BL_Cntry = coalesce(BL_Cntry, dynamic([])),
+        BL_City  = coalesce(BL_City,  dynamic([]))
+    | extend
+        NewP24   = set_difference(Cur_P24,   BL_P24),     // new /24 networks
+        NewISPs  = set_difference(Cur_ISPs,  BL_ISPs),    // new providers
+        NewCntry = set_difference(Cur_Cntry, BL_Cntry),   // new countries
+        NewCity  = set_difference(Cur_City,  BL_City)     // new cities
+    | extend
+        NewPrefixCount = array_length(NewP24),
+        NewISPCount    = array_length(NewISPs)
+    // KEEP the arrays for the final projection
+    | project AccountObjectId, AccountDisplayName,
+              NewP24, NewISPs, NewCntry, NewCity,
+              NewPrefixCount, NewISPCount;
+
+//////////////////////////
+// PER-IP annotation (compute flags before using)
+//////////////////////////
+let PerIpAnnotated =
+    CurrentUnique
+    | join kind=leftouter (BaselinePerUser | project AccountObjectId, AccountDisplayName, BL_P24, BL_ISPs, BL_Cntry, BL_City)
+        on AccountObjectId, AccountDisplayName
+    | extend
+        BL_P24   = coalesce(BL_P24,   dynamic([])),
+        BL_ISPs  = coalesce(BL_ISPs,  dynamic([])),
+        BL_Cntry = coalesce(BL_Cntry, dynamic([])),
+        BL_City  = coalesce(BL_City,  dynamic([]))
+    // IMPORTANT: define all flags before they are referenced anywhere else
+    | extend
+        InKnownPrefix = iif(set_has_element(BL_P24, Prefix24), 1, 0),
+        IsNewPrefix   = iif(set_has_element(BL_P24, Prefix24), 0, 1),
+        IsNewISP      = iif(set_has_element(BL_ISPs, ISP),     0, 1),
+        IsNewCountry  = iif(set_has_element(BL_Cntry, CountryCode), 0, 1),
+        IsNewCity     = iif(set_has_element(BL_City,  City),   0, 1)
+    | extend
+        IsInteresting = iif(IsNewPrefix == 1 or IsNewISP == 1 or IsNewCountry == 1 or IsNewCity == 1, 1, 0);
+
+//////////////////////////
+// PER-USER summary: churn + interesting IPs w/ context
+//////////////////////////
+let PerUserSummarized =
+    PerIpAnnotated
+    | summarize
+        ChurnIPsInKnownPrefixes = dcountif(IPAddress, InKnownPrefix == 1),
+        NewItems = make_list_if(
+            pack(
+                "ip",         IPAddress,
+                "prefix24",   Prefix24,
+                "country",    CountryCode,
+                "city",       City,
+                "isp",        ISP,
+                "firstSeen",  format_datetime(FirstSeen, "yyyy-MM-dd HH:mm:ss"),
+                "lastSeen",   format_datetime(LastSeen,  "yyyy-MM-dd HH:mm:ss"),
+                "newPrefix",  IsNewPrefix,
+                "newISP",     IsNewISP,
+                "newCountry", IsNewCountry,
+                "newCity",    IsNewCity
+            ),
+            IsInteresting == 1,
+            maxBag
+        )
+      by AccountObjectId, AccountDisplayName;
+
+//////////////////////////
+// FINAL: one row per user
+//////////////////////////
+Deltas
+| join kind=inner PerUserSummarized on AccountObjectId, AccountDisplayName
+| extend Severity =
+    case(
+        NewPrefixCount > 2 or NewISPCount > 2, "High",           // new networks/providers
+        ChurnIPsInKnownPrefixes >= 10,         "Low",            // lots of last-octet churn only
+        "Informational"
     )
-  by AccountObjectId, AccountDisplayName
-| order by NewIPCount desc, AccountDisplayName asc
+| project
+    AccountDisplayName,
+    AccountObjectId,
+    Severity,
+    NewPrefixCount,
+    NewISPCount,
+    ChurnIPsInKnownPrefixes,
+    NewNetworks  = NewP24,                // list of new /24 prefixes
+    NewProviders = NewISPs,               // list of new ISPs
+    NewGeo       = bag_pack("countries", NewCntry, "cities", NewCity),
+    NewItems                              // array of detailed objects per IP
+| order by NewPrefixCount desc, NewISPCount desc, ChurnIPsInKnownPrefixes desc, AccountDisplayName asc
