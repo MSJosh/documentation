@@ -20,6 +20,7 @@
 6. [Design Your Workspace Architecture](https://learn.microsoft.com/en-us/azure/sentinel/design-your-workspace-architecture)
 7. [Azure Sentinel Training Lab](https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/Training/Azure-Sentinel-Training-Lab/README.md)
 8. [Becoming a Microsoft Sentinel Expert](https://cloudacademy.com/learning-paths/becoming-a-microsoft-sentinel-expert-4465/)
+9. [Using Microsoft Sentinel Workbooks](https://github.com/garybushey/UsingMicrosoftSentinelWorkbooks)
 
 ## **Blogs**
 1. [Microsoft Sentinel Blog](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/bg-p/MicrosoftSentinelBlog)
