@@ -15,7 +15,7 @@ This guide explains how to:
 - - SigninLogs:[Signinlogs.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Entra%20ID/Signinlogs.json)
 - - AADNonInteractiveUserSignInLogs:[AADNON.json](https://github.com/MSJosh/documentation/blob/main/Sentinel/Entra%20ID/AADNON.json)
 ## Instructions
-- Go to the
+- Go to the [Create or Update Table API](https://learn.microsoft.com/en-us/rest/api/loganalytics/tables/create-or-update?view=rest-loganalytics-2022-10-01&tabs=HTTP)
 - Use an authorized account to create tables in Sentinel.
 - For each table:
 - - Set api-version to 2023-01-01-preview
