@@ -1,0 +1,35 @@
+let TimeWindow = 2m; // 2 minutes maximum
+let KeyVaultLogs = 
+    CloudAuditEvents 
+    | where AzureResourceId has "Microsoft.KeyVault"
+    | extend Keystatus = tostring(parse_json(RawEventData)["status"])
+    | extend RawEventData_authorization = parse_json(RawEventData)["authorization"]
+    | extend KeyAction = tostring(parse_json(RawEventData_authorization)["action"])
+    | extend VaultName = tostring(split(AzureResourceId, "/")[-1])
+    | extend RawEventData_resourceUri = tostring(parse_json(RawEventData)["resourceUri"])
+    | summarize arg_max(TimeGenerated, *) by AzureResourceId, Account, IPAddress, tostring(KeyAction), tostring(Keystatus), tostring(RawEventData_resourceUri)
+    | project TimeGenerated, VaultName, Keystatus, Account, IPAddress, AzureResourceId, RawEventData, KeyAction, RawEventData_resourceUri;
+let SuccessfulOps = 
+    KeyVaultLogs
+    | where VaultName == "Microsoft.KeyVault" and Keystatus == "Succeeded"
+    | project Account, IPAddress, FirstTime = TimeGenerated, FirstVaultName = VaultName, FirstKeyAction = KeyAction, FirstAzureResourceId = AzureResourceId;
+let SubsequentOps = 
+    KeyVaultLogs
+    | where VaultName != "Microsoft.KeyVault"
+    | project Account, IPAddress, SecondTime = TimeGenerated, SecondVaultName = VaultName, SecondKeyAction = KeyAction, SecondAzureResourceId = AzureResourceId, SecondKeystatus = Keystatus;
+SuccessfulOps
+| join kind=inner (SubsequentOps) on Account, IPAddress
+| where SecondTime > FirstTime 
+    and SecondTime <= FirstTime + TimeWindow  // Less than or equal to 2 minutes
+| project 
+    Account,
+    IPAddress,
+    FirstOperation_Time = FirstTime,
+    FirstOperation_Vault = FirstVaultName,
+    SecondOperation_Time = SecondTime,
+    SecondOperation_Vault = SecondVaultName,
+    SecondOperation_Status = SecondKeystatus,
+    TimeDifference_Seconds = datetime_diff('second', SecondTime, FirstTime),
+    FirstAzureResourceId,
+    SecondAzureResourceId
+| sort by Account, FirstOperation_Time asc
